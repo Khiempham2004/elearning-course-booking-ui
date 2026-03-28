@@ -1,0 +1,380 @@
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Inter:wght@100..900&family=Poppins:wght@100..900&family=Sora:wght@100..800&family=Unbounded:wght@200..900&display=swap");
+/* 
+@tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+  font-family: var(--Poppins-font);
+}
+
+:root {
+  --prim-color: #066dca;
+  --prim-light: #f3f9ff;
+  --text-color: #222e48;
+  --pera-color: #404a60;
+  --secondary-color: #f37739;
+  --white: #fff;
+  --black: #000;
+  --ChakraPetch-font: "Chakra Petch", sans-serif;
+  --Inter-font: "Inter", sans-serif;
+  --Poppins-font: "Poppins", sans-serif;
+  --Unbounded-font: "Unbounded", sans-serif;
+  --Sora-font: "Sora", sans-serif;
+  --transition-fast: 0.3s ease-in-out;
+  --transition-slow: 0.5s ease-in-out;
+}
+
+/* Font utility classes */
+.sora-font {
+  font-family: var(--Sora-font);
+}
+
+.poppins-font {
+  font-family: var(--Poppins-font);
+}
+
+.inter-font {
+  font-family: var(--Inter-font);
+}
+
+.chakrapetch-font {
+  font-family: var(--ChakraPetch-font);
+}
+
+.unbounded-font {
+  font-family: var(--Unbounded-font);
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.element1 {
+  animation: roatation 8s linear infinite;
+}
+
+@keyframes roatation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.element2 {
+  animation: scalation 8s linear infinite;
+}
+
+@keyframes scalation {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.element3 {
+  animation: walking 10s linear infinite;
+}
+
+@keyframes walking {
+  0% {
+    transform: translate(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(100px) rotate(180deg);
+  }
+
+  100% {
+    transform: translate(0px) rotate(360deg);
+  }
+}
+
+.element4 {
+  animation: walking 10s linear infinite;
+}
+
+.element5 {
+  animation: scalation 8s linear infinite;
+}
+
+/* Navbar */
+.nav-logo {
+  font-family: var(--Unbounded-font);
+}
+
+.nav-menu li {
+  position: relative;
+}
+
+.nav-menu li a {
+  position: relative;
+  z-index: 2;
+  color: var(--text-color);
+  padding: 12px 10px;
+  transition: color var(--transition-fast);
+}
+
+.nav-menu li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background-color: var(--prim-color);
+  transition: height var(--transition-fast);
+  z-index: 1;
+}
+
+.nav-menu li:hover::after {
+  height: 100%;
+}
+
+.nav-menu li:hover a {
+  color: #fff;
+}
+
+.sidebar {
+  height: 100%;
+  width: 35%;
+  box-shadow: -10px -10px 20px #00000041;
+  position: absolute;
+  top: 0;
+  left: -100%;
+  background: #fff;
+  z-index: 999;
+  padding: 30px;
+  background-color: var(--white);
+  transition: all 0.8s ease-in-out;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+@media screen and (max-width: 991.98px) {
+  .sidebar {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 767.98px) {
+  .sidebar {
+    width: 75%;
+  }
+}
+
+@media screen and (max-width: 575.98px) {
+  .sidebar {
+    width: 100%;
+  }
+}
+
+/* Hero section */
+.hero {
+  background-image: url(../public/Images/hero-bg.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 350px;
+  background-image: url(../public/Images/cloud-shap-img1.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+@media screen and (max-width:767.98px) {
+  .hero::after {
+    height: 250px;
+  }
+}
+
+/* Feature Section */
+
+.feature {
+  position: relative;
+  background: #f3f9ff;
+}
+
+.feature::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background-image: url(../public/Images/cloud-shap-img2.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.feature-item:hover .feature-icon img {
+  animation: bounce 1s;
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  53%,
+  100% {
+    transform: translateZ(0);
+  }
+
+  40%,
+  43% {
+    transform: translate3d(0, -30px, 0) scale(1.1);
+  }
+
+  80% {
+    transform: translateZ(0) scaleY(0.95);
+  }
+
+  90% {
+    transform: translate3d(0, -4px, 0) scaleY(1.02);
+  }
+}
+
+.feature-wrapper {
+  padding: 30px 0 !important;
+}
+
+/* Our Achievements */
+
+.our-achievements::after {
+  content: '';
+  position: absolute;
+  top: -250px;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  background-image: url(../public/Images/cloud-shap-img1.png);
+}
+
+.achievements-item:hover .achievements-icon i {
+  animation: wobble 1s ease-in-out;
+}
+
+@keyframes wobble {
+  0% {
+    transform: translateZ(0);
+  }
+
+  15% {
+    transform: translate3d(-25%, 0, 0) rotate(-5deg);
+  }
+
+  30% {
+    transform: translate3d(20%, 0, 0) rotate(3deg);
+  }
+
+  45% {
+    transform: translate3d(-15%, 0, 0) rotate(-3deg);
+  }
+
+  75% {
+    transform: translate3d(-5%, 0, 0) rotate(-1deg);
+  }
+
+  100% {
+    transform: translateZ(0);
+  }
+}
+
+/* Courses */
+
+.courses::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background-image: url(../public/Images/cloud-shap-img2.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  z-index: 0;
+}
+
+/* why-choose-us */
+
+.why-choose-us::after {
+  content: '';
+  position: absolute;
+  top: -250px;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  /* background-image: url(../public/Images/cloud-shap-img1.png); */
+  /* background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover; */
+}
+
+/* Articles */
+
+.articles {
+  position: relative;
+}
+
+.articles::after {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 250px;
+  background-image: url(../public/Images/cloud-shap-img2.png);
+}
+
+@media screen and (max-width:991.98px) {
+  .articles::after {
+    top: -78px;
+    height: 250px;
+  }
+}
+
+/* Contact page */
+.user-image img {
+  margin: 0 -10px;
+}
+
+.contact::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(/public/Images/wave-bg.png);
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+}
