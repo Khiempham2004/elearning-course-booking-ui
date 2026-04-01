@@ -10,12 +10,14 @@ import Footer from "./components/Footer.jsx";
 import Index from "./pages/Index.jsx";
 import About from "./pages/About.jsx";
 import Blog from "./pages/Blog.jsx";
-import Course from "./pages/Course.jsx";
-import SignIn from "./pages/SignIn.jsx";
-import SignUp from "./pages/SignUp.jsx";
+import Course from "./pages/course/Course.jsx";
+import SignIn from "./pages/auth/SignIn.jsx";
+import SignUp from "./pages/auth/SignUp.jsx";
 import Schedule from "./pages/Schedule.jsx";
-import Enrollment from "./pages/Enrollment.jsx";
+import Enrollment from "./pages/course/Enrollment.jsx";
 import Contact from "./pages/Contact.jsx";
+import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -27,6 +29,26 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Index />} />
+
+          <Routes>
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute role="admin">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute role="/">
+                {/* <StudentDashboard /> */}
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/Courses" element={<Course />} />
           <Route path="/signin" element={<SignIn />} />

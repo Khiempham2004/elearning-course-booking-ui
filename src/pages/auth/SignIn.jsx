@@ -44,7 +44,7 @@ const SignIn = () => {
       if (user?.role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/student");
+        navigate("/");
       }
       alert("SingIn thành công!");
     } catch (error) {
@@ -52,6 +52,7 @@ const SignIn = () => {
       alert("Email hoặc Password sai");
     }
   };
+
   return (
     <div>
       <div className="section-banner bg-[#f3f9ff] h-[400px] py-[50px] lg:py-[90px] flex flex-col justify-center items-center relative">
