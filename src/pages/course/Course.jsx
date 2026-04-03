@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import element1 from "../../public/Images/element-01.png";
-import element2 from "../../public/Images/element-02.png";
-import element3 from "../../public/Images/element-03.png";
-import element4 from "../../public/Images/element-04.png";
-import element5 from "../../public/Images/element-05.png";
-import element6 from "../../public/Images/element-06.png";
+import element1 from "../../assets/Images/element-01.png";
+import element2 from "../../assets/Images/element-02.png";
+import element3 from "../../assets/Images/element-03.png";
+import element4 from "../../assets/Images/element-04.png";
+import element5 from "../../assets/Images/element-05.png";
+import element6 from "../../assets/Images/element-06.png";
 
 import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
+import { getCourse } from "../../service/course.service.js";
 
-// import CoursesData from "../CoursesData.json";
-import axios from "axios";
 const Course = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy, setSortBy] = useState("Newest");
@@ -28,7 +27,7 @@ const Course = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/courses");
+        const res = await getCourse;
         // console.log(res.data);
         setCourse(res.data.data);
         localStorage.setItem("course", JSON.stringify(res.data.data));
@@ -41,7 +40,7 @@ const Course = () => {
   }, []);
   return (
     <div>
-      <div className="section-banner bg-[#f3f9ff] h-[400px] py-[50px] lg:py-[90px] flex flex-col justify-center items-center relative">
+      <div className="section-banner bg-[#f3f9ff] h-100 py-12.5 lg:py-22.5 flex flex-col justify-center items-center relative">
         <h1 className="chakrapetch-font font-bold text-5xl lg:text-6xl mb-5 text-[#222e48]">
           Courses
         </h1>
@@ -83,16 +82,16 @@ const Course = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5  shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="element5  shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5  shape5 absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+          className="element5  shape5 absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
         />
       </div>
 
-      <div className=" px-[2%] lg:px-[12%] sm:px-[8%] py-[90px] lg:py-[150px] bg-[#f3f9ff] relative">
+      <div className=" px-[2%] lg:px-[12%] sm:px-[8%] py-22.5 lg:py-37.5 bg-[#f3f9ff] relative">
         <div className="flex justify-between items-center flex-wrap gap-3 mb-6 cursor-pointer">
           <p className="text-gray-600">
             Showing{" "}
@@ -144,7 +143,7 @@ const Course = () => {
                 key={course.title}
                 className="bg-white p-3 rounded-xl group hover:shadow-lg transition relative"
               >
-                <div className="h-[230px] rounded-xl overflow-hidden relative bg-gray-200">
+                <div className="h-57.5 rounded-xl overflow-hidden relative bg-gray-200">
                   <div className="absolute inset-0 animate-pulse bg-gray-200"></div>
                   <img
                     src={course.courseImage}
@@ -230,12 +229,12 @@ const Course = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute right-30 top-70 w-[25px] h-[25px] object-contain hidden sm:flex"
+          className="element5 hero-shape5 absolute right-30 top-70 w-6.25 h-6.25 object-contain hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape6 absolute left-10 bottom-50 w-[25px] h-[25px] object-contain hidden sm:flex"
+          className="element5 hero-shape6 absolute left-10 bottom-50 w-6.25 h-6.25 object-contain hidden sm:flex"
         />
         <img
           src={element6}

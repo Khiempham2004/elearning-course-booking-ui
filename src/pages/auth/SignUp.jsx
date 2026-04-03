@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
 
-import axios from "axios";
-import element1 from "../../public/Images/element-01.png";
-import element2 from "../../public/Images/element-02.png";
-import element3 from "../../public/Images/element-03.png";
-import element4 from "../../public/Images/element-04.png";
-import element5 from "../../public/Images/element-05.png";
-import learningImage from "../../public/Images/learning_image.png";
+import element1 from "../../assets/Images/element-01.png";
+import element2 from "../../assets/Images/element-02.png";
+import element3 from "../../assets/Images/element-03.png";
+import element4 from "../../assets/Images/element-04.png";
+import element5 from "../../assets/Images/element-05.png";
+import learningImage from "../../assets/Images/learning_image.png";
+import { register } from "../../service/auth.service.js";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -39,7 +39,7 @@ const SignUp = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:3000/api/user/register", {
+      const res = await register({
         name: formData.name,
         email: formData.email,
         password: formData.password,

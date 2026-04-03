@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
-import element1 from "../../public/Images/element-01.png";
-import element2 from "../../public/Images/element-02.png";
-import element3 from "../../public/Images/element-03.png";
-import element4 from "../../public/Images/element-04.png";
-import element5 from "../../public/Images/element-05.png";
+import element1 from "../../assets/Images/element-01.png";
+import element2 from "../../assets/Images/element-02.png";
+import element3 from "../../assets/Images/element-03.png";
+import element4 from "../../assets/Images/element-04.png";
+import element5 from "../../assets/Images/element-05.png";
 
 import { Navigate, useNavigate } from "react-router-dom";
-import learningImage from "../../public/Images/learning_image.png";
+import learningImage from "../../assets/Images/learning_image.png";
 import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
+import { login } from "../../service/auth.service.js";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -30,15 +30,15 @@ const SignIn = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:3000/api/user/login", {
+      const res = await login({
         email: formData.email,
         password: formData.password,
       });
-      console.log("Data login : ", res.data);
+      console.log("Data login : ", res);
 
-      const user = res.data.newUser;
+      const user = res.newUser; // axiosclient trả về trực tiếp
 
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", res.token);
       localStorage.setItem("user", JSON.stringify(user));
 
       if (user?.role === "admin") {
@@ -55,7 +55,7 @@ const SignIn = () => {
 
   return (
     <div>
-      <div className="section-banner bg-[#f3f9ff] h-[400px] py-[50px] lg:py-[90px] flex flex-col justify-center items-center relative">
+      <div className="section-banner bg-[#f3f9ff] h-100 py-12.5 lg:py-22.5 flex flex-col justify-center items-center relative">
         <h1 className="chakrapetch-font font-bold text-5xl lg:text-6xl mb-5 text-[#222e48]">
           Sign In
         </h1>

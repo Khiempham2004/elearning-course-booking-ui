@@ -1,11 +1,11 @@
 import React from "react";
 
-import element1 from "../../public/Images/element-01.png";
-import element2 from "../../public/Images/element-02.png";
-import element3 from "../../public/Images/element-03.png";
-import element4 from "../../public/Images/element-04.png";
-import element5 from "../../public/Images/element-05.png";
-import element6 from "../../public/Images/element-06.png";
+import element1 from "../assets/Images/element-01.png";
+import element2 from "../assets/Images/element-02.png";
+import element3 from "../assets/Images/element-03.png";
+import element4 from "../assets/Images/element-04.png";
+import element5 from "../assets/Images/element-05.png";
+import element6 from "../assets/Images/element-06.png";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
@@ -16,15 +16,15 @@ import {
   faUserCircle,
 } from "@fortawesome/free-regular-svg-icons";
 
-import blog1 from "../../public/Images/blog-image-01.jpg";
-import blog2 from "../../public/Images/blog-image-02.jpg";
-import blog3 from "../../public/Images/blog-image-03.jpg";
-import blog4 from "../../public/Images/blog-image-04.jpg";
-import blog5 from "../../public/Images/blog-image-05.jpg";
-import blog6 from "../../public/Images/blog-image-06.jpg";
-import blog7 from "../../public/Images/blog-image-07.jpg";
-import blog8 from "../../public/Images/blog-image-08.jpg";
-import blog9 from "../../public/Images/blog-image-09.jpg";
+import blog1 from "../assets/Images/blog-image-01.jpg";
+import blog2 from "../assets/Images/blog-image-02.jpg";
+import blog3 from "../assets/Images/blog-image-03.jpg";
+import blog4 from "../assets/Images/blog-image-04.jpg";
+import blog5 from "../assets/Images/blog-image-05.jpg";
+import blog6 from "../assets/Images/blog-image-06.jpg";
+import blog7 from "../assets/Images/blog-image-07.jpg";
+import blog8 from "../assets/Images/blog-image-08.jpg";
+import blog9 from "../assets/Images/blog-image-09.jpg";
 
 const blogs = [
   {
@@ -85,7 +85,7 @@ const blogs = [
 const Blog = () => {
   return (
     <div>
-      <div className="section-banner bg-[#f3f9ff] h-[400px] py-[50px] lg:py-[90px] flex flex-col justify-center items-center relative">
+      <div className="section-banner bg-[#f3f9ff] h-100 py-12.5 lg:py-22.5 flex flex-col justify-center items-center relative">
         <h1 className="chakrapetch-font font-bold text-5xl lg:text-6xl mb-5 text-[#222e48]">
           Blog
         </h1>
@@ -127,16 +127,16 @@ const Blog = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5  shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="element5  shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5  shape5 absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+          className="element5  shape5 absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
         />
       </div>
 
-      <div className="px-[2%] lg:px-[12%] sm:px-[8%] py-[50px] lg:py-[90px] relative gap-10 flex flex-col">
+      <div className="px-[2%] lg:px-[12%] sm:px-[8%] py-12.5 lg:py-22.5 relative gap-10 flex flex-col">
         <div className="blog-wrapper grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 xl:gap-8 z-2">
           {blogs.map((blog, index) => (
             <div
@@ -207,12 +207,12 @@ const Blog = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="element5 hero-shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+          className="element5 hero-shape5 absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
         />
         <img
           src={element6}

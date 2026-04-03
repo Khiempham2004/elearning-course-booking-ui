@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import element1 from "../../public/Images/element-01.png";
-import element2 from "../../public/Images/element-02.png";
-import element3 from "../../public/Images/element-03.png";
-import element4 from "../../public/Images/element-04.png";
-import element5 from "../../public/Images/element-05.png";
+import element1 from "../assets/Images/element-01.png";
+import element2 from "../assets/Images/element-02.png";
+import element3 from "../assets/Images/element-03.png";
+import element4 from "../assets/Images/element-04.png";
+import element5 from "../assets/Images/element-05.png";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-import student1 from "../../public/Images/student-img-01.png";
-import student2 from "../../public/Images/student-img-02.png";
-import student3 from "../../public/Images/student-img-03.png";
-import student4 from "../../public/Images/student-img-04.png";
-import student5 from "../../public/Images/student-img-05.png";
-import student6 from "../../public/Images/student-img-06.png";
+import student1 from "../assets/Images/student-img-01.png";
+import student2 from "../assets/Images/student-img-02.png";
+import student3 from "../assets/Images/student-img-03.png";
+import student4 from "../assets/Images/student-img-04.png";
+import student5 from "../assets/Images/student-img-05.png";
+import student6 from "../assets/Images/student-img-06.png";
 
 import { faHome } from "@fortawesome/free-regular-svg-icons";
 const Contact = () => {
@@ -30,7 +30,7 @@ const Contact = () => {
   };
   return (
     <div>
-      <div className="section-banner bg-[#f3f9ff] h-[400px] py-[50px] lg:py-[90px] flex flex-col justify-center items-center relative">
+      <div className="section-banner bg-[#f3f9ff] h-100 py-12.5 lg:py-22.5 flex flex-col justify-center items-center relative">
         <h1 className="chakrapetch-font font-bold text-5xl lg:text-6xl mb-5 text-[#222e48]">
           Contact
         </h1>
@@ -99,7 +99,7 @@ const Contact = () => {
 
         <div className="contact-wrapper grid grid-cols-1 lg:grid-cols-3 gap-5 w-full">
           <div className="contact-item w-full flex items-start gap-5 px-5 py-10 group bg-[#f3f9ff]  border border-[#EBECEF] rounded-xl hover:bg-[#066dca] transition-colors duration-300">
-            <div className="contact-icon min-w-[50px] min-h-[50px]  bg-white rounded-full flex justify-center items-center text-xl shadow">
+            <div className="contact-icon min-w-12.5 min-h-12.5  bg-white rounded-full flex justify-center items-center text-xl shadow">
               <i className="bi bi-geo-alt"></i>
             </div>
             <div className="contact-info">
@@ -119,7 +119,7 @@ const Contact = () => {
             </div>
           </div>
           <div className="contact-item w-full flex items-start gap-5 px-5 py-10 group bg-[#f3f9ff]  border border-[#EBECEF] rounded-xl hover:bg-[#066dca] transition-colors duration-300">
-            <div className="contact-icon min-w-[50px] min-h-[50px]  bg-white rounded-full flex justify-center items-center text-xl shadow">
+            <div className="contact-icon min-w-12.5 min-h-12.5  bg-white rounded-full flex justify-center items-center text-xl shadow">
               <i className="bi bi-envelope"></i>
             </div>
             <div className="contact-info">
@@ -142,7 +142,7 @@ const Contact = () => {
             </div>
           </div>
           <div className="contact-item w-full flex items-start gap-5 px-5 py-10 group bg-[#f3f9ff]  border border-[#EBECEF] rounded-xl hover:bg-[#066dca] transition-colors duration-300">
-            <div className="contact-icon min-w-[50px] min-h-[50px]  bg-white rounded-full flex justify-center items-center text-xl shadow">
+            <div className="contact-icon min-w-12.5 min-h-12.5  bg-white rounded-full flex justify-center items-center text-xl shadow">
               <i className="bi bi-telephone"></i>
             </div>
             <div className="contact-info">
@@ -178,16 +178,16 @@ const Contact = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="element5 hero-shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+          className="element5 hero-shape5 absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
         />
       </div>
 
-      <div className="contact flex lg:flex-row flex-col justify-between items-center gap-10 px-[2%] lg:px-[12%] sm:px-[8%] py-[50px] lg:py-[90px] relative">
+      <div className="contact flex lg:flex-row flex-col justify-between items-center gap-10 px-[2%] lg:px-[12%] sm:px-[8%] py-12.5 lg:py-22.5 relative">
         <div className="contact-content flex flex-col lg:w-1/2 w-full">
           <span className="text-[#076dcb] font-semibold sora-font pb-1">
             <i className="bi bi-book pe-2"></i>

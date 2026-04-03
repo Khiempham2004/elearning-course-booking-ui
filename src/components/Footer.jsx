@@ -1,6 +1,6 @@
 import React from "react";
-import certificateimg from "../../public/Images/certificate-img.png";
-import element5 from "../../public/Images/element-05.png";
+import certificateimg from "../assets/Images/certificate-img.png";
+import element5 from "../assets/Images/element-05.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,
@@ -16,8 +16,8 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <>
-      <div className="banner px-[2%] lg:px-[12%] sm:px-[8%] py-[30px] lg:py-[60px] relative">
-        <div className="banner-content w-full z-2 bg-[#076dcd] p-5 h-[300px] flex justify-center items-start flex-col rounded-xl relative">
+      <div className="banner px-[2%] lg:px-[12%] sm:px-[8%] py-7.5 lg:py-15 relative">
+        <div className="banner-content w-full z-2 bg-[#076dcd] p-5 h-75 flex justify-center items-start flex-col rounded-xl relative">
           <span className="text-white font-semibold sora-font pb-1">
             <i className="bi bi-book pe-2"></i>
             Get Certificate
@@ -32,7 +32,7 @@ const Footer = () => {
             Get Started Now
             <i className="bi bi-arrow-up-right ps-2"></i>
           </button>
-          <div className="certificate-img hidden lg:flex w-[300px] h-[380px] absolute bottom-0 right-0 xl:right-20">
+          <div className="certificate-img hidden lg:flex w-75 h-95 absolute bottom-0 right-0 xl:right-20">
             <img
               src={certificateimg}
               alt="certificate-img"
@@ -44,15 +44,15 @@ const Footer = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="element5 hero-shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape6 absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+          className="element5 hero-shape6 absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
         />
       </div>
-      <div className="footer px-[2%] lg:px-[12%] sm:px-[8%] pt-[50px] lg:pt-[50px] relative overflow-hidden">
+      <div className="footer px-[2%] lg:px-[12%] sm:px-[8%] pt-12.5 lg:pt-12.5 relative overflow-hidden">
         <div className="grid grid-cols-1 xl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-10 mb-8">
           <div className="w-full">
             <Link to="/">
@@ -212,9 +212,9 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="Email"
-                className="w-full bg-white h-[45px] ps-5 rounded-full border-1 border-[#ebecef] outline-none"
+                className="w-full bg-white h-11.25 ps-5 rounded-full border border-[#ebecef] outline-none"
               />
-              <button className="absolute right-1 top-0.5 rounded-full bg-[#066dca] text-white h-[40px] w-[40px] flex justify-center items-center p-3 cursor-pointer">
+              <button className="absolute right-1 top-0.5 rounded-full bg-[#066dca] text-white h-10 w-10 flex justify-center items-center p-3 cursor-pointer">
                 <FontAwesomeIcon icon={faPaperPlane} className="btn-icon" />
               </button>
             </div>
