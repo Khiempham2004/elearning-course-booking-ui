@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import element1 from "../../assets/Images/element-01.png";
-import element2 from "../../assets/Images/element-02.png";
-import element3 from "../../assets/Images/element-03.png";
-import element4 from "../../assets/Images/element-04.png";
-import element5 from "../../assets/Images/element-05.png";
+import element1 from "../../../public/Images/element-01.png";
+import element2 from "../../../public/Images/element-02.png";
+import element3 from "../../../public/Images/element-03.png";
+import element4 from "../../../public/Images/element-04.png";
+import element5 from "../../../public/Images/element-05.png";
 
 import { Navigate, useNavigate } from "react-router-dom";
-import learningImage from "../../assets/Images/learning_image.png";
+import learningImage from "../../../public/Images/learning_image.png";
 import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
+// import axios from "axios";
 import { login } from "../../service/auth.service.js";
 
 const SignIn = () => {
@@ -36,15 +37,16 @@ const SignIn = () => {
       });
       console.log("Data login : ", res);
 
-      const user = res.newUser; // axiosclient trả về trực tiếp
+      const user = res.data.newUser; // axiosclient trả về trực tiếp
+      const token = res.data.token;
 
-      localStorage.setItem("token", res.token);
+      localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      if (user?.role === "admin") {
+      if (user.role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/");
+        navigate("/student");
       }
       alert("SingIn thành công!");
     } catch (error) {

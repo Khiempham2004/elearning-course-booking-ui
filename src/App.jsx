@@ -18,17 +18,27 @@ import Enrollment from "./pages/course/Enrollment.jsx";
 import Contact from "./pages/Contact.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
+
 const App = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
     <>
       <div className={isHome ? "home-page" : ""}>
-        <Navbar />
-        
+        {!isAdminPage && <Navbar />}
         <Routes>
           <Route path="/" element={<Index />} />
+
+          <Route
+            path="/student"
+            element={
+              <ProtectedRoute role="student">
+
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/admin"
             element={
@@ -38,14 +48,6 @@ const App = () => {
             }
           />
 
-          <Route
-            path="/student"
-            element={
-              <ProtectedRoute role="/student">
-                {/* <StudentDashboard /> */}
-              </ProtectedRoute>
-            }
-          />
 
           <Route path="/Courses" element={<Course />} />
           <Route path="/signin" element={<SignIn />} />
@@ -56,7 +58,8 @@ const App = () => {
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
-        <Footer />
+
+        {!isAdminPage && <Footer />}
       </div>
     </>
   );

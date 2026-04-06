@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { BsCheckAll } from "react-icons/bs";
-import element1 from "../assets/Images/element-01.png";
-import element2 from "../assets/Images/element-02.png";
-import element3 from "../assets/Images/element-03.png";
-import element4 from "../assets/Images/element-04.png";
-import element5 from "../assets/Images/element-05.png";
-import element6 from "../assets/Images/element-06.png";
+import element1 from "../../public/Images/element-01.png";
+import element2 from "../../public/Images/element-02.png";
+import element3 from "../../public/Images/element-03.png";
+import element4 from "../../public/Images/element-04.png";
+import element5 from "../../public/Images/element-05.png";
+import element6 from "../../public/Images/element-06.png";
 
-import about1 from "../assets/Images/about-img1.png";
-import about2 from "../assets/Images/about-img2.png";
-import user from "../assets/Images/user.png";
-import aboutimage from "../assets/Images/about-image.jpg";
+import about1 from "../../public/Images/about-img1.png";
+import about2 from "../../public/Images/about-img2.png";
+import user from "../../public/Images/user.png";
+import aboutimage from "../../public/Images/about-image.jpg";
 
-import whychoose from "../assets/Images/why-choose-us-image.jpg";
+import whychoose from "../../public/Images/why-choose-us-image.jpg";
 
-import featureicon1 from "../assets/Images/feature-icon1.png";
-import featureicon2 from "../assets/Images/feature-icon2.png";
-import featureicon3 from "../assets/Images/feature-icon3.png";
+import featureicon1 from "../../public/Images/feature-icon1.png";
+import featureicon2 from "../../public/Images/feature-icon2.png";
+import featureicon3 from "../../public/Images/feature-icon3.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -29,16 +29,16 @@ import {
 
 import { Link } from "react-router-dom";
 
-import article1 from "../assets/Images/articles-01.jpg";
-import article2 from "../assets/Images/articles-02.jpg";
-import article3 from "../assets/Images/articles-03.jpg";
+import article1 from "../../public/Images/articles-01.jpg";
+import article2 from "../../public/Images/articles-02.jpg";
+import article3 from "../../public/Images/articles-03.jpg";
 import axios from "axios";
 
 const Index = () => {
   const [courses, setCourses] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const categories = ["All", ...new Set((courses || []).map((c) => c.category))];
+  const categories = ["All", ...new Set(courses.map((c) => c.category))];
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -438,8 +438,8 @@ const Index = () => {
               key={category}
               onClick={() => setActiveCategory(category)}
               className={`px-4 py-3 rounded-full text-sm font-medium transition cursor-pointer shadow-md ${activeCategory === category
-                  ? "bg-blue-600 text-white"
-                  : "bg-[#f3f9ff] text-[#404a60]"
+                ? "bg-blue-600 text-white"
+                : "bg-[#f3f9ff] text-[#404a60]"
                 }`}
             >
               {category}

@@ -1,6 +1,6 @@
 import React from "react";
-import certificateimg from "../assets/Images/certificate-img.png";
-import element5 from "../assets/Images/element-05.png";
+import certificateimg from "../../public/Images/certificate-img.png";
+import element5 from "../../public/Images/element-05.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,

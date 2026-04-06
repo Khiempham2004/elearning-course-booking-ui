@@ -3,23 +3,23 @@ import { faHome } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-import element1 from "../assets/Images/element-01.png";
-import element2 from "../assets/Images/element-02.png";
-import element3 from "../assets/Images/element-03.png";
-import element4 from "../assets/Images/element-04.png";
-import element5 from "../assets/Images/element-05.png";
-import element6 from "../assets/Images/element-06.png";
+import element1 from "../../public/Images/element-01.png";
+import element2 from "../../public/Images/element-02.png";
+import element3 from "../../public/Images/element-03.png";
+import element4 from "../../public/Images/element-04.png";
+import element5 from "../../public/Images/element-05.png";
+import element6 from "../../public/Images/element-06.png";
 
-import featuresImage1 from "../assets/Images/features-icon1.png";
-import featuresImage2 from "../assets/Images/features-icon2.png";
-import featuresImage3 from "../assets/Images/features-icon3.png";
+import featuresImage1 from "../../public/Images/features-icon1.png";
+import featuresImage2 from "../../public/Images/features-icon2.png";
+import featuresImage3 from "../../public/Images/features-icon3.png";
 
-import whychooseImage from "../assets/Images/about-img.png";
+import whychooseImage from "../../public/Images/about-img.png";
 
-import choseImage1 from "../assets/Images/choose-icon1.png";
-import choseImage2 from "../assets/Images/choose-icon2.png";
-import choseImage3 from "../assets/Images/choose-icon3.png";
-import choseImage4 from "../assets/Images/choose-icon4.png";
+import choseImage1 from "../../public/Images/choose-icon1.png";
+import choseImage2 from "../../public/Images/choose-icon2.png";
+import choseImage3 from "../../public/Images/choose-icon3.png";
+import choseImage4 from "../../public/Images/choose-icon4.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -27,10 +27,11 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import testiImage1 from "../assets/Images/testi-img1.png";
-import testiImage2 from "../assets/Images/testi-img2.png";
-import testiImage3 from "../assets/Images/testi-img3.png";
-import quoteImage from "../assets/Images/quote-icon.png";
+import testiImage1 from "../../public/Images/testi-img1.png";
+import testiImage2 from "../../public/Images/testi-img2.png";
+import testiImage3 from "../../public/Images/testi-img3.png";
+
+import quoteImage from '../../public/Images/quote-icon.png';
 
 const About = () => {
   const testimonials = [
@@ -438,13 +439,12 @@ const About = () => {
               <div className="testu-icons flex gap-3 text-[#ff9f29] mb-2">
                 {Array.from({ length: 5 }, (_, i) => (
                   <i
-                    className={`bi ${
-                      i < Math.floor(testi.ratings)
+                    className={`bi ${i < Math.floor(testi.ratings)
                         ? "bi-star-fill"
                         : i < testi.ratings
                           ? "bi-star-half"
                           : "bi-star"
-                    }`}
+                      }`}
                     key={i}
                   ></i>
                 ))}

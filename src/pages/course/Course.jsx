@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import element1 from "../../assets/Images/element-01.png";
-import element2 from "../../assets/Images/element-02.png";
-import element3 from "../../assets/Images/element-03.png";
-import element4 from "../../assets/Images/element-04.png";
-import element5 from "../../assets/Images/element-05.png";
-import element6 from "../../assets/Images/element-06.png";
+import element1 from "../../../public/Images/element-01.png";
+import element2 from "../../../public/Images/element-02.png";
+import element3 from "../../../public/Images/element-03.png";
+import element4 from "../../../public/Images/element-04.png";
+import element5 from "../../../public/Images/element-05.png";
+import element6 from "../../../public/Images/element-06.png";
+
 
 import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
-import { getCourse } from "../../service/course.service.js";
+// import { getCourse } from "../../service/course.service.js";
+import axios from "axios";
 
 const Course = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -27,8 +29,8 @@ const Course = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await getCourse;
-        // console.log(res.data);
+        const res = await axios.get('http://localhost:3000/api/courses');
+        console.log(res.data);
         setCourse(res.data.data);
         localStorage.setItem("course", JSON.stringify(res.data.data));
       } catch (error) {
@@ -146,7 +148,7 @@ const Course = () => {
                 <div className="h-57.5 rounded-xl overflow-hidden relative bg-gray-200">
                   <div className="absolute inset-0 animate-pulse bg-gray-200"></div>
                   <img
-                    src={course.courseImage}
+                    src= {course.courseImage}
                     alt={course.title}
                     loading="lazy"
                     className="relative z-10 group-hover:scale-110 transition duration-500 h-full w-full object-cover"
@@ -178,7 +180,7 @@ const Course = () => {
                     <div className="flex items-center">
                       <img
                         src={course.instructorImage}
-                        alt={course.instructor}
+                        alt={course.Instructor}
                         className="rounded-full h-10 w-10 object-cover me-2"
                       />
                       <span>{course.instructor}</span>

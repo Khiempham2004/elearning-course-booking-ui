@@ -9,9 +9,12 @@ import {
   DashboardOutlined,
   BookOutlined,
   UserOutlined,
+  TeamOutlined,
+  CalendarOutlined,
   LogoutOutlined,
   BellOutlined,
 } from "@ant-design/icons";
+
 
 const { Header, Sider, Content } = Layout;
 
@@ -44,15 +47,27 @@ export default function AdminDashboard() {
   return (
     <div>
       <Layout style={{ minHeight: "100vh" }}>
-        {/* Sidebar */}
         <Sider>
-          <h2 style={{ color: "white", textAlign: "center", padding: 20 }}>
+          <h2 style={{ color: "white", textAlign: "center", padding: 20, fontSize: 30, fontFamily: "Poppins, sans-serif", fontWeight: "bold" }}>
             StudIQ
           </h2>
-          <Menu theme="dark" mode="inline">
-            <Menu.Item icon={<DashboardOutlined />}>Dashboard</Menu.Item>
-            <Menu.Item icon={<BookOutlined />}>Courses</Menu.Item>
-            <Menu.Item icon={<UserOutlined />}>Users</Menu.Item>
+          <Menu style={{ height: "100%", display: "flex", flexDirection: "column" }} theme="dark" mode="inline">
+            <Link to='/admin'>
+              <Menu.Item style={{ marginLeft: 40 }} icon={<DashboardOutlined />}>Dashboard</Menu.Item>
+            </Link>
+            <Link to='/admin/course'>
+              <Menu.Item style={{ marginLeft: 40 }} icon={<BookOutlined />}>Courses</Menu.Item>
+            </Link>
+            <Link to='/admin/users'>
+              <Menu.Item style={{ marginLeft: 40 }} icon={<UserOutlined />}>Users</Menu.Item>
+            </Link>
+
+            <Link to='/admin/enrollment'>
+              <Menu.Item style={{ marginLeft: 40 }} icon={<TeamOutlined />}>Enrollment</Menu.Item>
+            </Link>
+            <Link to='/admin/schedule'>
+              <Menu.Item style={{ marginLeft: 40 }} icon={<CalendarOutlined />}>Schedule</Menu.Item>
+            </Link>
           </Menu>
         </Sider>
 

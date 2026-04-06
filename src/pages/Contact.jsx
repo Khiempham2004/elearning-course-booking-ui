@@ -1,19 +1,21 @@
 import React, { useState } from "react";
-import element1 from "../assets/Images/element-01.png";
-import element2 from "../assets/Images/element-02.png";
-import element3 from "../assets/Images/element-03.png";
-import element4 from "../assets/Images/element-04.png";
-import element5 from "../assets/Images/element-05.png";
+
+import element1 from "../../public/Images/element-01.png";
+import element2 from "../../public/Images/element-02.png";
+import element3 from "../../public/Images/element-03.png";
+import element4 from "../../public/Images/element-04.png";
+import element5 from "../../public/Images/element-05.png";
+
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-import student1 from "../assets/Images/student-img-01.png";
-import student2 from "../assets/Images/student-img-02.png";
-import student3 from "../assets/Images/student-img-03.png";
-import student4 from "../assets/Images/student-img-04.png";
-import student5 from "../assets/Images/student-img-05.png";
-import student6 from "../assets/Images/student-img-06.png";
+import student1 from "../../public/Images/student-img-01.png";
+import student2 from "../../public/Images/student-img-02.png";
+import student3 from "../../public/Images/student-img-03.png";
+import student4 from "../../public/Images/student-img-04.png";
+import student5 from "../../public/Images/student-img-05.png";
+import student6 from "../../public/Images/student-img-06.png";
 
 import { faHome } from "@fortawesome/free-regular-svg-icons";
 const Contact = () => {

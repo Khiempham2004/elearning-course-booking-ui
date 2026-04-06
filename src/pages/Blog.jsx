@@ -1,11 +1,11 @@
 import React from "react";
 
-import element1 from "../assets/Images/element-01.png";
-import element2 from "../assets/Images/element-02.png";
-import element3 from "../assets/Images/element-03.png";
-import element4 from "../assets/Images/element-04.png";
-import element5 from "../assets/Images/element-05.png";
-import element6 from "../assets/Images/element-06.png";
+import element1 from "../../public/Images/element-01.png";
+import element2 from "../../public/Images/element-02.png";
+import element3 from "../../public/Images/element-03.png";
+import element4 from "../../public/Images/element-04.png";
+import element5 from "../../public/Images/element-05.png";
+import element6 from "../../public/Images/element-06.png";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
@@ -16,15 +16,15 @@ import {
   faUserCircle,
 } from "@fortawesome/free-regular-svg-icons";
 
-import blog1 from "../assets/Images/blog-image-01.jpg";
-import blog2 from "../assets/Images/blog-image-02.jpg";
-import blog3 from "../assets/Images/blog-image-03.jpg";
-import blog4 from "../assets/Images/blog-image-04.jpg";
-import blog5 from "../assets/Images/blog-image-05.jpg";
-import blog6 from "../assets/Images/blog-image-06.jpg";
-import blog7 from "../assets/Images/blog-image-07.jpg";
-import blog8 from "../assets/Images/blog-image-08.jpg";
-import blog9 from "../assets/Images/blog-image-09.jpg";
+import blog1 from "../../public/Images/blog-image-01.jpg";
+import blog2 from "../../public/Images/blog-image-02.jpg";
+import blog3 from "../../public/Images/blog-image-03.jpg";
+import blog4 from "../../public/Images/blog-image-04.jpg";
+import blog5 from "../../public/Images/blog-image-05.jpg";
+import blog6 from "../../public/Images/blog-image-06.jpg";
+import blog7 from "../../public/Images/blog-image-07.jpg";
+import blog8 from "../../public/Images/blog-image-08.jpg";
+import blog9 from "../../public/Images/blog-image-09.jpg";
 
 const blogs = [
   {
