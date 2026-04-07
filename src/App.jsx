@@ -17,7 +17,12 @@ import Schedule from "./pages/Schedule.jsx";
 import Enrollment from "./pages/course/Enrollment.jsx";
 import Contact from "./pages/Contact.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import AdminLayout from "./layouts/AdminLayout.jsx";
 import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
+import CourseManager from "./pages/Admin/CourseManager.jsx";
+import EnrollmentManager from "./pages/Admin/EnrollmentManager.jsx";
+import UserManager from "./pages/Admin/UserManager.jsx";
+import ScheduleManager from "./pages/Admin/ScheduleManager.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -42,11 +47,17 @@ const App = () => {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute role="admin">
-                <AdminDashboard />
-              </ProtectedRoute>
+              // <ProtectedRoute role="admin">
+              <AdminLayout />
+              // </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path='course' element={<CourseManager />} />
+            <Route path='user' element={<UserManager />} />
+            <Route path='enrollment' element={<EnrollmentManager />} />
+            <Route path='schedule' element={<ScheduleManager />} />
+          </Route>
 
 
           <Route path="/Courses" element={<Course />} />
