@@ -1,4 +1,5 @@
 import { getToken } from "../utils/Auth.js";
+import axiosClient from '../utils/axiosClient.js'
 
 export const fetchData = () => {
     const token = getToken();
@@ -8,4 +9,12 @@ export const fetchData = () => {
             Authorization: `Bearer ${token}`,
         }
     })
+}
+
+export const getUserProfile = () => {
+    return axiosClient.get('/users/profile')
+}
+
+export const getMyCourses = () => {
+    return axiosClient.get('/courses/my-course')
 }

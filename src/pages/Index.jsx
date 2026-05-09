@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { BsCheckAll } from "react-icons/bs";
-import element1 from "../../public/Images/element-01.png";
-import element2 from "../../public/Images/element-02.png";
-import element3 from "../../public/Images/element-03.png";
-import element4 from "../../public/Images/element-04.png";
-import element5 from "../../public/Images/element-05.png";
-import element6 from "../../public/Images/element-06.png";
+import element1 from "../../src/assets/Images/element-01.png";
+import element2 from "../../src/assets/Images/element-02.png";
+import element3 from "../../src/assets/Images/element-03.png";
+import element4 from "../../src/assets/Images/element-04.png";
+import element5 from "../../src/assets/Images/element-05.png";
+import element6 from "../../src/assets/Images/element-06.png";
 
-import about1 from "../../public/Images/about-img1.png";
-import about2 from "../../public/Images/about-img2.png";
-import user from "../../public/Images/user.png";
-import aboutimage from "../../public/Images/about-image.jpg";
+import about1 from "../../src/assets/Images/about-img1.png";
+import about2 from "../../src/assets/Images/about-img2.png";
+import user from "../../src/assets/Images/user.png";
+import aboutimage from "../../src/assets/Images/about-image.jpg";
 
-import whychoose from "../../public/Images/why-choose-us-image.jpg";
+import whychoose from "../../src/assets/Images/why-choose-us-image.jpg";
 
-import featureicon1 from "../../public/Images/feature-icon1.png";
-import featureicon2 from "../../public/Images/feature-icon2.png";
-import featureicon3 from "../../public/Images/feature-icon3.png";
+import featureicon1 from "../../src/assets/Images/feature-icon1.png";
+import featureicon2 from "../../src/assets/Images/feature-icon2.png";
+import featureicon3 from "../../src/assets/Images/feature-icon3.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -29,10 +29,19 @@ import {
 
 import { Link } from "react-router-dom";
 
-import article1 from "../../public/Images/articles-01.jpg";
-import article2 from "../../public/Images/articles-02.jpg";
-import article3 from "../../public/Images/articles-03.jpg";
+import article1 from "../../src/assets/Images/articles-01.jpg";
+import article2 from "../../src/assets/Images/articles-02.jpg";
+import article3 from "../../src/assets/Images/articles-03.jpg";
 import axios from "axios";
+
+const imageModules = import.meta.glob("../assets/Images/*", { eager: true });
+
+const getLocalImage = (courseImage) => {
+  if (!courseImage) return "";
+  const filename = courseImage.split("/").pop();
+  const key = Object.keys(imageModules).find((k) => k.includes(filename));
+  return key ? imageModules[key].default : courseImage;
+};
 
 const Index = () => {
   const [courses, setCourses] = useState([]);
@@ -52,6 +61,7 @@ const Index = () => {
     };
     fetchCourse();
   }, []);
+
   return (
     <div>
       {/* Hero */}
@@ -433,9 +443,9 @@ const Index = () => {
 
         {/* Category Filter */}
         <div className="flex flex-wrap gap-3 my-8 bg-white p-5 rounded-xl shadow-xl">
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <button
-              key={category}
+              key={index}
               onClick={() => setActiveCategory(category)}
               className={`px-4 py-3 rounded-full text-sm font-medium transition cursor-pointer shadow-md ${activeCategory === category
                 ? "bg-blue-600 text-white"
@@ -448,71 +458,92 @@ const Index = () => {
         </div>
 
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.length > 0 ? (
-            courses.map((course) => (
-              <div
-                key={course._id}
-                className="bg-white p-3 rounded-xl group hover:shadow-lg transition relative"
-              >
-                {course.title}
+            courses
+              .filter(
+                (course) =>
+                  activeCategory === "All" ||
+                  course.category === activeCategory
+              )
+              .map((course) => (
+                <div
+                  key={course._id}
+                  className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 group flex flex-col"
+                >
+                  <div className="relative overflow-hidden h-60">
+                    <img
+                      src={getLocalImage(course.courseImage)}
+                      alt={course.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
 
-                <div className="h-[230px] rounded-xl overflow-hidden relative bg-gray-200">
-                  <div className="absolute inset-0 animate-pulse bg-gray-200"></div>
-                  <img
-                    src={course.courseImage}
-                    alt={course.title}
-                    loading="lazy"
-                    className="relative z-10 group-hover:scale-110 transition duration-500 h-full w-full object-cover"
-                    onLoad={(e) => {
-                      e.target.previousSibling.style.display = "none";
-                    }}
-                  />
-                </div>
-
-                <div className="p-3">
-                  <h4 className="text-[#222e48] font-bold sm:text-xl hover:text-[#006dca] transition-colors duration-500">
-                    {course.title}
-                  </h4>
-                  <div className="flex justify-between items-center my-2">
-                    <span>
-                      <i className="bi bi-camera-video pe-2"></i>
-                      {course.lessons} Lessons
-                    </span>
-                    <span>
-                      <i className="bi bi-bar-chart pe-2"></i>
-                      {course.level}
+                    <span className="absolute top-4 left-4 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
+                      {course.category}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center my-2">
-                    <span>
-                      <i className="bi bi-star-fill text-yellow-400 pe-2"></i>
-                      {course.rating} ({course.reviews})
-                    </span>
-                    <div className="flex items-center">
+
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-2xl font-bold text-[#222e48] mb-3 hover:text-[#076dcb] transition-colors line-clamp-2">
+                      {course.title}
+                    </h3>
+
+                    <div className="flex justify-between items-center text-gray-600 text-sm mb-4">
+                      <span className="flex items-center gap-2">
+                        <i className="bi bi-camera-video"></i>
+                        {course.lessons} Lessons
+                      </span>
+
+                      <span className="flex items-center gap-2">
+                        <i className="bi bi-bar-chart"></i>
+                        {course.level}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="flex items-center gap-2">
+                        <i className="bi bi-star-fill text-yellow-400"></i>
+
+                        <span className="font-medium">
+                          {course.rating}
+                        </span>
+
+                        <span className="text-gray-500 text-sm">
+                          ({course.reviews} Reviews)
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 border-t border-dashed pt-4 mb-5">
                       <img
-                        src={course.instructorImage}
+                        src={getLocalImage(course.instructorImage)}
                         alt={course.instructor}
-                        className="rounded-full h-10 w-10 object-cover me-2"
+                        className="w-12 h-12 rounded-full object-cover border"
                       />
-                      <span>{course.instructor}</span>
+
+                      <div>
+                        <p className="text-sm text-gray-500">
+                          Instructor
+                        </p>
+
+                        <h4 className="font-semibold text-[#222e48]">
+                          {course.instructor}
+                        </h4>
+                      </div>
+                    </div>
+
+                    <div className="mt-auto flex justify-between items-center">
+                      <h2 className="text-3xl font-bold text-[#f37739]">
+                        ${course.price}
+                      </h2>
+
+                      <button className="bg-[#076dcb] hover:bg-black text-white px-5 py-2 rounded-full text-sm transition-all duration-300">
+                        Enroll Now
+                      </button>
                     </div>
                   </div>
-                  <div className="border-t-2 border-dotted pt-5 flex justify-between items-center">
-                    <h4 className="text-[#f37739] text-2xl font-semibold">
-                      ${course.price}
-                    </h4>
-                    <button
-                      className="text-[#076dcd] hover:text-black font-medium cursor-pointer px-5 py-3 rounded-full w-fit text-sm transition-colors duration-300"
-                      type="button"
-                    >
-                      {course.enrollLink}{" "}
-                      <i className="bi bi-arrow-up-right ps-2"></i>
-                    </button>
-                  </div>
                 </div>
-              </div>
-            ))
+              ))
           ) : (
             <p className="col-span-full text-center text-gray-600">
               No course available

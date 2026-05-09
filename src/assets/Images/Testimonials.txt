@@ -10,4 +10,6 @@
             rating: 4.5,
             text: `"I was initially skeptical about online learning, but changed my perspective completely. The courses are well-designed, and the flexibility to learn at my own pace is invaluable."`,
             author: "Sarah L.",
+        }
+    ]
            

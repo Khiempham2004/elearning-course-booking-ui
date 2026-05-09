@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
 
-import element1 from "../../../public/Images/element-01.png";
-import element2 from "../../../public/Images/element-02.png";
-import element3 from "../../../public/Images/element-03.png";
-import element4 from "../../../public/Images/element-04.png";
-import element5 from "../../../public/Images/element-05.png";
-import learningImage from "../../../public/Images/learning_image.png";
-// import axios from "axios";
+import element1 from "../../assets/Images/element-01.png";
+import element2 from "../../assets/Images/element-02.png";
+import element3 from "../../assets/Images/element-03.png";
+import element4 from "../../assets/Images/element-04.png";
+import element5 from "../../assets/Images/element-05.png";
+import learningImage from "../../assets/Images/learning_image.png";
+
 import { register } from "../../service/auth.service.js";
 
 const SignUp = () => {
@@ -45,7 +45,7 @@ const SignUp = () => {
         email: formData.email,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
-        role: formData.role || "student",
+        role: formData.role || "User",
       });
       // console.log(res.data);
 
@@ -102,12 +102,12 @@ const SignUp = () => {
         <img
           src={element5}
           alt="shape"
-          className="absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape"
-          className="absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+          className="absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
         />
       </div>
 
@@ -140,7 +140,7 @@ const SignUp = () => {
                 name="name"
                 placeholder="Enter your name..."
                 required
-                className="h-[45px] border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
+                className="h-11.25 border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
               />
             </div>
 
@@ -156,7 +156,7 @@ const SignUp = () => {
                 name="email"
                 placeholder="Enter your email..."
                 required
-                className="h-[45px] border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
+                className="h-11.25 border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
               />
             </div>
 
@@ -172,7 +172,7 @@ const SignUp = () => {
                 name="password"
                 placeholder="Enter your password..."
                 required
-                className="h-[45px] border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
+                className="h-11.25 border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
               />
             </div>
 
@@ -188,7 +188,7 @@ const SignUp = () => {
                 name="confirmPassword"
                 placeholder="Re-enter your password..."
                 required
-                className="h-[45px] border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
+                className="h-11.25 border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
               />
             </div>
 
@@ -198,10 +198,10 @@ const SignUp = () => {
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="h-[45px] border border-[#ebecef] bg-white ps-4 rounded-lg"
+                className="h-11.25 border border-[#ebecef] bg-white ps-4 rounded-lg"
               >
                 <option value="">Chọn role</option>
-                <option value="student">Student</option>
+                <option value="student">User</option>
                 <option value="admin">ADMIN</option>
               </select>
             </div>

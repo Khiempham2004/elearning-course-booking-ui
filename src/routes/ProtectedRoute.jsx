@@ -1,17 +1,21 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { getUser } from "../utils/Auth.js";
 
-const ProtectedRoute = ({ children, role }) => {
-  const user = JSON.parse(localStorage.getItem("user"));
+const ProtectedRoute = ({  roles }) => {
+  const user = getUser();
+
+  console.log('User:', user);
+
   if (!user) {
-    return <Navigate to="/signin" />;
+    return <Navigate to="/signin" replace />;
   }
 
-  if (role && user.role !== role) {
-    return <Navigate to="/" />;
+  if (roles && !roles.includes(user.role?.toLowerCase())) {
+    return <Navigate to="/signin" replace />;
   }
-  console.log(user);
-  
-  return children;
+  // console.log(user);
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

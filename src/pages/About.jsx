@@ -3,23 +3,23 @@ import { faHome } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-import element1 from "../../public/Images/element-01.png";
-import element2 from "../../public/Images/element-02.png";
-import element3 from "../../public/Images/element-03.png";
-import element4 from "../../public/Images/element-04.png";
-import element5 from "../../public/Images/element-05.png";
-import element6 from "../../public/Images/element-06.png";
+import element1 from "../../src/assets/Images/element-01.png";
+import element2 from "../../src/assets/Images/element-02.png";
+import element3 from "../../src/assets/Images/element-03.png";
+import element4 from "../../src/assets/Images/element-04.png";
+import element5 from "../../src/assets/Images/element-05.png";
+import element6 from "../../src/assets/Images/element-06.png";
 
-import featuresImage1 from "../../public/Images/features-icon1.png";
-import featuresImage2 from "../../public/Images/features-icon2.png";
-import featuresImage3 from "../../public/Images/features-icon3.png";
+import featuresImage1 from "../../src/assets/Images/features-icon1.png";
+import featuresImage2 from "../../src/assets/Images/features-icon2.png";
+import featuresImage3 from "../../src/assets/Images/features-icon3.png";
 
-import whychooseImage from "../../public/Images/about-img.png";
+import whychooseImage from "../../src/assets/Images/about-img.png";
 
-import choseImage1 from "../../public/Images/choose-icon1.png";
-import choseImage2 from "../../public/Images/choose-icon2.png";
-import choseImage3 from "../../public/Images/choose-icon3.png";
-import choseImage4 from "../../public/Images/choose-icon4.png";
+import choseImage1 from "../../src/assets/Images/choose-icon1.png";
+import choseImage2 from "../../src/assets/Images/choose-icon2.png";
+import choseImage3 from "../../src/assets/Images/choose-icon3.png";
+import choseImage4 from "../../src/assets/Images/choose-icon4.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -27,11 +27,12 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import testiImage1 from "../../public/Images/testi-img1.png";
-import testiImage2 from "../../public/Images/testi-img2.png";
-import testiImage3 from "../../public/Images/testi-img3.png";
+import testiImage1 from "../../src/assets/Images/testi-img1.png";
+import testiImage2 from "../../src/assets/Images/testi-img2.png";
+import testiImage3 from "../../src/assets/Images/testi-img3.png";
 
-import quoteImage from '../../public/Images/quote-icon.png';
+import quoteImage from '../../src/assets/Images/quote-icon.png';
+import { BsCheckAll } from "react-icons/bs";
 
 const About = () => {
   const testimonials = [
@@ -60,7 +61,7 @@ const About = () => {
 
   return (
     <div>
-      <div className="section-banner bg-[#f3f9ff] h-[400px] py-[50px] lg:py-[90px] flex flex-col justify-center items-center relative">
+      <div className="section-banner bg-[#f3f9ff] h-100 py-12.5 lg:py-22.5 flex flex-col justify-center items-center relative">
         <h1 className="chakrapetch-font font-bold text-5xl lg:text-6xl mb-5 text-[#222e48]">
           About Us
         </h1>
@@ -235,7 +236,7 @@ const About = () => {
               </div>
             </div>
             <div className="info-section flex items-center gap-2 w-full">
-              <div className="info-icons bg-white text-[#006dca] min-w-[50px] flex justify-center items-center text-2xl rounded-full">
+              <div className="info-icons bg-white text-[#006dca] min-w-12.5 flex justify-center items-center text-2xl rounded-full">
                 <i className="bi bi-people"></i>
               </div>
               <div className="info-text">
@@ -248,7 +249,7 @@ const About = () => {
               </div>
             </div>
             <div className="info-section flex items-center gap-2 w-full">
-              <div className="info-icons bg-white text-[#006dca] min-w-[50px] flex justify-center items-center text-2xl rounded-full">
+              <div className="info-icons bg-white text-[#006dca] min-w-12.5 flex justify-center items-center text-2xl rounded-full">
                 <i className="bi bi-clock"></i>
               </div>
               <div className="info-text">
@@ -259,7 +260,7 @@ const About = () => {
               </div>
             </div>
             <div className="info-section flex items-center gap-2 w-full">
-              <div className="info-icons bg-white text-[#006dca] min-w-[50px] flex justify-center items-center text-2xl rounded-full">
+              <div className="info-icons bg-white text-[#006dca] min-w-12.5 flex justify-center items-center text-2xl rounded-full">
                 <i className="bi bi-award"></i>
               </div>
               <div className="info-text">
@@ -275,7 +276,7 @@ const About = () => {
 
       <div className="flex lg:flex-row flex-col justify-between items-center gap-10 px-[2%] lg:px-[12%] sm:px-[8%] py-[50px] lg:py-[90px] relative">
         {/* Image (Left Side) */}
-        <div className="w-full lg:w-1/2 h-[500px] overflow-hidden group rounded-lg">
+        <div className="w-full lg:w-1/2 h-125 overflow-hidden group rounded-lg">
           <img
             src={whychooseImage}
             alt="why-choose-us"
@@ -298,23 +299,23 @@ const About = () => {
             in the power of knowledge to...
           </p>
 
-          {/* <ul className="flex flex-col gap-6 pb-6">
-                  <li className="flex items-center gap-2 text-sm text-[#222e48]">
-                    <BsCheckAll className="size-7 text-[#076dcd]" />
-                    9/10 Average Satisfaction Rate
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-[#222e48]">
-                    <BsCheckAll className="size-7 text-[#076dcd]" />
-                    96% Completion Rate
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-[#222e48]">
-                    <BsCheckAll className="size-7 text-[#076dcd]" />
-                    Friendly Environment & Expert Teacher
-                  </li>
-                </ul> */}
+          <ul className="flex flex-col gap-6 pb-6">
+            <li className="flex items-center gap-2 text-sm text-[#222e48]">
+              <BsCheckAll className="size-7 text-[#076dcd]" />
+              9/10 Average Satisfaction Rate
+            </li>
+            <li className="flex items-center gap-2 text-sm text-[#222e48]">
+              <BsCheckAll className="size-7 text-[#076dcd]" />
+              96% Completion Rate
+            </li>
+            <li className="flex items-center gap-2 text-sm text-[#222e48]">
+              <BsCheckAll className="size-7 text-[#076dcd]" />
+              Friendly Environment & Expert Teacher
+            </li>
+          </ul>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-3 pb-10">
             <div className="about-section flex items-center gap-5">
-              <div className="about-sec-img min-h-[50px] min-w-[50px] p-4 rounded-full border-gray-100 shadow-lg flex items-center justify-center">
+              <div className="about-sec-img min-h-12.5 min-w-12.5 p-4 rounded-full border-gray-100 shadow-lg flex items-center justify-center">
                 <img src={choseImage1} alt="" />
               </div>
               <div className="about-sec-content">
@@ -327,7 +328,7 @@ const About = () => {
               </div>
             </div>
             <div className="about-section flex items-center gap-5">
-              <div className="about-sec-img min-h-[50px] min-w-[50px] p-4 rounded-full border-gray-100 shadow-lg flex items-center justify-center">
+              <div className="about-sec-img min-h-12.5 min-w-12.5 p-4 rounded-full border-gray-100 shadow-lg flex items-center justify-center">
                 <img src={choseImage2} alt="" />
               </div>
               <div className="about-sec-content">
@@ -340,7 +341,7 @@ const About = () => {
               </div>
             </div>
             <div className="about-section flex items-center gap-5">
-              <div className="about-sec-img min-h-[50px] min-w-[50px] p-4 rounded-full border-gray-100 shadow-lg flex items-center justify-center">
+              <div className="about-sec-img min-h-12.5 min-w-12.5 p-4 rounded-full border-gray-100 shadow-lg flex items-center justify-center">
                 <img src={choseImage3} alt="" />
               </div>
               <div className="about-sec-content">
@@ -353,7 +354,7 @@ const About = () => {
               </div>
             </div>
             <div className="about-section flex items-center gap-5">
-              <div className="about-sec-img min-h-[50px] min-w-[50px] p-4 rounded-full border-gray-100 shadow-lg flex items-center justify-center">
+              <div className="about-sec-img min-h-12.5 min-w-12.5 p-4 rounded-full border-gray-100 shadow-lg flex items-center justify-center">
                 <img src={choseImage4} alt="" />
               </div>
               <div className="about-sec-content">
@@ -378,7 +379,6 @@ const About = () => {
           </div>
         </div>
 
-        {/* Shapes */}
         <img
           src={element2}
           alt="shape-image"
@@ -387,12 +387,12 @@ const About = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape-5 absolute right-30 top-70 w-[20px] h-[20px] sm:flex hidden"
+          className="element5 hero-shape-5 absolute right-30 top-70 w-5 h-5 sm:flex hidden"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape-6 absolute left-10 bottom-50 w-[25px] h-[25px] sm:flex hidden"
+          className="element5 hero-shape-6 absolute left-10 bottom-50 w-6.25 h-6.25 sm:flex hidden"
         />
         <img
           src={element6}
@@ -401,7 +401,7 @@ const About = () => {
         />
       </div>
       {/* Testmonials */}
-      <div className="texti px-[2%] lg:px-[12%] sm:px-[8%] lg:py-[90px] flex flex-col gap-3 relative">
+      <div className="texti px-[2%] lg:px-[12%] sm:px-[8%] lg:py-22.5 flex flex-col gap-3 relative">
         <div className="feature-content z-2 flex flex-col text-center w-full lg:w-[60%] mx-auto xl:w-[50%]">
           <span className="text-[#076dcb] font-semibold sora-font pb-1">
             <i className="bi bi-book pe-2"></i>
@@ -440,10 +440,10 @@ const About = () => {
                 {Array.from({ length: 5 }, (_, i) => (
                   <i
                     className={`bi ${i < Math.floor(testi.ratings)
-                        ? "bi-star-fill"
-                        : i < testi.ratings
-                          ? "bi-star-half"
-                          : "bi-star"
+                      ? "bi-star-fill"
+                      : i < testi.ratings
+                        ? "bi-star-half"
+                        : "bi-star"
                       }`}
                     key={i}
                   ></i>
@@ -499,12 +499,12 @@ const About = () => {
       <img
         src={element5}
         alt="shape-image"
-        className="element5 hero-shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+        className="element5 hero-shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
       />
       <img
         src={element5}
         alt="shape-image"
-        className="element5 hero-shape5 absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+        className="element5 hero-shape5 absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
       />
     </div>
   );

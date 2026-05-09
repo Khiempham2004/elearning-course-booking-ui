@@ -1,6 +1,24 @@
+import { message } from "antd";
 import React from "react";
+import { getToken } from "../../utils/Auth";
+import axios from "axios";
 
 const Enrollment = () => {
+  const handleEnroll = async (courseId) => {
+    try {
+      const tokenEnroll = getToken();
+      await axios.post('http://localhost:3000/api/enrollments', { courseId }, {
+        headers: {
+          Authorization: `Bearer ${tokenEnroll}`
+        }
+      });
+      message('Đăng ký thành công');
+    } catch (error) {
+      console.log(error);
+      message.error(error);
+    }
+  }
+
   return (
     <div>
       <div className="max-w-lg mx-auto bg-white shadow-xl rounded-xl p-30">
@@ -20,7 +38,7 @@ const Enrollment = () => {
             <option>Digital Marketing</option>
           </select>
 
-          <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">
+          <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700" onClick={() => handleEnroll()}>
             Enroll Now
           </button>
         </form>

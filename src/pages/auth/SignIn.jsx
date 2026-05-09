@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import element1 from "../../../public/Images/element-01.png";
-import element2 from "../../../public/Images/element-02.png";
-import element3 from "../../../public/Images/element-03.png";
-import element4 from "../../../public/Images/element-04.png";
-import element5 from "../../../public/Images/element-05.png";
+import element1 from "../../assets/Images/element-01.png";
+import element2 from "../../assets/Images/element-02.png";
+import element3 from "../../assets/Images/element-03.png";
+import element4 from "../../assets/Images/element-04.png";
+import element5 from "../../assets/Images/element-05.png";
 
 import { Navigate, useNavigate } from "react-router-dom";
-import learningImage from "../../../public/Images/learning_image.png";
+import learningImage from "../../assets/Images/learning_image.png";
 import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
-// import axios from "axios";
 import { login } from "../../service/auth.service.js";
+import { message } from "antd";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -35,23 +35,26 @@ const SignIn = () => {
         email: formData.email,
         password: formData.password,
       });
+
       console.log("Data login : ", res);
 
-      const user = res.data.newUser; // axiosclient trả về trực tiếp
+      const user = res.data.newUser; //axios client đã tự động thêm token vào header nên không cần lấy token từ response nữa
       const token = res.data.token;
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      const role = user?.role?.trim().toLowerCase();
 
-      if (user.role === "admin") {
+      if (role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/student");
+        navigate("/users");
       }
-      alert("SingIn thành công!");
+      console.log('Login success');
+      message.success('SignIn success');
     } catch (error) {
       console.log(error);
-      alert("Email hoặc Password sai");
+      message.error('Email hoặc password sai')
     }
   };
 
@@ -99,16 +102,16 @@ const SignIn = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5  shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="element5  shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5  shape5 absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+          className="element5  shape5 absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
         />
       </div>
 
-      <div className="px-[2%] lg:px-[12%] sm:px-[8%] py-[50px] lg:py-[80px] w-full flex flex-col lg:flex-row gap-10 justify-between items-center xl:gap-20 relative">
+      <div className="px-[2%] lg:px-[12%] sm:px-[8%] py-12.5 lg:py-20 w-full flex flex-col lg:flex-row gap-10 justify-between items-center xl:gap-20 relative">
         <div className="lg:w-1/2 w-full">
           <form
             onSubmit={handleSubmitLogin}
@@ -133,7 +136,7 @@ const SignIn = () => {
                 type="email"
                 placeholder="Enter your email..."
                 required
-                className="h-[45px] border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
+                className="h-11.25 border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
               />
             </div>
 
@@ -147,7 +150,7 @@ const SignIn = () => {
                 type="password"
                 placeholder="Enter your password..."
                 required
-                className="h-[45px] border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
+                className="h-11.25 border border-[#ebecef] bg-white ps-4 rounded-lg outline-none focus:ring-2 focus:ring-[#076dcd]"
               />
             </div>
 
@@ -185,7 +188,7 @@ const SignIn = () => {
 
         {/* Image Section */}
         <div className="lg:w-1/2 w-full flex justify-center">
-          <div className="learning-image bg-[#f3f9ff] rounded-full w-[300px] sm:w-[450px] lg:w-[550px] aspect-square p-6 flex items-center justify-center shadow-inner">
+          <div className="learning-image bg-[#f3f9ff] rounded-full w-75 sm:w-112.5 lg:w-137.5 aspect-square p-6 flex items-center justify-center shadow-inner">
             <img
               src={learningImage}
               alt="learning-image"

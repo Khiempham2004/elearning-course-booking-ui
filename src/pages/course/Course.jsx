@@ -1,29 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import element1 from "../../../public/Images/element-01.png";
-import element2 from "../../../public/Images/element-02.png";
-import element3 from "../../../public/Images/element-03.png";
-import element4 from "../../../public/Images/element-04.png";
-import element5 from "../../../public/Images/element-05.png";
-import element6 from "../../../public/Images/element-06.png";
+import element1 from "../../assets/Images/element-01.png";
+import element2 from "../../assets/Images/element-02.png";
+import element3 from "../../assets/Images/element-03.png";
+import element4 from "../../assets/Images/element-04.png";
+import element5 from "../../assets/Images/element-05.png";
+import element6 from "../../assets/Images/element-06.png";
 
 
 import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
-// import { getCourse } from "../../service/course.service.js";
 import axios from "axios";
+
+const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
+
+const getLocalImage = (courseImage) => {
+  if (!courseImage) return "";
+  const filename = courseImage.split("/").pop();
+  const key = Object.keys(imageModules).find((k) => k.includes(filename));
+  return key ? imageModules[key].default : courseImage;
+};
 
 const Course = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy, setSortBy] = useState("Newest");
-  const [courses, setCourse] = useState([]);
+  const [courses, setCourses] = useState([]);
+  // const [loading, setLoading] = useState(true);
+
   const categories = ["All", ...new Set(courses.map((c) => c.category))];
 
-  const filterCourses =
-    activeCategory === "All"
-      ? courses
-      : courses.filter((c) => c.category === activeCategory);
+  const filteredCourses = activeCategory === "All"
+    ? [...courses]
+    : courses.filter((c) => c.category === activeCategory);
 
+  const sortedCourses = [...filteredCourses].sort((a, b) => {
+    switch (sortBy) {
+      case "Newest":
+        return new Date(b.createdAt) - new Date(a.createdAt);
+
+      case "Oldest":
+        return new Date(a.createdAt) - new Date(b.createdAt);
+
+      case "PriceLowHigh":
+        return a.price - b.price;
+
+      case "PriceHighLow":
+        return b.price - a.price;
+
+      default:
+        return 0;
+    }
+  })
   const totalCourse = courses.length;
 
   useEffect(() => {
@@ -31,15 +58,17 @@ const Course = () => {
       try {
         const res = await axios.get('http://localhost:3000/api/courses');
         console.log(res.data);
-        setCourse(res.data.data);
+
+        setCourses(res.data.data);
+
         localStorage.setItem("course", JSON.stringify(res.data.data));
       } catch (error) {
         console.log(error);
       }
     };
-
     fetchCourse();
   }, []);
+
   return (
     <div>
       <div className="section-banner bg-[#f3f9ff] h-100 py-12.5 lg:py-22.5 flex flex-col justify-center items-center relative">
@@ -64,7 +93,7 @@ const Course = () => {
         <img
           src={element1}
           alt="shape-image"
-          className="element1  shape1 absolute left-30 top-30 object-contain hidden md:block"
+        // className="element1  shape1 absolute left-30 top-30 object-contain hidden md:block"
         />
         <img
           src={element2}
@@ -121,34 +150,32 @@ const Course = () => {
           </div>
         </div>
 
-        {/* Category Filter */}
         <div className="flex flex-wrap gap-3 my-8 bg-white p-5 rounded-xl shadow-xl">
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <button
-              key={category}
+              key={category, index}
               onClick={() => setActiveCategory(category)}
-              className={`px-4 py-3 rounded-full text-sm font-medium transition cursor-pointer shadow-md ${
-                activeCategory === category
-                  ? "bg-blue-600 text-white"
-                  : "bg-[#f3f9ff] text-[#404a60]"
-              }`}
+              className={`px-4 py-3 rounded-full text-sm font-medium transition cursor-pointer shadow-md ${activeCategory === category
+                ? "bg-blue-600 text-white"
+                : "bg-[#f3f9ff] text-[#404a60]"
+                }`}
             >
               {category}
             </button>
           ))}
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filterCourses.length > 0 ? (
-            filterCourses.map((course) => (
+          {sortedCourses.length > 0 ? (
+            sortedCourses.map((course) => (
               <div
-                key={course.title}
+                key={course._id}
+                course={course}
                 className="bg-white p-3 rounded-xl group hover:shadow-lg transition relative"
               >
                 <div className="h-57.5 rounded-xl overflow-hidden relative bg-gray-200">
                   <div className="absolute inset-0 animate-pulse bg-gray-200"></div>
                   <img
-                    src= {course.courseImage}
+                    src={getLocalImage(course.courseImage)}
                     alt={course.title}
                     loading="lazy"
                     className="relative z-10 group-hover:scale-110 transition duration-500 h-full w-full object-cover"
@@ -190,13 +217,14 @@ const Course = () => {
                     <h4 className="text-[#f37739] text-2xl font-semibold">
                       ${course.price}
                     </h4>
-                    <button
+                    <Link
                       className="text-[#076dcd] hover:text-black font-medium cursor-pointer px-5 py-3 rounded-full w-fit text-sm transition-colors duration-300"
                       type="button"
+                      to={`/course/${course._id}`}
                     >
-                      {course.enrollLink}{" "}
+                      {/* {course.enrollLink}{" "} */}Enrollment Now {" "}
                       <i className="bi bi-arrow-up-right ps-2"></i>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

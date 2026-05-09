@@ -23,43 +23,54 @@ import CourseManager from "./pages/Admin/CourseManager.jsx";
 import EnrollmentManager from "./pages/Admin/EnrollmentManager.jsx";
 import UserManager from "./pages/Admin/UserManager.jsx";
 import ScheduleManager from "./pages/Admin/ScheduleManager.jsx";
+import UserLayout from "./layouts/UserLayout.jsx";
+import UserProfile from "./pages/User/UserProfile.jsx";
+import UserCourse from "./pages/User/UserCourse.jsx";
+import UserSettings from "./pages/User/UserSettings.jsx";
+import UserDashboard from "./pages/User/UserDashboard.jsx";
+import AdminRoute from "./routes/AdminRoute.jsx";
 
 const App = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const isAdminPage = location.pathname.startsWith("/admin");
+  const isUserPage = location.pathname.startsWith('/user');
+
 
   return (
     <>
       <div className={isHome ? "home-page" : ""}>
-        {!isAdminPage && <Navbar />}
+        {!isAdminPage && !isUserPage && <Navbar />}
         <Routes>
           <Route path="/" element={<Index />} />
 
-          <Route
-            path="/student"
-            element={
-              <ProtectedRoute role="student">
-
-              </ProtectedRoute>
-            }
-          />
+          {/* ADMIN */}
           <Route
             path="/admin"
             element={
-              // <ProtectedRoute role="admin">
-              <AdminLayout />
-              // </ProtectedRoute>
+              <AdminRoute roles={["admin", "teacher"]}>
+                <AdminLayout />
+              </AdminRoute>
             }
           >
             <Route index element={<AdminDashboard />} />
             <Route path='course' element={<CourseManager />} />
-            <Route path='user' element={<UserManager />} />
             <Route path='enrollment' element={<EnrollmentManager />} />
             <Route path='schedule' element={<ScheduleManager />} />
+            <Route path='user' element={<UserManager />} />
           </Route>
 
+          {/* User */}
+          <Route element={<ProtectedRoute roles={["user"]} />}>
+            <Route path="/users" element={<UserLayout />}>
+              <Route index element={<UserDashboard />} />
+              <Route path="profile" element={<UserProfile />} />
+              <Route path="my-courses" element={<UserCourse />} />
+              <Route path="settings" element={<UserSettings />} />
+            </Route>
+          </Route>
 
+          {/* Pages */}
           <Route path="/Courses" element={<Course />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
@@ -70,7 +81,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
         </Routes>
 
-        {!isAdminPage && <Footer />}
+        {!isAdminPage && !isUserPage && <Footer />}
       </div>
     </>
   );
