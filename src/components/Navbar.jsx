@@ -77,13 +77,13 @@ const Navbar = () => {
 
         {/* Right side */}
         <div className="nav-right flex gap-2 items-center">
-          <div className="user text-xl min-h-[40px] bg-white hover:bg-[#006dca] hover:text-white transition-colors duration-300 shadow-xl p-2 flex justify-center items-center rounded-xl cursor-pointer">
+          <div className="user text-xl min-h-10 bg-white hover:bg-[#006dca] hover:text-white transition-colors duration-300 shadow-xl p-2 flex justify-center items-center rounded-xl cursor-pointer">
             <Link to="/SignIn">
               <FontAwesomeIcon icon={faCircleUser} />
             </Link>
           </div>
           <div
-            className="open-sidebar min-h-[40px] min-w-[40px] text-xl bg-white hover:bg-[#006dca] hover:text-white transition-colors duration-300 shadow-xl p-1 justify-center items-center rounded-full flex xl:hidden"
+            className="open-sidebar min-h-10 min-w-10 text-xl bg-white hover:bg-[#006dca] hover:text-white transition-colors duration-300 shadow-xl p-1 justify-center items-center rounded-full flex xl:hidden"
             onClick={() => setIsOpen(true)}
           >
             <FontAwesomeIcon icon={faBars} />

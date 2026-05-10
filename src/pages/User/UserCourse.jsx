@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import {
     Table,
@@ -11,8 +10,17 @@ import {
     Card,
     Typography,
 } from 'antd';
+import { getMyCourses } from '../../service/user.service';
 
 const { Title, Text } = Typography;
+const imageModules = import.meta.glob("../../assets/Images/*.{png,jpg,jpeg,webp}", { eager: true });
+
+const getLocalImage = (courseImage) => {
+    if (!courseImage) return "";
+    const filename = courseImage.split("/").pop();
+    const key = Object.keys(imageModules).find((k) => k.includes(filename));
+    return key ? imageModules[key].default : "";
+};
 
 const UserCourse = () => {
     const [courses, setCourses] = useState([]);
@@ -23,19 +31,13 @@ const UserCourse = () => {
             setLoading(true);
 
             const token = localStorage.getItem('token');
+            console.log(token);
 
-            const res = await axios.get(
-                'http://localhost:3000/api/courses',
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+
+            const res = await getMyCourses(token);
 
             console.log('API:', res.data.courses);
 
-            // FIX
             setCourses(res.data.courses || []);
 
         } catch (error) {
@@ -52,13 +54,13 @@ const UserCourse = () => {
 
     const columns = [
         {
-            title: 'Image',
-            dataIndex: 'image',
-            key: 'image',
+            title: 'Course Image',
+            dataIndex: 'courseImage',
+            key: 'courseImage',
 
-            render: (image) => (
+            render: (courseImage) => (
                 <Image
-                    src={`http://localhost:3000/${image}`}
+                    src={getLocalImage(courseImage)}
                     width={100}
                     height={60}
                     style={{
@@ -80,13 +82,13 @@ const UserCourse = () => {
         },
 
         {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
+            title: 'lessons',
+            dataIndex: 'lessons',
+            key: 'lessons',
 
-            render: (description) => (
+            render: (lessons) => (
                 <Text type="secondary">
-                    {description || 'Không có mô tả'}
+                    {lessons || 'Không có mô tả'}
                 </Text>
             ),
         },
@@ -98,24 +100,69 @@ const UserCourse = () => {
 
             render: (price) => (
                 <Text strong style={{ color: '#1677ff' }}>
-                    {price
-                        ? `${price.toLocaleString()} VND`
-                        : 'Free'}
+                    ${price}
                 </Text>
             ),
         },
 
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
+            title: 'level',
+            dataIndex: 'level',
+            key: 'level',
 
-            render: (status) => (
-                <Tag color={status === 'active' ? 'green' : 'orange'}>
-                    {status || 'Unknown'}
+            render: (level) => (
+                <Tag color="blue">
+                    {level}
                 </Tag>
             ),
         },
+        {
+            title: 'rating',
+            dataIndex: 'rating',
+            key: 'rating',
+
+            render: (rating) => (
+                <Tag color="gold">
+                    ⭐ {rating}
+                </Tag>
+            ),
+        },
+        {
+            title: 'reviews',
+            dataIndex: 'reviews',
+            key: 'reviews',
+        },
+        {
+            title: 'Instructor',
+            dataIndex: 'instructor',
+            key: 'instructor',
+            render: (_, record) => (
+                <div style={{ display: 'flex', alignItems: "center" }}>
+                    <Image
+                        src={getLocalImage(record.instructorImage)}
+                        width={40}
+                        height={40}
+                        style={{
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            marginRight: 10,
+                        }}
+                    />
+                    <Text>{record.instructor}</Text>
+                </div>
+            )
+        },
+
+        {
+            title: "Catagory",
+            dataIndex: 'catagory',
+            key: 'catagory',
+            render: (catagory) => (
+                <Tag color='purple'>
+                    {catagory}
+                </Tag>
+            )
+        }
     ];
 
     if (loading) {
@@ -138,7 +185,7 @@ const UserCourse = () => {
         <div
             style={{
                 padding: 24,
-                background: '#f5f7fa',  
+                background: '#f5f7fa',
                 minHeight: '100vh',
             }}
         >

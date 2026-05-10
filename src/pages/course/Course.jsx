@@ -206,9 +206,9 @@ const Course = () => {
                     </span>
                     <div className="flex items-center">
                       <img
-                        src={course.instructorImage}
-                        alt={course.Instructor}
-                        className="rounded-full h-10 w-10 object-cover me-2"
+                        src={getLocalImage(course.instructorImage)}
+                        alt={course.instructor}
+                        className="w-12 h-12 rounded-full object-cover border"
                       />
                       <span>{course.instructor}</span>
                     </div>
@@ -222,7 +222,7 @@ const Course = () => {
                       type="button"
                       to={`/course/${course._id}`}
                     >
-                      {/* {course.enrollLink}{" "} */}Enrollment Now {" "}
+                      Enrollment Now {" "}
                       <i className="bi bi-arrow-up-right ps-2"></i>
                     </Link>
                   </div>

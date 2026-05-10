@@ -63,7 +63,6 @@ const UserManager = () => {
         fetchUsers();
     }, []);
 
-    // ================= DELETE USER =================
     const handleDelete = async (id) => {
         try {
             const token = localStorage.getItem('token');
@@ -86,7 +85,6 @@ const UserManager = () => {
         }
     };
 
-    // ================= FILTER =================
     const filteredUsers = useMemo(() => {
         return users.filter((item) => {
             const matchSearch =
@@ -117,11 +115,7 @@ const UserManager = () => {
         (item) => item.role === 'teacher'
     ).length;
 
-    const totalStudents = users.filter(
-        (item) => item.role === 'user'
-    ).length;
 
-    // ================= TABLE =================
     const columns = [
         {
             title: 'User',
@@ -156,7 +150,7 @@ const UserManager = () => {
 
                 if (role === 'admin') color = 'red';
                 if (role === 'teacher') color = 'gold';
-                if (role === 'user') color = 'green';
+                if (role === 'User') color = 'green';
 
                 return (
                     <Tag color={color}>
@@ -271,14 +265,6 @@ const UserManager = () => {
                     </Card>
                 </Col>
 
-                <Col xs={24} md={6}>
-                    <Card>
-                        <Statistic
-                            title="Students"
-                            value={totalStudents}
-                        />
-                    </Card>
-                </Col>
             </Row>
 
             {/* FILTER */}
@@ -315,15 +301,14 @@ const UserManager = () => {
                                 Teacher
                             </Option>
 
-                            <Option value="user">
-                                Student
+                            <Option value="User">
+                                User
                             </Option>
                         </Select>
                     </Col>
                 </Row>
             </Card>
 
-            {/* TABLE */}
             <Card>
                 <Table
                     rowKey="_id"

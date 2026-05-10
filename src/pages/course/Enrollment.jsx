@@ -2,20 +2,30 @@ import { message } from "antd";
 import React from "react";
 import { getToken } from "../../utils/Auth";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const Enrollment = () => {
-  const handleEnroll = async (courseId) => {
+  const { courseId } = useParams();
+
+  const handleEnroll = async () => {
     try {
-      const tokenEnroll = getToken();
-      await axios.post('http://localhost:3000/api/enrollments', { courseId }, {
-        headers: {
-          Authorization: `Bearer ${tokenEnroll}`
+      const token = getToken();
+      const res = await axios.post('http://localhost:3000/api/enrollments',
+        {
+          courseId
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-      });
-      message('Đăng ký thành công');
+      );
+      console.log(res.data);
+
+      message.success("Đăng ký thành công")
     } catch (error) {
       console.log(error);
-      message.error(error);
+      message.error("Đăng ký thất bại")
     }
   }
 
@@ -38,7 +48,9 @@ const Enrollment = () => {
             <option>Digital Marketing</option>
           </select>
 
-          <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700" onClick={() => handleEnroll()}>
+          <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
+            onClick={handleEnroll}
+          >
             Enroll Now
           </button>
         </form>

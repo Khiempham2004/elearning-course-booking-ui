@@ -420,11 +420,11 @@ const Index = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element-5 hero-shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="element-5 hero-shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
       </div>
       {/* Courses  */}
-      <div className="courses px-[2%] lg:px-[12%] sm:px-[8%] py-[90px] lg:py-[150px] bg-[#f3f9ff] relative">
+      <div className="courses px-[2%] lg:px-[12%] sm:px-[8%] py-22.5 lg:py-37.5 bg-[#f3f9ff] relative">
         <div className="flex justify-between items-center flex-col lg:flex-row w-full gap-3">
           <h2 className="text-[#222e48] text-2xl sm:text-3xl md:text-4xl font-medium lg:w-1/2">
             Explore 4,000+ Free Online Courses For Students
@@ -574,12 +574,12 @@ const Index = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute right-30 top-70 w-[25px] h-[25px] object-contain hidden sm:flex"
+          className="element5 hero-shape5 absolute right-30 top-70   object-contain hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape6 absolute left-10 bottom-50 w-[25px] h-[25px] object-contain hidden sm:flex"
+          className="element5 hero-shape6 absolute left-10 bottom-50 w-6.25 h-6.25 object-contain hidden sm:flex"
         />
         <img
           src={element6}
@@ -590,7 +590,7 @@ const Index = () => {
       {/* Why Choose Us */}
       <div className="why-choose-us flex lg:flex-row flex-col justify-between items-center gap-10 px-[2%] lg:px-[12%] sm:px-[8%] py-[50px] lg:py-[90px] relative">
         {/* Image (Left Side) */}
-        <div className="why-choose-us-image w-full lg:w-1/2 h-[500px] overflow-hidden group rounded-lg">
+        <div className="why-choose-us-image w-full lg:w-1/2 h-125 overflow-hidden group rounded-lg">
           <img
             src={whychoose}
             alt="why-choose-us"
@@ -648,12 +648,12 @@ const Index = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape-5 absolute right-30 top-70 w-[20px] h-[20px] sm:flex hidden"
+          className="element5 hero-shape-5 absolute right-30 top-70 w-5 h-5 sm:flex hidden"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape-6 absolute left-10 bottom-50 w-[25px] h-[25px] sm:flex hidden"
+          className="element5 hero-shape-6 absolute left-10 bottom-50 w-6.25 h-6.25 sm:flex hidden"
         />
         <img
           src={element6}
@@ -662,7 +662,7 @@ const Index = () => {
         />
       </div>
       {/* Articles */}
-      <div className="articles bg-[#f3f9ff] px-[#2%] lg:px-[12%] sm:px-[8%] py-[50px] lg:py-[90px] relative gap-10 flex flex-col">
+      <div className="articles bg-[#f3f9ff] px-[#2%] lg:px-[12%] sm:px-[8%] py-12.5 lg:py-22.5 relative gap-10 flex flex-col">
         <div className="articles-content flex flex-col lg:w-1/2 w-full mx-auto text-center z-2">
           <span className="text-[#076dcb] font-semibold sora-font pb-1">
             <i className="bi bi-book pe-2"></i>
@@ -844,12 +844,12 @@ const Index = () => {
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute right-30 top-70 w-[20px] h-[20px] hidden sm:flex"
+          className="element5 hero-shape5 absolute right-30 top-70 w-5 h-5 hidden sm:flex"
         />
         <img
           src={element5}
           alt="shape-image"
-          className="element5 hero-shape5 absolute left-10 bottom-50 w-[25px] h-[25px] hidden sm:flex"
+          className="element5 hero-shape5 absolute left-10 bottom-50 w-6.25 h-6.25 hidden sm:flex"
         />
         <img
           src={element6}

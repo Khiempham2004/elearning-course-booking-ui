@@ -29,6 +29,7 @@ import UserCourse from "./pages/User/UserCourse.jsx";
 import UserSettings from "./pages/User/UserSettings.jsx";
 import UserDashboard from "./pages/User/UserDashboard.jsx";
 import AdminRoute from "./routes/AdminRoute.jsx";
+import CourseDetail from "./pages/course/CourseDetail.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -72,11 +73,12 @@ const App = () => {
 
           {/* Pages */}
           <Route path="/Courses" element={<Course />} />
+          <Route path="/course/:id" element={<CourseDetail />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/About" element={<About />} />
           <Route path="/schedule" element={<Schedule />} />
-          <Route path="/enrollment" element={<Enrollment />} />
+          <Route path="/enrollment/:courseId" element={<Enrollment />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>

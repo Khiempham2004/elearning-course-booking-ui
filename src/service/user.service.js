@@ -15,6 +15,10 @@ export const getUserProfile = () => {
     return axiosClient.get('/users/profile')
 }
 
-export const getMyCourses = () => {
-    return axiosClient.get('/courses/my-course')
+export const getMyCourses = (token) => {
+    return axiosClient.get('/courses/my-course' , {
+        headers : {
+            Authorization : `Bearer ${token}`
+        }
+    })
 }
