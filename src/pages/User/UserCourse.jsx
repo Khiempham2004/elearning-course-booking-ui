@@ -9,9 +9,21 @@ import {
     message,
     Card,
     Typography,
+    Form,
+    Popconfirm,
+    Button,
+    Modal,
+    Input,
+    InputNumber,
+    Upload,
 } from 'antd';
 import { getMyCourses } from '../../service/enrollment.service';
-
+import {
+    createCourse,
+    updateCourse,
+    deleteCourse
+} from '../../service/course.service';
+import { getToken } from '../../utils/Auth';
 const { Title, Text } = Typography;
 const imageModules = import.meta.glob("../../assets/Images/*.{png,jpg,jpeg,webp}", { eager: true });
 
@@ -23,14 +35,18 @@ const getLocalImage = (courseImage) => {
 };
 
 const UserCourse = () => {
+    const [open, setOpening] = useState(false);
+    const [editingCourse, setEditingCourse] = useState(null);
+    const [form] = Form.useForm();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
+    // const [fileList, setFileList] = useState([]);
 
     const fetchCourse = async () => {
         try {
             setLoading(true);
 
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem("token");
             console.log(token);
 
 
@@ -52,6 +68,112 @@ const UserCourse = () => {
         fetchCourse();
     }, []);
 
+    const handleAdd = () => {
+        setEditingCourse(null);
+        form.resetFields();
+        setOpening(true);
+    };
+
+    const handleEditing = (record) => {
+        setEditingCourse(record);
+        form.setFieldsValue({
+            title: record.title,
+            lessons: record.lessons,
+            price: record.price,
+            level: record.level,
+            rating: record.rating,
+            reviews: record.reviews,
+            instructor: record.instructor,
+            catagory: record.catagory,
+        });
+        setOpening(true);
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const token = getToken();
+
+            await deleteCourse(id, token);
+
+            fetchCourse();
+            message.success("Xóa khóa học thành công");
+        } catch (error) {
+            console.log(error);
+            message.error("Xóa thất bại")
+        }
+    }
+
+    const handleSubmit = async (id) => {
+        try {
+            const values = await form.validateFields();
+            const token = getToken();
+            const formData = new FormData();
+
+            formData.append(
+                "title",
+                values.title
+            );
+
+            formData.append(
+                "lessons",
+                values.lessons
+            );
+
+            formData.append(
+                "price",
+                values.price
+            );
+
+            formData.append(
+                "level",
+                values.level
+            );
+
+            formData.append(
+                "rating",
+                values.rating
+            );
+
+            formData.append(
+                "reviews",
+                values.reviews
+            );
+
+            formData.append(
+                "instructor",
+                values.instructor
+            );
+
+            formData.append(
+                "catagory",
+                values.catagory
+            );
+
+
+            if (editingCourse) {
+                const resEdit = await updateCourse(
+                    editingCourse._id,
+                    formData,
+                    token
+                );
+                setCourses(prev => prev.map(course => course.id === id ? resEdit.data : course));
+
+                message.success("Cập nhật khóa học thành công");
+            } else {
+                await createCourse(values, token)
+
+                message.success("Thêm khóa học thành công");
+                fetchCourse();
+            }
+
+            setOpening(false);
+            // form.resetFields();
+        } catch (error) {
+            console.log(error);
+            message.error("Có lỗi xảy ra")
+        }
+    };
+
     const columns = [
         {
             title: 'Course Image',
@@ -60,7 +182,7 @@ const UserCourse = () => {
 
             render: (courseImage) => (
                 <Image
-                    src={getLocalImage(courseImage)}
+                    src={getLocalImage(courseImage) || courseImage}
                     width={100}
                     height={60}
                     style={{
@@ -162,7 +284,27 @@ const UserCourse = () => {
                     {catagory}
                 </Tag>
             )
+        },
+
+        {
+            title: "Action",
+            dataIndex: "action",
+            key: "action",
+
+            render: (_, record) => (
+                <div style={{ display: 'flex', gap: '10' }}>
+                    <Button type="primary" onClick={() => handleEditing(record)}>
+                        Edit
+                    </Button>
+                    <Popconfirm title='Bạn có chắc muốn xóa không?' onConfirm={() => handleDelete(record._id)}>
+                        <Button danger>
+                            Delete
+                        </Button>
+                    </Popconfirm>
+                </div>
+            )
         }
+
     ];
 
     if (loading) {
@@ -198,6 +340,9 @@ const UserCourse = () => {
                 <Title level={3}>
                     📚 My Courses
                 </Title>
+                <Button type="primary" onClick={handleAdd}>
+                    + Add Course
+                </Button>
 
                 <Table
                     columns={columns}
@@ -205,6 +350,99 @@ const UserCourse = () => {
                     rowKey="_id"
                     pagination={{ pageSize: 5 }}
                 />
+
+                <Modal
+                    open={open}
+                    onCancel={() => setOpening(false)}
+                    onOk={handleSubmit}
+                    title={
+                        editingCourse
+                            ? "Edit Course"
+                            : "Add Course"
+                    }
+                >
+                    <Form
+                        layout="vertical"
+                        form={form}
+
+                    >
+                        <Form.Item
+                            label="Course Image"
+                            name="courseImage"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Nhập ảnh thành công"
+                                }
+                            ]}
+                        >
+                            <Input placeholder='vd : course-01.jpg' />
+                            {/* <Upload /> */}
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Title"
+                            name="title"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Nhập tên khóa học",
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="lessons"
+                            name="lessons"
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Price"
+                            name="price"
+                        >
+                            <InputNumber
+                                style={{ width: "100%" }}
+                            />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Level"
+                            name="level"
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="rating"
+                            name="rating">
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="reviews"
+                            name="reviews"
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Instructor"
+                            name="instructor"
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Category"
+                            name="catagory"
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </Card>
         </div>
     );

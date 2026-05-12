@@ -8,12 +8,13 @@ export const getMyCourses = (token) => {
     });
 };
 
-export const createEnrollment = (data, token) => {
-    return axiosClient.post('/enrollments', data, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
+export const createEnrollment = (courseId, token) => {
+    return axiosClient.post('/enrollments', courseId,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        });
 };
 
 export const getAllEnroll = () => {

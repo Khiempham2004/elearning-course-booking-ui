@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getToken } from '../../utils/Auth';
 import { Button, Card, Col, message, Row, Spin, Tag, Typography } from 'antd';
 import { createEnrollment } from '../../service/enrollment.service';
 import { getCourseById } from '../../service/course.service';
 import { useParams } from 'react-router-dom';
 import { BookOutlined, DollarOutlined, UserOutlined } from '@ant-design/icons';
-
+import { getToken } from '../../utils/Auth'
 const { Title, Paragraph, Text } = Typography;
 
 const imageModules = import.meta.glob(
@@ -14,10 +13,12 @@ const imageModules = import.meta.glob(
 );
 
 const getLocalImage = (courseImage) => {
-    if (!courseImage) return "";
+    if (!courseImage) return null;
     const filename = courseImage.split("/").pop();
+
     const key = Object.keys(imageModules).find((k) => k.includes(filename));
-    return key ? imageModules[key].default : courseImage;
+
+    return key ? imageModules[key].default : null;
 };
 
 const CourseDetail = () => {
@@ -30,8 +31,8 @@ const CourseDetail = () => {
         const getCourseDetail = async () => {
             try {
                 setLoading(true);
-                const res = await getCourseById(id)
 
+                const res = await getCourseById(id)
                 console.log(res.data);
 
                 setCourse(res.data.data);
@@ -51,8 +52,12 @@ const CourseDetail = () => {
         try {
             setEnrollLoading(true);
 
-            const token = getToken();
+            const token = getToken()
             console.log(token);
+
+            if (!token) {
+                return message.error("Vui lòng đăng nhập")
+            }
 
             const res = await createEnrollment(
                 {
@@ -62,6 +67,7 @@ const CourseDetail = () => {
             );
 
             console.log(res.data);
+
             message.success("Đăng ký khóa học thành công");
         } catch (error) {
             console.log(error);
@@ -69,6 +75,8 @@ const CourseDetail = () => {
                 error.response?.data?.message ||
                 "Đăng ký thất bại"
             );
+        } finally {
+            setEnrollLoading(false)
         }
     };
 
@@ -109,7 +117,7 @@ const CourseDetail = () => {
                             <Row gutter={[40, 20]}>
                                 <Col xs={24} md={10}>
                                     <img
-                                        src={getLocalImage(course.courseImage)}
+                                        src={getLocalImage(course.courseImage) || course.courseImage}
                                         alt="course"
                                         style={{
                                             width: "100%",
@@ -182,6 +190,7 @@ const CourseDetail = () => {
                                     >
                                         Enroll Now
                                     </Button>
+                                    
                                 </Col>
                             </Row>
                         </Card>

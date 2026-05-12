@@ -9,14 +9,26 @@ export const getCourseById = (id) => {
     return axiosClient.get(`/courses/${id}`)
 };
 
-export const createCourse = (data) => {
-    return axiosClient.post('/courses', data)
+export const createCourse = (data, token) => {
+    return axiosClient.post('/courses', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 };
 
-export const updateCourse = (id, data) => {
-    return axiosClient.put(`/courses/${id}`, data)
+export const updateCourse = (id, data, token) => {
+    return axiosClient.put(`/courses/${id}`, data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 };
 
-export const deleteCourse = (id) => {
-    return axiosClient.delete(`/courses/${id}`)
+export const deleteCourse = (id, token) => {
+    return axiosClient.delete(`/courses/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 };

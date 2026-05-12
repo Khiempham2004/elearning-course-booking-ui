@@ -14,6 +14,7 @@ export const fetchData = () => {
 export const getUserProfile = () => {
     return axiosClient.get('/users/profile')
 }
+
 export const getAllUsers = () => {
     return axiosClient.get('/users')
 }

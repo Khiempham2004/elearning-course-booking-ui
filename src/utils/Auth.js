@@ -3,8 +3,9 @@ export const getUser = () => {
 };
 
 export const getToken = () => {
-    return localStorage.getItem("token") || null;
+    return localStorage.getItem("token") || "";
 };
+console.log(localStorage.getItem("token"));
 
 export const logout = (navigate) => {
     localStorage.removeItem("user");
