@@ -10,7 +10,7 @@ import {
     Card,
     Typography,
 } from 'antd';
-import { getMyCourses } from '../../service/user.service';
+import { getMyCourses } from '../../service/enrollment.service';
 
 const { Title, Text } = Typography;
 const imageModules = import.meta.glob("../../assets/Images/*.{png,jpg,jpeg,webp}", { eager: true });

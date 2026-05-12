@@ -32,7 +32,7 @@ import { Link } from "react-router-dom";
 import article1 from "../../src/assets/Images/articles-01.jpg";
 import article2 from "../../src/assets/Images/articles-02.jpg";
 import article3 from "../../src/assets/Images/articles-03.jpg";
-import axios from "axios";
+import { getCourse } from "../service/course.service";
 
 const imageModules = import.meta.glob("../assets/Images/*", { eager: true });
 
@@ -52,7 +52,7 @@ const Index = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/courses");
+        const res = await getCourse();
         setCourses(res.data.data);
         console.log(res.data);
       } catch (error) {
@@ -64,8 +64,7 @@ const Index = () => {
 
   return (
     <div>
-      {/* Hero */}
-      <div className="hero flex justify-between items-center gap-10 w-full px-[2%] sm:px-[8%] lg:px-[12%] py-12.5 lg:py-22.5 min-h-screen pt-[120px] relative">
+      <div className="hero flex justify-between items-center gap-10 w-full px-[2%] sm:px-[8%] lg:px-[12%] py-12.5 lg:py-22.5 min-h-screen pt-30 relative">
         <div className="hero-content text-center mx-auto w-full flex flex-col items-center relative z-10">
           <span className="text-[#076dcb] font-semibold chakrapetch-font">
             <i className="bi bi-book pe-2"></i>

@@ -7,3 +7,4 @@ export const login = (data) => {
 export const register = (data) => {
     return axiosClient.post('/users/register', data);
 }
+

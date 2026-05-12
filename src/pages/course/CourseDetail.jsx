@@ -1,10 +1,17 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { getToken } from '../../utils/Auth';
-import { message } from 'antd';
+import { Button, Card, Col, message, Row, Spin, Tag, Typography } from 'antd';
+import { createEnrollment } from '../../service/enrollment.service';
+import { getCourseById } from '../../service/course.service';
+import { useParams } from 'react-router-dom';
+import { BookOutlined, DollarOutlined, UserOutlined } from '@ant-design/icons';
 
-const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
+const { Title, Paragraph, Text } = Typography;
+
+const imageModules = import.meta.glob(
+    "../../assets/Images/*",
+    { eager: true }
+);
 
 const getLocalImage = (courseImage) => {
     if (!courseImage) return "";
@@ -14,53 +21,48 @@ const getLocalImage = (courseImage) => {
 };
 
 const CourseDetail = () => {
-
     const { id } = useParams();
     const [course, setCourse] = useState({});
-
+    const [loading, setLoading] = useState(false);
+    const [enrollLoading, setEnrollLoading] = useState(false);
 
     useEffect(() => {
         const getCourseDetail = async () => {
             try {
-                const tokenDetail = getToken();
-
-                const res = await axios.get(
-                    `http://localhost:3000/api/courses/${id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokenDetail}`
-                        }
-                    }
-                );
+                setLoading(true);
+                const res = await getCourseById(id)
 
                 console.log(res.data);
+
                 setCourse(res.data.data);
+                message.success("Lấy course chi tiết thành công")
             } catch (error) {
                 console.log(error);
+                message.error("Lấy chi tiết course thất bại")
+            } finally {
+                setLoading(false);
             }
         };
         getCourseDetail();
-    }, []);
+    }, [id]);
+
 
     const handleEnroll = async () => {
         try {
+            setEnrollLoading(true);
+
             const token = getToken();
             console.log(token);
 
-
-            const res = await axios.post(
-                'http://localhost:3000/api/enrollments',
+            const res = await createEnrollment(
                 {
-                    courseId: course._id
+                    courseId: id,
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+                token,
             );
+
             console.log(res.data);
-            message.success("Đăng ký thành công");
+            message.success("Đăng ký khóa học thành công");
         } catch (error) {
             console.log(error);
             message.error(
@@ -70,35 +72,122 @@ const CourseDetail = () => {
         }
     };
 
+    if (loading) {
+        return (
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: 100,
+                }}
+            >
+                <Spin size="large" />
+            </div>
+        );
+    }
+
     return (
         <div>
-            <div style={{ padding: 130 }}>
-                <img
-                    src={getLocalImage(course.courseImage)}
-                    alt='CourseImage'
-                    style={{
-                        width: 400,
-                        borderRadius: 10
-                    }}
-                />
+            <div
+                style={{
+                    padding: "160px",
+                    background: "#f5f5f5",
+                    minHeight: "100vh",
+                }}
+            >
+                <Row justify="center" style={{ marginTop: 50 }}>
+                    <Col xs={24} md={20} lg={16}>
+                        <Card
+                            bordered={false}
+                            style={{
+                                borderRadius: 20,
+                                overflow: "hidden",
+                                boxShadow:
+                                    "0 4px 20px rgba(0,0,0,0.1)",
+                            }}
+                        >
+                            <Row gutter={[40, 20]}>
+                                <Col xs={24} md={10}>
+                                    <img
+                                        src={getLocalImage(course.courseImage)}
+                                        alt="course"
+                                        style={{
+                                            width: "100%",
+                                            borderRadius: 16,
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </Col>
 
-                <h1>Course Name : {course.title}</h1>
+                                <Col xs={24} md={14}>
 
-                <p>Lessons: {course.lessons}</p>
+                                    <Title level={2}>
+                                        {course.title}
+                                    </Title>
 
-                <h3>Level: {course.level}</h3>
+                                    <Paragraph
+                                        style={{
+                                            fontSize: 16,
+                                            color: "#555",
+                                        }}
+                                    >
+                                        {course.description}
+                                    </Paragraph>
 
-                <h3>Instructor: {course.instructor}</h3>
+                                    <div
+                                        style={{
+                                            marginBottom: 15,
+                                        }}
+                                    >
+                                        <Tag color="blue">
+                                            {course.level}
+                                        </Tag>
+                                    </div>
 
-                <h3>Price: ${course.price}</h3>
-                
+                                    <Paragraph>
+                                        <UserOutlined />{" "}
+                                        <Text strong>
+                                            Instructor:
+                                        </Text>{" "}
+                                        {course.instructor}
+                                    </Paragraph>
 
-                <button onClick={handleEnroll}>
-                    Enroll now
-                </button>
+                                    <Paragraph>
+                                        <BookOutlined />{" "}
+                                        <Text strong>
+                                            Lessons:
+                                        </Text>{" "}
+                                        {course.lessons}
+                                    </Paragraph>
 
+                                    <Paragraph>
+                                        <DollarOutlined />{" "}
+                                        <Text strong>
+                                            Price:
+                                        </Text>{" "}
+                                        ${course.price}
+                                    </Paragraph>
+
+                                    <Button
+                                        type="primary"
+                                        size="large"
+                                        loading={enrollLoading}
+                                        onClick={handleEnroll}
+                                        style={{
+                                            marginTop: 20,
+                                            height: 45,
+                                            paddingInline: 40,
+                                            borderRadius: 10,
+                                        }}
+                                    >
+                                        Enroll Now
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Card>
+                    </Col>
+                </Row>
             </div>
-
         </div>
     );
 }

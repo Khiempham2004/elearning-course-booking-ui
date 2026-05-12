@@ -10,7 +10,7 @@ import element6 from "../../assets/Images/element-06.png";
 
 import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
-import axios from "axios";
+import { getCourse } from "../../service/course.service";
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
@@ -56,7 +56,7 @@ const Course = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/courses');
+        const res = await getCourse();
         console.log(res.data);
 
         setCourses(res.data.data);

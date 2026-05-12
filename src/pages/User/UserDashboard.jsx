@@ -2,7 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Card, Row, Col, Typography, Spin, Progress } from 'antd';
 import { BookOutlined, CheckCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { getMyCourses, getUserProfile } from '../../service/user.service';
+import { getUserProfile } from '../../service/user.service';
+import { getMyCourses } from '../../service/enrollment.service';
+import { getToken } from '../../utils/Auth';
 
 const { Title, Text } = Typography;
 
@@ -19,8 +21,12 @@ const UserManager = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(false);
+                const token = getToken();
+
                 const userRes = await getUserProfile();
-                const courseRes = await getMyCourses();
+
+                const courseRes = await getMyCourses(token);
 
                 console.log('userRes : ', userRes);
 

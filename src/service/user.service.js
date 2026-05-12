@@ -14,11 +14,14 @@ export const fetchData = () => {
 export const getUserProfile = () => {
     return axiosClient.get('/users/profile')
 }
+export const getAllUsers = () => {
+    return axiosClient.get('/users')
+}
 
-export const getMyCourses = (token) => {
-    return axiosClient.get('/courses/my-course' , {
-        headers : {
-            Authorization : `Bearer ${token}`
-        }
-    })
+export const updateUser = (id, data) => {
+    return axiosClient.put(`/users/${id}`, data)
+}
+
+export const deleteUser = (id) => {
+    return axiosClient.delete(`/users/${id}`)
 }
