@@ -54,7 +54,6 @@ const Index = () => {
       try {
         const res = await getCourse();
         setCourses(res.data.data);
-        console.log(res.data);
       } catch (error) {
         console.log(error);
       }

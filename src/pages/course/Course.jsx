@@ -57,7 +57,6 @@ const Course = () => {
     const fetchCourse = async () => {
       try {
         const res = await getCourse();
-        console.log(res.data);
 
         setCourses(res.data.data);
 

@@ -24,6 +24,7 @@ import {
     deleteCourse
 } from '../../service/course.service';
 import { getToken } from '../../utils/Auth';
+import { width } from '@fortawesome/free-regular-svg-icons/faEnvelopeOpen';
 const { Title, Text } = Typography;
 const imageModules = import.meta.glob("../../assets/Images/*.{png,jpg,jpeg,webp}", { eager: true });
 
@@ -47,12 +48,9 @@ const UserCourse = () => {
             setLoading(true);
 
             const token = localStorage.getItem("token");
-            console.log(token);
-
 
             const res = await getMyCourses(token);
-
-            console.log('API:', res.data.courses);
+            console.log("API :", res.data);
 
             setCourses(res.data.courses || []);
 
@@ -68,7 +66,7 @@ const UserCourse = () => {
         fetchCourse();
     }, []);
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         setEditingCourse(null);
         form.resetFields();
         setOpening(true);
@@ -78,13 +76,16 @@ const UserCourse = () => {
         setEditingCourse(record);
         form.setFieldsValue({
             title: record.title,
+            // ...item.courseId,
             lessons: record.lessons,
             price: record.price,
             level: record.level,
             rating: record.rating,
             reviews: record.reviews,
             instructor: record.instructor,
+            instructorImage: record.instructorImage,
             catagory: record.catagory,
+            courseImage: record.courseImage,
         });
         setOpening(true);
     };
@@ -143,10 +144,18 @@ const UserCourse = () => {
                 "instructor",
                 values.instructor
             );
+            formData.append(
+                "instructorImage",
+                values.instructorImage
+            )
 
             formData.append(
                 "catagory",
                 values.catagory
+            );
+            formData.append(
+                "courseImage",
+                values.courseImage
             );
 
 
@@ -165,9 +174,11 @@ const UserCourse = () => {
                 message.success("Thêm khóa học thành công");
                 fetchCourse();
             }
+            fetchCourse();
 
             setOpening(false);
-            // form.resetFields();
+
+            form.resetFields();
         } catch (error) {
             console.log(error);
             message.error("Có lỗi xảy ra")
@@ -197,7 +208,7 @@ const UserCourse = () => {
             title: 'Course Name',
             dataIndex: 'title',
             key: 'title',
-
+            width: 200,
             render: (title) => (
                 <Text strong>{title}</Text>
             ),
@@ -258,19 +269,40 @@ const UserCourse = () => {
             title: 'Instructor',
             dataIndex: 'instructor',
             key: 'instructor',
+            width: 220,
+
             render: (_, record) => (
-                <div style={{ display: 'flex', alignItems: "center" }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 12,
+                        whiteSpace: 'nowrap',
+                    }}
+                >
                     <Image
-                        src={getLocalImage(record.instructorImage)}
-                        width={40}
-                        height={40}
+                        src={
+                            getLocalImage(record.instructorImage)
+                            || record.instructorImage
+                        }
+                        width={42}
+                        height={42}
+                        preview={false}
                         style={{
                             borderRadius: '50%',
                             objectFit: 'cover',
-                            marginRight: 10,
+                            flexShrink: 0,
                         }}
                     />
-                    <Text>{record.instructor}</Text>
+
+                    <Text
+                        strong
+                        style={{
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        {record.instructor}
+                    </Text>
                 </div>
             )
         },
@@ -292,7 +324,7 @@ const UserCourse = () => {
             key: "action",
 
             render: (_, record) => (
-                <div style={{ display: 'flex', gap: '10' }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
                     <Button type="primary" onClick={() => handleEditing(record)}>
                         Edit
                     </Button>
@@ -429,10 +461,16 @@ const UserCourse = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Instructor"
-                            name="instructor"
+                            label="Instructor Image"
+                            name="instructor Image"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Nhập image instructor"
+                                },
+                            ]}
                         >
-                            <Input />
+                            <Input placeholder='vd : avatar-01.png' />
                         </Form.Item>
 
                         <Form.Item

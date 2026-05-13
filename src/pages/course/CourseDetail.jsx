@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, message, Row, Spin, Tag, Typography } from 'antd';
 import { createEnrollment } from '../../service/enrollment.service';
 import { getCourseById } from '../../service/course.service';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BookOutlined, DollarOutlined, UserOutlined } from '@ant-design/icons';
 import { getToken } from '../../utils/Auth'
 const { Title, Paragraph, Text } = Typography;
@@ -26,7 +26,7 @@ const CourseDetail = () => {
     const [course, setCourse] = useState({});
     const [loading, setLoading] = useState(false);
     const [enrollLoading, setEnrollLoading] = useState(false);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const getCourseDetail = async () => {
             try {
@@ -56,24 +56,21 @@ const CourseDetail = () => {
             console.log(token);
 
             if (!token) {
-                return message.error("Vui lòng đăng nhập")
+                navigate('/signin');
+                message.error("Vui lòng đăng nhập");
+                return;
             }
 
-            const res = await createEnrollment(
-                {
-                    courseId: id,
-                },
-                token,
-            );
+            const res = await createEnrollment(id, token);
 
             console.log(res.data);
 
             message.success("Đăng ký khóa học thành công");
+            navigate('/users/my-courses')
         } catch (error) {
             console.log(error);
             message.error(
-                error.response?.data?.message ||
-                "Đăng ký thất bại"
+                error.response?.data?.message || "Đăng ký thất bại"
             );
         } finally {
             setEnrollLoading(false)
@@ -190,7 +187,7 @@ const CourseDetail = () => {
                                     >
                                         Enroll Now
                                     </Button>
-                                    
+
                                 </Col>
                             </Row>
                         </Card>
