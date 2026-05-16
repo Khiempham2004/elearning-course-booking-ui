@@ -24,16 +24,18 @@ import {
     deleteCourse
 } from '../../service/course.service';
 import { getToken } from '../../utils/Auth';
-import { width } from '@fortawesome/free-regular-svg-icons/faEnvelopeOpen';
+import { UploadOutlined } from '@ant-design/icons';
 const { Title, Text } = Typography;
-const imageModules = import.meta.glob("../../assets/Images/*.{png,jpg,jpeg,webp}", { eager: true });
 
-const getLocalImage = (courseImage) => {
-    if (!courseImage) return "";
-    const filename = courseImage.split("/").pop();
-    const key = Object.keys(imageModules).find((k) => k.includes(filename));
-    return key ? imageModules[key].default : "";
-};
+
+
+// const getLocalImage = (courseImage) => {
+//     if (!courseImage) return "";
+//     const filename = courseImage.split("/").pop();
+//     const key = Object.keys().find((k) => k.includes(filename));
+//     return key ? [key].default : "";
+
+// };
 
 const UserCourse = () => {
     const [open, setOpening] = useState(false);
@@ -41,7 +43,9 @@ const UserCourse = () => {
     const [form] = Form.useForm();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
-    // const [fileList, setFileList] = useState([]);
+    const [courseFile, setCourseFile] = useState(null);
+    const [instructorFile, setInstructorFile] = useState(null);
+
 
     const fetchCourse = async () => {
         try {
@@ -144,19 +148,25 @@ const UserCourse = () => {
                 "instructor",
                 values.instructor
             );
-            formData.append(
-                "instructorImage",
-                values.instructorImage
-            )
+            if (instructorFile) {
+                formData.append("instructorImage", instructorFile);
+                // await axios.post("/api/upload", formData,
+                //     {
+                //         headers: {
+                //             "Content-Type": "multipart/form-data",
+                //         },
+                //     }
+                // );
+            };
 
             formData.append(
                 "catagory",
                 values.catagory
             );
-            formData.append(
-                "courseImage",
-                values.courseImage
-            );
+
+            if (courseFile) {
+                formData.append("courseImage", courseFile);
+            };
 
 
             if (editingCourse) {
@@ -169,16 +179,18 @@ const UserCourse = () => {
 
                 message.success("Cập nhật khóa học thành công");
             } else {
-                await createCourse(values, token)
+                await createCourse(formData, token);
 
                 message.success("Thêm khóa học thành công");
                 fetchCourse();
             }
-            fetchCourse();
 
             setOpening(false);
 
             form.resetFields();
+            setCourseFile(null);
+
+            setInstructorFile(null);
         } catch (error) {
             console.log(error);
             message.error("Có lỗi xảy ra")
@@ -191,9 +203,9 @@ const UserCourse = () => {
             dataIndex: 'courseImage',
             key: 'courseImage',
 
-            render: (courseImage) => (
+            render: (_, record) => (
                 <Image
-                    src={getLocalImage(courseImage) || courseImage}
+                    src={record.courseImage}
                     width={100}
                     height={60}
                     style={{
@@ -208,7 +220,7 @@ const UserCourse = () => {
             title: 'Course Name',
             dataIndex: 'title',
             key: 'title',
-            width: 200,
+            width: 400,
             render: (title) => (
                 <Text strong>{title}</Text>
             ),
@@ -265,11 +277,12 @@ const UserCourse = () => {
             dataIndex: 'reviews',
             key: 'reviews',
         },
+
         {
-            title: 'Instructor',
-            dataIndex: 'instructor',
+            title: 'Instructor Image',
+            dataIndex: 'instructor Image',
             key: 'instructor',
-            width: 220,
+            // width: 220,
 
             render: (_, record) => (
                 <div
@@ -281,10 +294,7 @@ const UserCourse = () => {
                     }}
                 >
                     <Image
-                        src={
-                            getLocalImage(record.instructorImage)
-                            || record.instructorImage
-                        }
+                        src={record.instructorImage}
                         width={42}
                         height={42}
                         preview={false}
@@ -387,6 +397,8 @@ const UserCourse = () => {
                     open={open}
                     onCancel={() => setOpening(false)}
                     onOk={handleSubmit}
+                    maskClosable={false}
+                    destroyOnClose
                     title={
                         editingCourse
                             ? "Edit Course"
@@ -400,16 +412,29 @@ const UserCourse = () => {
                     >
                         <Form.Item
                             label="Course Image"
-                            name="courseImage"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Nhập ảnh thành công"
-                                }
-                            ]}
                         >
-                            <Input placeholder='vd : course-01.jpg' />
-                            {/* <Upload /> */}
+                            <Upload
+                                name="courseImage"
+                                beforeUpload={(file) => {
+                                    console.log("Course file selected:", file);
+                                    setCourseFile(file);
+                                    return false; // Prevent auto upload
+                                }}
+                                onRemove={() => {
+                                    setCourseFile(null);
+                                }}
+                                maxCount={1}
+                                listType='picture'
+                                fileList={courseFile ? [{
+                                    uid: '1',
+                                    name: courseFile.name,
+                                    status: 'done'
+                                }] : []}
+                            >
+                                <Button icon={<UploadOutlined />}>
+                                    Upload Course Image
+                                </Button>
+                            </Upload>
                         </Form.Item>
 
                         <Form.Item
@@ -461,16 +486,43 @@ const UserCourse = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Instructor Image"
-                            name="instructor Image"
+                            label='Instructor'
+                            name='instructor'
                             rules={[
                                 {
                                     required: true,
-                                    message: "Nhập image instructor"
-                                },
+                                    message: 'Nhập trên instructor'
+                                }
                             ]}
                         >
-                            <Input placeholder='vd : avatar-01.png' />
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Instructor Image"
+                        >
+                            <Upload
+                                name="instructorImage"
+                                beforeUpload={(file) => {
+                                    console.log("Instructor file selected:", file);
+                                    setInstructorFile(file);
+                                    return false; // Prevent auto upload
+                                }}
+                                onRemove={() => {
+                                    setInstructorFile(null);
+                                }}
+                                maxCount={1}
+                                listType='picture'
+                                fileList={instructorFile ? [{
+                                    uid: '2',
+                                    name: instructorFile.name,
+                                    status: 'done'
+                                }] : []}
+                            >
+                                <Button icon={<UploadOutlined />}>
+                                    Upload Instructor Image
+                                </Button>
+                            </Upload>
                         </Form.Item>
 
                         <Form.Item
