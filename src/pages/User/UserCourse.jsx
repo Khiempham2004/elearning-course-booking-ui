@@ -27,15 +27,15 @@ import { getToken } from '../../utils/Auth';
 import { UploadOutlined } from '@ant-design/icons';
 const { Title, Text } = Typography;
 
+const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
+const getLocalImage = (courseImage) => {
+    if (!courseImage) return "";
+    const filename = courseImage.split("/").pop();
+    const key = Object.keys(imageModules).find((k) => k.includes(filename));
+    return key ? imageModules[key].default : courseImage;
 
-// const getLocalImage = (courseImage) => {
-//     if (!courseImage) return "";
-//     const filename = courseImage.split("/").pop();
-//     const key = Object.keys().find((k) => k.includes(filename));
-//     return key ? [key].default : "";
-
-// };
+};
 
 const UserCourse = () => {
     const [open, setOpening] = useState(false);
@@ -73,11 +73,15 @@ const UserCourse = () => {
     const handleAdd = async () => {
         setEditingCourse(null);
         form.resetFields();
+        setCourseFile(null);
+        setInstructorFile(null);
         setOpening(true);
     };
 
     const handleEditing = (record) => {
         setEditingCourse(record);
+        setCourseFile(null);
+        setInstructorFile(null);
         form.setFieldsValue({
             title: record.title,
             // ...item.courseId,
@@ -113,6 +117,9 @@ const UserCourse = () => {
             const values = await form.validateFields();
             const token = getToken();
             const formData = new FormData();
+
+            console.log("DEBUG: courseFile =", courseFile);
+            console.log("DEBUG: instructorFile =", instructorFile);
 
             formData.append(
                 "title",
@@ -150,13 +157,7 @@ const UserCourse = () => {
             );
             if (instructorFile) {
                 formData.append("instructorImage", instructorFile);
-                // await axios.post("/api/upload", formData,
-                //     {
-                //         headers: {
-                //             "Content-Type": "multipart/form-data",
-                //         },
-                //     }
-                // );
+                // await axios.post('/upload', formData);
             };
 
             formData.append(
@@ -205,7 +206,7 @@ const UserCourse = () => {
 
             render: (_, record) => (
                 <Image
-                    src={record.courseImage}
+                    src={getLocalImage(record.courseImage)}
                     width={100}
                     height={60}
                     style={{
@@ -294,7 +295,7 @@ const UserCourse = () => {
                     }}
                 >
                     <Image
-                        src={record.instructorImage}
+                        src={getLocalImage(record.instructorImage)}
                         width={42}
                         height={42}
                         preview={false}
@@ -414,22 +415,17 @@ const UserCourse = () => {
                             label="Course Image"
                         >
                             <Upload
-                                name="courseImage"
                                 beforeUpload={(file) => {
                                     console.log("Course file selected:", file);
                                     setCourseFile(file);
                                     return false; // Prevent auto upload
                                 }}
                                 onRemove={() => {
+                                    console.log("Removing course file");
                                     setCourseFile(null);
                                 }}
                                 maxCount={1}
                                 listType='picture'
-                                fileList={courseFile ? [{
-                                    uid: '1',
-                                    name: courseFile.name,
-                                    status: 'done'
-                                }] : []}
                             >
                                 <Button icon={<UploadOutlined />}>
                                     Upload Course Image
@@ -502,22 +498,17 @@ const UserCourse = () => {
                             label="Instructor Image"
                         >
                             <Upload
-                                name="instructorImage"
                                 beforeUpload={(file) => {
                                     console.log("Instructor file selected:", file);
                                     setInstructorFile(file);
                                     return false; // Prevent auto upload
                                 }}
                                 onRemove={() => {
+                                    console.log("Removing instructor file");
                                     setInstructorFile(null);
                                 }}
                                 maxCount={1}
                                 listType='picture'
-                                fileList={instructorFile ? [{
-                                    uid: '2',
-                                    name: instructorFile.name,
-                                    status: 'done'
-                                }] : []}
                             >
                                 <Button icon={<UploadOutlined />}>
                                     Upload Instructor Image

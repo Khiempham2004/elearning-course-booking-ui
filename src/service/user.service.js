@@ -15,14 +15,22 @@ export const getUserProfile = () => {
     return axiosClient.get('/users/profile')
 }
 
-export const getAllUsers = () => {
-    return axiosClient.get('/users')
+export const getAllUsers = (token) => {
+    return axiosClient.get('/users', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }
 
 export const updateUser = (id, data) => {
     return axiosClient.put(`/users/${id}`, data)
 }
 
-export const deleteUser = (id) => {
-    return axiosClient.delete(`/users/${id}`)
+export const deleteUser = (id, token) => {
+    return axiosClient.delete(`/users/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 }

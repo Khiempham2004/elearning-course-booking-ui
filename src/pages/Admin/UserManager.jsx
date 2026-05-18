@@ -12,6 +12,7 @@ import {
     Col,
     Input,
     message,
+    Modal,
     Popconfirm,
     Row,
     Select,
@@ -21,8 +22,8 @@ import {
     Tag,
     Typography,
 } from 'antd';
-import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
+import { deleteUser, getAllUsers, updateUser } from '../../service/user.service';
 
 
 const { Title, Text } = Typography;
@@ -35,20 +36,19 @@ const UserManager = () => {
     const [searchText, setSearchText] = useState('');
     const [roleFilter, setRoleFilter] = useState('all');
 
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedRole, setSelectedRole] = useState('');
+    const [selectedName, setSelectedName] = useState('');
+    const [selectedEmail, setSelectedEmail] = useState('');
+
     const fetchUsers = async () => {
         try {
             setLoading(true);
 
             const token = localStorage.getItem('token');
 
-            const res = await axios.get(
-                'http://localhost:3000/api/users',
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await getAllUsers(token);
 
             setUsers(res?.data?.users || []);
         } catch (error) {
@@ -63,18 +63,54 @@ const UserManager = () => {
         fetchUsers();
     }, []);
 
+    const handleEditClick = (record) => {
+        setSelectedUser(record);
+        setSelectedRole(record?.role || '');
+        setSelectedName(record?.name || '');
+        setSelectedEmail(record?.email || '');
+        setEditModalOpen(true);
+    };
+
+    const handleEditConfirm = async () => {
+        try {
+            if (!selectedRole) {
+                message.error('Please select a role');
+                return;
+            }
+
+            if (!selectedName.trim()) {
+                message.error('Please enter user name');
+                return;
+            }
+
+            if (!selectedEmail.trim()) {
+                message.error('Please enter email');
+                return;
+            }
+
+            await updateUser(selectedUser._id, {
+                role: selectedRole,
+                name: selectedName,
+                email: selectedEmail
+            });
+            message.success('Update user success');
+            setEditModalOpen(false);
+            setSelectedUser(null);
+            setSelectedRole('');
+            setSelectedName('');
+            setSelectedEmail('');
+            fetchUsers();
+        } catch (error) {
+            console.log(error);
+            message.error("Edit users failed");
+        }
+    };
+
     const handleDelete = async (id) => {
         try {
             const token = localStorage.getItem('token');
 
-            await axios.delete(
-                `http://localhost:9000/api/users/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            await deleteUser(id, token);
 
             message.success('Delete user success');
 
@@ -110,11 +146,7 @@ const UserManager = () => {
     const totalAdmins = users.filter(
         (item) => item.role === 'admin'
     ).length;
-
-    const totalTeachers = users.filter(
-        (item) => item.role === 'teacher'
-    ).length;
-
+    
 
     const columns = [
         {
@@ -130,9 +162,7 @@ const UserManager = () => {
 
                     <div>
                         <Text strong>{record?.name}</Text>
-
                         <br />
-
                         <Text type="secondary">
                             {record?.email}
                         </Text>
@@ -149,7 +179,6 @@ const UserManager = () => {
                 let color = 'blue';
 
                 if (role === 'admin') color = 'red';
-                if (role === 'teacher') color = 'gold';
                 if (role === 'User') color = 'green';
 
                 return (
@@ -185,6 +214,7 @@ const UserManager = () => {
                     <Button
                         type="primary"
                         icon={<EditOutlined />}
+                        onClick={() => handleEditClick(record)}
                     >
                         Edit
                     </Button>
@@ -255,16 +285,6 @@ const UserManager = () => {
                         />
                     </Card>
                 </Col>
-
-                <Col xs={24} md={6}>
-                    <Card>
-                        <Statistic
-                            title="Teachers"
-                            value={totalTeachers}
-                        />
-                    </Card>
-                </Col>
-
             </Row>
 
             {/* FILTER */}
@@ -297,10 +317,6 @@ const UserManager = () => {
                                 Admin
                             </Option>
 
-                            <Option value="teacher">
-                                Teacher
-                            </Option>
-
                             <Option value="User">
                                 User
                             </Option>
@@ -321,6 +337,56 @@ const UserManager = () => {
                     scroll={{ x: 900 }}
                 />
             </Card>
+
+            <Modal
+                title="Update User"
+                open={editModalOpen}
+                onOk={handleEditConfirm}
+                onCancel={() => {
+                    setEditModalOpen(false);
+                    setSelectedUser(null);
+                    setSelectedRole('');
+                    setSelectedName('');
+                    setSelectedEmail('');
+                }}
+                okText="Update"
+                cancelText="Cancel"
+            >
+                {selectedUser && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        <div>
+                            <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>Name:</label>
+                            <Input
+                                value={selectedName}
+                                onChange={(e) => setSelectedName(e.target.value)}
+                                placeholder="Enter user name"
+                            />
+                        </div>
+
+                        <div>
+                            <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>Email:</label>
+                            <Input
+                                value={selectedEmail}
+                                onChange={(e) => setSelectedEmail(e.target.value)}
+                                placeholder="Enter email"
+                                type="email"
+                            />
+                        </div>
+
+                        <div>
+                            <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>Role:</label>
+                            <Select
+                                style={{ width: '100%' }}
+                                value={selectedRole}
+                                onChange={setSelectedRole}
+                            >
+                                <Option value="admin">Admin</Option>
+                                <Option value="User">User</Option>
+                            </Select>
+                        </div>
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 }

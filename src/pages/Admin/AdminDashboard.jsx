@@ -1,7 +1,7 @@
 import { BookOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 import { Card, Col, message, Row, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getCourse } from '../../service/course.service';
 
 
 const { Title, Text } = Typography;
@@ -16,7 +16,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const courseData = async () => {
       try {
-        const resCourse = await axios.get('http://localhost:3000/api/courses');
+        const resCourse = await getCourse();
         setCourse(resCourse);
 
       } catch (error) {

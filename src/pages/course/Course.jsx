@@ -25,7 +25,7 @@ const Course = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy, setSortBy] = useState("Newest");
   const [courses, setCourses] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const categories = ["All", ...new Set(courses.map((c) => c.category))];
 
@@ -56,13 +56,21 @@ const Course = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
+        setLoading(true);
         const res = await getCourse();
-
-        setCourses(res.data.data);
-
-        localStorage.setItem("course", JSON.stringify(res.data.data));
+        console.log("Course API response:", res.data);
+        
+        // Backend returns { data: [...] } so access res.data.data
+        const coursesData = res.data.data || res.data || [];
+        console.log("Courses loaded:", coursesData.length);
+        
+        setCourses(coursesData);
+        localStorage.setItem("course", JSON.stringify(coursesData));
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching courses:", error);
+        setCourses([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCourse();
@@ -70,6 +78,18 @@ const Course = () => {
 
   return (
     <div>
+      {loading && (
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p>Loading courses...</p>
+        </div>
+      )}
+      {!loading && courses.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p>No courses available</p>
+        </div>
+      )}
+      {!loading && courses.length > 0 && (
+        <>
       <div className="section-banner bg-[#f3f9ff] h-100 py-12.5 lg:py-22.5 flex flex-col justify-center items-center relative">
         <h1 className="chakrapetch-font font-bold text-5xl lg:text-6xl mb-5 text-[#222e48]">
           Courses
@@ -271,6 +291,8 @@ const Course = () => {
           className="element5 hero-shape7 absolute right-50 top-20 hidden lg:flex"
         />
       </div>
+        </>
+      )}
     </div>
   );
 };
