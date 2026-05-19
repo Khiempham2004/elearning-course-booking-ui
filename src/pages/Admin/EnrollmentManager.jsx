@@ -25,8 +25,14 @@ import {
     BookOutlined,
     CheckCircleOutlined,
     ClockCircleOutlined,
+    CloseCircleOutlined,
 } from '@ant-design/icons';
-import { getAllEnrollments, deleteEnrollments } from '../../service/enrollment.service';
+import {
+    getAllEnrollments,
+    deleteEnrollments,
+    approveEnrollment,
+    rejectEnrollment,
+} from '../../service/enrollment.service';
 import { getToken } from '../../utils/Auth';
 
 const { Title, Text } = Typography;
@@ -38,6 +44,11 @@ const EnrollmentManager = () => {
     const [statusFilter, setStatusFilter] = useState('all');
     const [detailModalOpen, setDetailModalOpen] = useState(false);
     const [selectedEnrollment, setSelectedEnrollment] = useState(null);
+    const [approvalModalOpen, setApprovalModalOpen] = useState(false);
+    const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
+    const [actionType, setActionType] = useState(null);
+    const [form] = Form.useForm();
+    const [submitting, setSubmitting] = useState(false);
 
     const fetchEnrollments = async () => {
         try {
@@ -75,6 +86,63 @@ const EnrollmentManager = () => {
         setDetailModalOpen(true);
     };
 
+    const handleApproveClick = (record) => {
+        setSelectedEnrollment(record);
+        setActionType('approve');
+        setApprovalModalOpen(true);
+        form.resetFields();
+    };
+
+    const handleRejectClick = (record) => {
+        setSelectedEnrollment(record);
+        setActionType('reject');
+        setRejectionModalOpen(true);
+        form.resetFields();
+    };
+
+    const handleApproveSubmit = async () => {
+        try {
+            setSubmitting(true);
+            const token = getToken();
+            const notes = form.getFieldValue('notes');
+
+            await approveEnrollment(selectedEnrollment._id, token, notes);
+            message.success('Enrollment approved successfully');
+            setApprovalModalOpen(false);
+            fetchEnrollments();
+        } catch (error) {
+            console.log(error);
+            message.error(error?.response?.data?.message || 'Failed to approve enrollment');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleRejectSubmit = async () => {
+        try {
+            const rejectionReason = form.getFieldValue('rejectionReason');
+            const notes = form.getFieldValue('notes');
+
+            if (!rejectionReason) {
+                message.error('Please provide rejection reason');
+                return;
+            }
+
+            setSubmitting(true);
+            const token = getToken();
+
+            await rejectEnrollment(selectedEnrollment._id, token, rejectionReason, notes);
+            message.success('Enrollment rejected successfully');
+            setRejectionModalOpen(false);
+            fetchEnrollments();
+        } catch (error) {
+            console.log(error);
+            message.error(error?.response?.data?.message || 'Failed to reject enrollment');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     const filteredEnrollments = enrollments.filter((enrollment) => {
         const searchLower = searchText.toLowerCase();
         const matchSearch =
@@ -90,10 +158,11 @@ const EnrollmentManager = () => {
 
     const getStatusColor = (status) => {
         const colors = {
+            pending: 'orange',// chờ admin duyệt
             approved: 'green',
-            pending: 'orange',
             rejected: 'red',
             cancelled: 'default',
+            completed: 'blue'
         };
         return colors[status] || 'blue';
     };
@@ -134,20 +203,18 @@ const EnrollmentManager = () => {
             dataIndex: 'status',
             key: 'status',
             width: 120,
-            render: (status) => (
-                <Tag
-                    icon={
-                        status === 'approved' ? (
-                            <CheckCircleOutlined />
-                        ) : status === 'pending' ? (
-                            <ClockCircleOutlined />
-                        ) : null
-                    }
-                    color={getStatusColor(status)}
-                >
-                    {status?.toUpperCase()}
-                </Tag>
-            ),
+            render: (status) => {
+                let icon = null;
+                if (status === 'approved') icon = <CheckCircleOutlined />;
+                else if (status === 'pending') icon = <ClockCircleOutlined />;
+                else if (status === 'rejected') icon = <CloseCircleOutlined />;
+
+                return (
+                    <Tag icon={icon} color={getStatusColor(status)}>
+                        {status?.toUpperCase()}
+                    </Tag>
+                );
+            },
         },
         {
             title: 'Enrolled Date',
@@ -164,9 +231,19 @@ const EnrollmentManager = () => {
             },
         },
         {
+            title: 'Approved By',
+            key: 'approvedBy',
+            width: 150,
+            render: (_, record) => (
+                <Text>
+                    {record?.approvedBy ? record.approvedBy.name : '-'}
+                </Text>
+            ),
+        },
+        {
             title: 'Action',
             key: 'action',
-            width: 150,
+            width: 220,
             render: (_, record) => (
                 <Space>
                     <Button
@@ -176,6 +253,24 @@ const EnrollmentManager = () => {
                     >
                         Details
                     </Button>
+                    {record.status !== 'approved' && (
+                        <Button
+                            type="primary"
+                            size="small"
+                            onClick={() => handleApproveClick(record)}
+                        >
+                            Approve
+                        </Button>
+                    )}
+                    {record.status !== 'rejected' && (
+                        <Button
+                            danger
+                            size="small"
+                            onClick={() => handleRejectClick(record)}
+                        >
+                            Reject
+                        </Button>
+                    )}
                     <Popconfirm
                         title="Delete Enrollment"
                         description="Are you sure you want to remove this enrollment?"
@@ -184,11 +279,12 @@ const EnrollmentManager = () => {
                         cancelText="No"
                     >
                         <Button
+                            ghost
                             danger
                             icon={<DeleteOutlined />}
                             size="small"
                         >
-                            Remove
+                            Delete
                         </Button>
                     </Popconfirm>
                 </Space>
@@ -253,7 +349,8 @@ const EnrollmentManager = () => {
                         <Statistic
                             title="Rejected"
                             value={stats.rejected}
-                            prefix="❌"
+                            prefix={<CloseCircleOutlined style={{ color: 'red' }} />}
+                            valueStyle={{ color: 'red' }}
                         />
                     </Card>
                 </Col>
@@ -280,10 +377,10 @@ const EnrollmentManager = () => {
                             placeholder="Filter by status"
                         >
                             <Select.Option value="all">All Status</Select.Option>
-                            <Select.Option value="approved">Approved</Select.Option>
                             <Select.Option value="pending">Pending</Select.Option>
+                            <Select.Option value="approved">Approved</Select.Option>
                             <Select.Option value="rejected">Rejected</Select.Option>
-                            <Select.Option value="cancelled">Cancelled</Select.Option>
+                            <Select.Option value="completed">Completed</Select.Option>
                         </Select>
                     </Col>
                 </Row>
@@ -301,7 +398,7 @@ const EnrollmentManager = () => {
                         total: filteredEnrollments.length,
                         showTotal: (total) => `Total ${total} enrollments`,
                     }}
-                    scroll={{ x: 1000 }}
+                    scroll={{ x: 1200 }}
                     locale={{
                         emptyText: (
                             <div style={{ padding: '50px 0', textAlign: 'center' }}>
@@ -368,10 +465,87 @@ const EnrollmentManager = () => {
                                     <strong>Enrolled Date:</strong>{' '}
                                     {new Date(selectedEnrollment?.createdAt).toLocaleDateString()}
                                 </p>
+                                {selectedEnrollment?.approvedBy && (
+                                    <>
+                                        <p>
+                                            <strong>Approved By:</strong> {selectedEnrollment.approvedBy.name}
+                                        </p>
+                                        <p>
+                                            <strong>Approved Date:</strong>{' '}
+                                            {new Date(selectedEnrollment.approvedAt).toLocaleDateString()}
+                                        </p>
+                                    </>
+                                )}
+                                {selectedEnrollment?.rejectionReason && (
+                                    <p>
+                                        <strong>Rejection Reason:</strong> {selectedEnrollment.rejectionReason}
+                                    </p>
+                                )}
+                                {selectedEnrollment?.notes && (
+                                    <p>
+                                        <strong>Notes:</strong> {selectedEnrollment.notes}
+                                    </p>
+                                )}
                             </Card>
                         </div>
                     </div>
                 )}
+            </Modal>
+
+            {/* Approval Modal */}
+            <Modal
+                title="Approve Enrollment"
+                open={approvalModalOpen}
+                onOk={handleApproveSubmit}
+                onCancel={() => setApprovalModalOpen(false)}
+                confirmLoading={submitting}
+                okText="Approve"
+            >
+                <Form form={form} layout="vertical">
+                    <Form.Item>
+                        <Text strong>
+                            Confirm approval for {selectedEnrollment?.userId?.name} - {selectedEnrollment?.courseId?.title}
+                        </Text>
+                    </Form.Item>
+                    <Form.Item
+                        label="Notes (Optional)"
+                        name="notes"
+                    >
+                        <Input.TextArea rows={3} placeholder="Add any notes about this approval" />
+                    </Form.Item>
+                </Form>
+            </Modal>
+
+            {/* Rejection Modal */}
+            <Modal
+                title="Reject Enrollment"
+                open={rejectionModalOpen}
+                onOk={handleRejectSubmit}
+                onCancel={() => setRejectionModalOpen(false)}
+                confirmLoading={submitting}
+                okText="Reject"
+                okButtonProps={{ danger: true }}
+            >
+                <Form form={form} layout="vertical">
+                    <Form.Item>
+                        <Text strong>
+                            Confirm rejection for {selectedEnrollment?.userId?.name} - {selectedEnrollment?.courseId?.title}
+                        </Text>
+                    </Form.Item>
+                    <Form.Item
+                        label="Rejection Reason *"
+                        name="rejectionReason"
+                        rules={[{ required: true, message: 'Please provide a rejection reason' }]}
+                    >
+                        <Input.TextArea rows={3} placeholder="Explain why this enrollment is being rejected" />
+                    </Form.Item>
+                    <Form.Item
+                        label="Additional Notes (Optional)"
+                        name="notes"
+                    >
+                        <Input.TextArea rows={2} placeholder="Add any additional notes" />
+                    </Form.Item>
+                </Form>
             </Modal>
         </div>
     );

@@ -31,9 +31,19 @@ const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
 const getLocalImage = (courseImage) => {
     if (!courseImage) return "";
+    
+    console.log("Processing image:", courseImage);
+    
+    if (courseImage.startsWith('http://') || courseImage.startsWith('https://') || courseImage.startsWith('/')) {
+        console.log("Using server image:", courseImage);
+        return courseImage;
+    }
+    
     const filename = courseImage.split("/").pop();
     const key = Object.keys(imageModules).find((k) => k.includes(filename));
-    return key ? imageModules[key].default : courseImage;
+    const result = key ? imageModules[key].default : courseImage;
+    console.log("Result:", result);
+    return result;
 
 };
 
@@ -54,7 +64,13 @@ const UserCourse = () => {
             const token = localStorage.getItem("token");
 
             const res = await getMyCourses(token);
-            console.log("API :", res.data);
+            console.log("API Response:", res.data);
+            console.log("Courses data:", res.data.courses);
+            if (res.data.courses && res.data.courses.length > 0) {
+                console.log("First course:", res.data.courses[0]);
+                console.log("Course image:", res.data.courses[0].courseImage);
+                console.log("Instructor image:", res.data.courses[0].instructorImage);
+            }
 
             setCourses(res.data.courses || []);
 

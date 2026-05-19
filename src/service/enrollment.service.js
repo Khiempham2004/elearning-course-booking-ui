@@ -33,3 +33,49 @@ export const deleteEnrollments = (id, token) => {
         },
     });
 };
+
+export const approveEnrollment = (id, token, notes = '') => {
+    return axiosClient.patch(`/enrollments/${id}/approve`, { notes }, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+};
+
+export const rejectEnrollment = (id, token, rejectionReason, notes = '') => {
+    return axiosClient.patch(`/enrollments/${id}/reject`, 
+        { rejectionReason, notes }, 
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+};
+
+export const updateEnrollmentStatus = (id, token, status, notes = '') => {
+    return axiosClient.patch(`/enrollments/${id}/status`, 
+        { status, notes }, 
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+};
+
+export const getEnrollmentByUser = (userId, token) => {
+    return axiosClient.get(`/enrollments/user/${userId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+};
+
+export const getEnrollmentByCourse = (courseId, token) => {
+    return axiosClient.get(`/enrollments/course/${courseId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+};

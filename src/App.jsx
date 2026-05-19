@@ -30,6 +30,7 @@ import UserSettings from "./pages/User/UserSettings.jsx";
 import UserDashboard from "./pages/User/UserDashboard.jsx";
 import AdminRoute from "./routes/AdminRoute.jsx";
 import CourseDetail from "./pages/course/CourseDetail.jsx";
+import EnrollmentStatus from "./pages/User/EnrollmentStatus.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -67,6 +68,7 @@ const App = () => {
               <Route index element={<UserDashboard />} />
               <Route path="profile" element={<UserProfile />} />
               <Route path="my-courses" element={<UserCourse />} />
+              <Route path="enrollment-status" element={<EnrollmentStatus />} />
               <Route path="settings" element={<UserSettings />} />
             </Route>
           </Route>
