@@ -32,19 +32,13 @@ const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 const getLocalImage = (courseImage) => {
     if (!courseImage) return "";
     
-    console.log("Processing image:", courseImage);
-    
     if (courseImage.startsWith('http://') || courseImage.startsWith('https://') || courseImage.startsWith('/')) {
-        console.log("Using server image:", courseImage);
         return courseImage;
     }
     
     const filename = courseImage.split("/").pop();
     const key = Object.keys(imageModules).find((k) => k.includes(filename));
-    const result = key ? imageModules[key].default : courseImage;
-    console.log("Result:", result);
-    return result;
-
+    return key ? imageModules[key].default : courseImage;
 };
 
 const UserCourse = () => {

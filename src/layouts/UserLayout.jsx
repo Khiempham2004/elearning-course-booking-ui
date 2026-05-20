@@ -29,8 +29,13 @@ const UserLayout = () => {
                                 My Courses
                             </NavLink>
                         </Menu.Item>
+                         <Menu.Item key="4">
+                            <NavLink to='/users/enrollment-status'>
+                                Enrollment
+                            </NavLink>
+                        </Menu.Item>
 
-                        <Menu.Item key="4">
+                        <Menu.Item key="5">
                             <NavLink to='/users/settings'>
                                 Settings
                             </NavLink>

@@ -6,7 +6,7 @@ import { getCourse } from '../../service/course.service';
 
 const { Title, Text } = Typography;
 const AdminDashboard = () => {
-  const [ setCourse] = useState([]);
+  const [setCourse] = useState([]);
   const [stats] = useState({
     users: 0,
     courses: 0,
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
       }
     };
     courseData();
-  }, []);
+  }, [setCourse]);
 
   const StatCard = ({ icon, value, label, color }) => (
     <Card
