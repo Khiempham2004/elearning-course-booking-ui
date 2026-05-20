@@ -33,7 +33,7 @@ export const deleteEnrollments = (id, token) => {
         },
     });
 };
-
+// duyệt dky course
 export const approveEnrollment = (id, token, notes = '') => {
     return axiosClient.patch(`/enrollments/${id}/approve`, { notes }, {
         headers: {
@@ -42,6 +42,7 @@ export const approveEnrollment = (id, token, notes = '') => {
     });
 };
 
+// từ chối enrollment
 export const rejectEnrollment = (id, token, rejectionReason, notes = '') => {
     return axiosClient.patch(`/enrollments/${id}/reject`, 
         { rejectionReason, notes }, 
@@ -52,7 +53,7 @@ export const rejectEnrollment = (id, token, rejectionReason, notes = '') => {
         }
     );
 };
-
+// cập nhật trạng thái enrollment tổng quát
 export const updateEnrollmentStatus = (id, token, status, notes = '') => {
     return axiosClient.patch(`/enrollments/${id}/status`, 
         { status, notes }, 
@@ -63,7 +64,7 @@ export const updateEnrollmentStatus = (id, token, status, notes = '') => {
         }
     );
 };
-
+// Lấy list course mà user đã đky
 export const getEnrollmentByUser = (userId, token) => {
     return axiosClient.get(`/enrollments/user/${userId}`, {
         headers: {
@@ -72,6 +73,7 @@ export const getEnrollmentByUser = (userId, token) => {
     });
 };
 
+// Lấy danh sách user đã đky 1 course
 export const getEnrollmentByCourse = (courseId, token) => {
     return axiosClient.get(`/enrollments/course/${courseId}`, {
         headers: {

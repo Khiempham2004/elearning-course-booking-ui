@@ -356,7 +356,6 @@ const EnrollmentManager = () => {
                 </Col>
             </Row>
 
-            {/* Filters */}
             <Card style={{ marginBottom: 24 }}>
                 <Row gutter={[16, 16]}>
                     <Col xs={24} md={12}>

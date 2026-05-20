@@ -6,12 +6,12 @@ import { getCourse } from '../../service/course.service';
 
 const { Title, Text } = Typography;
 const AdminDashboard = () => {
-  const [setCourse] = useState([]);
+  const [course, setCourse] = useState([]);
   const [stats] = useState({
     users: 0,
     courses: 0,
-    enrollments: null,
-    schedules: null,
+    enrollments: 0,
+    schedules: 0,
   });
   useEffect(() => {
     const courseData = async () => {

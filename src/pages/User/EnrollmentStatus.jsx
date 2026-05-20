@@ -121,7 +121,7 @@ const EnrollmentStatus = () => {
         rejected: enrollments.filter(e => e.status === 'rejected').length,
     };
 
-    const canEnrollMore = () => enrollments.filter(e => e.status === 'approved').length < 10;
+    // const canEnrollMore = () => enrollments.filter(e => e.status === 'approved').length < 10;
 
     return (
         <div style={{ padding: 24, background: '#f5f7fa', minHeight: '100vh' }}>
