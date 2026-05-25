@@ -109,6 +109,8 @@ const EnrollmentStatus = () => {
                 return <ClockCircleOutlined />;
             case 'rejected':
                 return <CloseCircleOutlined />;
+            case 'completed':
+                return <CheckCircleOutlined style={{ color: '#1890ff' }} />;
             default:
                 return null;
         }
@@ -119,6 +121,7 @@ const EnrollmentStatus = () => {
         approved: enrollments.filter(e => e.status === 'approved').length,
         pending: enrollments.filter(e => e.status === 'pending').length,
         rejected: enrollments.filter(e => e.status === 'rejected').length,
+        completed: enrollments.filter(e => e.status === 'completed').length,
     };
 
     // const canEnrollMore = () => enrollments.filter(e => e.status === 'approved').length < 10;
@@ -183,6 +186,16 @@ const EnrollmentStatus = () => {
                             value={stats.rejected}
                             prefix={<CloseCircleOutlined style={{ color: 'red' }} />}
                             valueStyle={{ color: 'red' }}
+                        />
+                    </Card>
+                </Col>
+                <Col xs={24} md={6}>
+                    <Card>
+                        <Statistic
+                            title="Completed"
+                            value={stats.completed}
+                            prefix="🎓"
+                            valueStyle={{ color: '#1890ff' }}
                         />
                     </Card>
                 </Col>
@@ -295,6 +308,14 @@ const EnrollmentStatus = () => {
                                     <div style={{ marginBottom: 12 }}>
                                         <Text type="warning" style={{ fontSize: 12 }}>
                                             ⏳ Waiting for admin approval
+                                        </Text>
+                                    </div>
+                                )}
+
+                                {enrollment?.status === 'completed' && (
+                                    <div style={{ marginBottom: 12 }}>
+                                        <Text type="success" style={{ fontSize: 12 }}>
+                                            ✓ 🎓 Course completed on {new Date(enrollment?.completedAt).toLocaleDateString()}
                                         </Text>
                                     </div>
                                 )}

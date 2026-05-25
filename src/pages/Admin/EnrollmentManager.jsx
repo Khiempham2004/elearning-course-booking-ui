@@ -32,6 +32,7 @@ import {
     deleteEnrollments,
     approveEnrollment,
     rejectEnrollment,
+    completeEnrollment,
 } from '../../service/enrollment.service';
 import { getToken } from '../../utils/Auth';
 
@@ -46,6 +47,7 @@ const EnrollmentManager = () => {
     const [selectedEnrollment, setSelectedEnrollment] = useState(null);
     const [approvalModalOpen, setApprovalModalOpen] = useState(false);
     const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
+    const [completeModalOpen, setCompleteModalOpen] = useState(false);
     const [actionType, setActionType] = useState(null);
     const [form] = Form.useForm();
     const [submitting, setSubmitting] = useState(false);
@@ -100,6 +102,13 @@ const EnrollmentManager = () => {
         form.resetFields();
     };
 
+    const handleCompleteClick = (record) => {
+        setSelectedEnrollment(record);
+        setActionType('complete');
+        setCompleteModalOpen(true);
+        form.resetFields();
+    };
+
     const handleApproveSubmit = async () => {
         try {
             setSubmitting(true);
@@ -143,6 +152,24 @@ const EnrollmentManager = () => {
         }
     };
 
+    const handleCompleteSubmit = async () => {
+        try {
+            setSubmitting(true);
+            const token = getToken();
+            const notes = form.getFieldValue('notes');
+
+            await completeEnrollment(selectedEnrollment._id, token, notes);
+            message.success('Enrollment completed successfully');
+            setCompleteModalOpen(false);
+            fetchEnrollments();
+        } catch (error) {
+            console.log(error);
+            message.error(error?.response?.data?.message || 'Failed to complete enrollment');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     const filteredEnrollments = enrollments.filter((enrollment) => {
         const searchLower = searchText.toLowerCase();
         const matchSearch =
@@ -172,6 +199,7 @@ const EnrollmentManager = () => {
         approved: enrollments.filter(e => e.status === 'approved').length,
         pending: enrollments.filter(e => e.status === 'pending').length,
         rejected: enrollments.filter(e => e.status === 'rejected').length,
+        completed: enrollments.filter(e => e.status === 'completed').length,
     };
 
     const columns = [
@@ -243,7 +271,7 @@ const EnrollmentManager = () => {
         {
             title: 'Action',
             key: 'action',
-            width: 220,
+            width: 300,
             render: (_, record) => (
                 <Space>
                     <Button
@@ -253,7 +281,7 @@ const EnrollmentManager = () => {
                     >
                         Details
                     </Button>
-                    {record.status !== 'approved' && (
+                    {record.status === 'pending' && (
                         <Button
                             type="primary"
                             size="small"
@@ -262,7 +290,17 @@ const EnrollmentManager = () => {
                             Approve
                         </Button>
                     )}
-                    {record.status !== 'rejected' && (
+                    {record.status === 'approved' && (
+                        <Button
+                            type="primary"
+                            style={{ background: '#52c41a', borderColor: '#52c41a' }}
+                            size="small"
+                            onClick={() => handleCompleteClick(record)}
+                        >
+                            ✓ Complete
+                        </Button>
+                    )}
+                    {record.status !== 'rejected' && record.status !== 'completed' && (
                         <Button
                             danger
                             size="small"
@@ -351,6 +389,16 @@ const EnrollmentManager = () => {
                             value={stats.rejected}
                             prefix={<CloseCircleOutlined style={{ color: 'red' }} />}
                             valueStyle={{ color: 'red' }}
+                        />
+                    </Card>
+                </Col>
+                <Col xs={24} md={6}>
+                    <Card>
+                        <Statistic
+                            title="Completed"
+                            value={stats.completed}
+                            prefix="🎓"
+                            valueStyle={{ color: '#1890ff' }}
                         />
                     </Card>
                 </Col>
@@ -543,6 +591,31 @@ const EnrollmentManager = () => {
                         name="notes"
                     >
                         <Input.TextArea rows={2} placeholder="Add any additional notes" />
+                    </Form.Item>
+                </Form>
+            </Modal>
+
+            {/* Complete Modal */}
+            <Modal
+                title="✓ Complete Enrollment"
+                open={completeModalOpen}
+                onOk={handleCompleteSubmit}
+                onCancel={() => setCompleteModalOpen(false)}
+                confirmLoading={submitting}
+                okText="Complete"
+                okButtonProps={{ style: { background: '#52c41a', borderColor: '#52c41a' } }}
+            >
+                <Form form={form} layout="vertical">
+                    <Form.Item>
+                        <Text strong>
+                            Mark as completed for {selectedEnrollment?.userId?.name} - {selectedEnrollment?.courseId?.title}
+                        </Text>
+                    </Form.Item>
+                    <Form.Item
+                        label="Completion Notes (Optional)"
+                        name="notes"
+                    >
+                        <Input.TextArea rows={3} placeholder="Add notes about course completion (e.g., Final grade, achievements, etc.)" />
                     </Form.Item>
                 </Form>
             </Modal>

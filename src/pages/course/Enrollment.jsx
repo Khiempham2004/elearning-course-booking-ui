@@ -135,7 +135,7 @@ const Enrollment = () => {
                         type="text"
                         icon={<ArrowLeftOutlined />}
                         onClick={() => navigate(-1)}
-                        style={{ marginBottom: 24 }}
+                        style={{ marginBottom: 24 , marginTop : 70 }}
                     >
                         Back
                     </Button>
