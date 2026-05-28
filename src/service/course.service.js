@@ -32,3 +32,12 @@ export const deleteCourse = (id, token) => {
         }
     })
 };
+
+// Lấy danh sách courses do user tạo
+export const getMyCreatedCourses = (token) => {
+    return axiosClient.get('/courses/my-courses', {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+};

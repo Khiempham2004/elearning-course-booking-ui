@@ -80,10 +80,11 @@ const EnrollmentStatus = () => {
 
     const filteredEnrollments = enrollments.filter((enrollment) => {
         const searchLower = searchText.toLowerCase();
-        const matchSearch =
-            enrollment?.courseId?.title?.toLowerCase().includes(searchLower) ||
-            enrollment?.courseId?.level?.toLowerCase().includes(searchLower) ||
-            enrollment?.courseId?.catagory?.toLowerCase().includes(searchLower);
+        const matchSearch = searchText === '' ? true : (
+            enrollment?.title?.toLowerCase().includes(searchLower) ||
+            enrollment?.level?.toLowerCase().includes(searchLower) ||
+            enrollment?.catagory?.toLowerCase().includes(searchLower)
+        );
 
         const matchStatus =
             statusFilter === 'all' ? true : enrollment?.status === statusFilter;
@@ -263,7 +264,7 @@ const EnrollmentStatus = () => {
                                 <div style={{ marginBottom: 16 }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 8 }}>
                                         <Text strong style={{ fontSize: 16 }}>
-                                            {enrollment?.courseId?.title || 'N/A'}
+                                            {enrollment?.title || 'N/A'}
                                         </Text>
                                         <Tag
                                             icon={getStatusIcon(enrollment.status)}
@@ -273,7 +274,7 @@ const EnrollmentStatus = () => {
                                         </Tag>
                                     </div>
                                     <Text type="secondary" style={{ fontSize: 12 }}>
-                                        {enrollment?.courseId?.level || 'Level N/A'} • {enrollment?.courseId?.catagory || 'Category N/A'}
+                                        {enrollment?.level || 'Level N/A'} • {enrollment?.catagory || 'Category N/A'}
                                     </Text>
                                 </div>
 
@@ -315,7 +316,10 @@ const EnrollmentStatus = () => {
                                 {enrollment?.status === 'completed' && (
                                     <div style={{ marginBottom: 12 }}>
                                         <Text type="success" style={{ fontSize: 12 }}>
-                                            ✓ 🎓 Course completed on {new Date(enrollment?.completedAt).toLocaleDateString()}
+                                            ✓ 🎓 Course completed on {''}
+                                            {enrollment?.createdAt
+                                                ? new Date(enrollment.completedAt).toLocaleDateString()
+                                                : 'N/A'}
                                         </Text>
                                     </div>
                                 )}

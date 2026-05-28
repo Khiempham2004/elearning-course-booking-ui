@@ -17,7 +17,6 @@ import {
     InputNumber,
     Upload,
 } from 'antd';
-import { getMyCourses } from '../../service/enrollment.service';
 import {
     createCourse,
     updateCourse,
@@ -25,6 +24,7 @@ import {
 } from '../../service/course.service';
 import { getToken } from '../../utils/Auth';
 import { UploadOutlined } from '@ant-design/icons';
+import { getMyCourses } from '../../service/enrollment.service';
 const { Title, Text } = Typography;
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
@@ -128,60 +128,29 @@ const UserCourse = () => {
     const handleSubmit = async (id) => {
         try {
             const values = await form.validateFields();
-            const token = getToken();
+            const token = getToken(id);
             const formData = new FormData();
 
             console.log("DEBUG: courseFile =", courseFile);
             console.log("DEBUG: instructorFile =", instructorFile);
 
-            formData.append(
-                "title",
-                values.title
-            );
+            formData.append("title", values.title);
+            formData.append("lessons", values.lessons);
+            formData.append("price", values.price);
+            formData.append("level", values.level);
+            formData.append("rating", values.rating);
+            formData.append("reviews", values.reviews);
+            formData.append("instructor", values.instructor);
+            formData.append("catagory", values.catagory);
 
-            formData.append(
-                "lessons",
-                values.lessons
-            );
-
-            formData.append(
-                "price",
-                values.price
-            );
-
-            formData.append(
-                "level",
-                values.level
-            );
-
-            formData.append(
-                "rating",
-                values.rating
-            );
-
-            formData.append(
-                "reviews",
-                values.reviews
-            );
-
-            formData.append(
-                "instructor",
-                values.instructor
-            );
-            if (instructorFile) {
-                formData.append("instructorImage", instructorFile);
-                // await axios.post('/upload', formData);
-            };
-
-            formData.append(
-                "catagory",
-                values.catagory
-            );
-
+            // Append files only if they exist
             if (courseFile) {
                 formData.append("courseImage", courseFile);
-            };
+            }
 
+            if (instructorFile) {
+                formData.append("instructorImage", instructorFile);
+            }
 
             if (editingCourse) {
                 const resEdit = await updateCourse(
@@ -189,25 +158,23 @@ const UserCourse = () => {
                     formData,
                     token
                 );
-                setCourses(prev => prev.map(course => course.id === id ? resEdit.data : course));
-
+                setCourses(prev => prev.map(course => course._id === editingCourse._id ? resEdit.data.data : course));
                 message.success("Cập nhật khóa học thành công");
             } else {
-                await createCourse(formData, token);
-
+                const res = await createCourse(formData, token);
+                console.log("Create course response:", res.data);
                 message.success("Thêm khóa học thành công");
-                fetchCourse();
+                // Reload data
+                await fetchCourse();
             }
 
             setOpening(false);
-
             form.resetFields();
             setCourseFile(null);
-
             setInstructorFile(null);
         } catch (error) {
             console.log(error);
-            message.error("Có lỗi xảy ra")
+            message.error("Có lỗi xảy ra: " + (error.response?.data?.message || error.message))
         }
     };
 
