@@ -18,12 +18,8 @@ export const createEnrollment = (courseId, token) => {
         });
 };
 
-export const getAllEnrollments = (token) => {
-    return axiosClient.get('/enrollments', {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
+export const getAllEnrollments = () => {
+    return axiosClient.get('/enrollments')
 };
 
 export const deleteEnrollments = (id, token) => {

@@ -42,6 +42,16 @@ const getLocalImage = (courseImage) => {
     return key ? imageModules[key].default : courseImage;
 };
 
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return "";
+
+    if (imagePath.startsWith("/uploads")) {
+        return `http://localhost:3000${imagePath}`;
+    };
+
+    return getLocalImage(imagePath);
+}
+
 const CourseManager = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -50,6 +60,8 @@ const CourseManager = () => {
     const [form] = Form.useForm();
     const [courseFile, setCourseFile] = useState(null);
     const [instructorFile, setInstructorFile] = useState(null);
+    const [courseFileList, setCourseFileList] = useState([]);
+    const [instructorFileList, setInstructorFileList] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('all');
 
@@ -75,6 +87,8 @@ const CourseManager = () => {
         form.resetFields();
         setCourseFile(null);
         setInstructorFile(null);
+        setCourseFileList([]);
+        setInstructorFileList([]);
         setModalOpen(true);
     };
 
@@ -82,6 +96,8 @@ const CourseManager = () => {
         setEditingCourse(record);
         setCourseFile(null);
         setInstructorFile(null);
+        setCourseFileList([]);
+        setInstructorFileList([]);
         form.setFieldsValue({
             title: record.title,
             lessons: record.lessons,
@@ -121,7 +137,7 @@ const CourseManager = () => {
             formData.append('rating', values.rating);
             formData.append('reviews', values.reviews);
             formData.append('instructor', values.instructor);
-            formData.append('catagory', values.catagory);
+            formData.append('catagory', values.category);
             formData.append('enrollLink', values.enrollLink || '');
 
             if (courseFile) {
@@ -172,7 +188,7 @@ const CourseManager = () => {
             width: 120,
             render: (_, record) => (
                 <Image
-                    src={getLocalImage(record.courseImage)}
+                    src={getImageUrl(record.courseImage)}
                     width={100}
                     height={60}
                     style={{
@@ -196,7 +212,7 @@ const CourseManager = () => {
             render: (_, record) => (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <Image
-                        src={getLocalImage(record.instructorImage)}
+                        src={getImageUrl(record.instructorImage)}
                         width={32}
                         height={32}
                         preview={false}
@@ -398,6 +414,8 @@ const CourseManager = () => {
                     form.resetFields();
                     setCourseFile(null);
                     setInstructorFile(null);
+                    setCourseFileList([]);
+                    setInstructorFileList([]);
                 }}
                 width={700}
                 okText={editingCourse ? 'Update' : 'Create'}
@@ -497,12 +515,25 @@ const CourseManager = () => {
 
                     <Form.Item label="Course Image">
                         <Upload
+                            fileList={courseFileList}
                             beforeUpload={(file) => {
                                 setCourseFile(file);
+                                setCourseFileList([{ uid: '-1', name: file.name, status: 'done', originFileObj: file }]);
                                 return false;
                             }}
-                            onRemove={() => setCourseFile(null)}
-                            maxCount={1}
+                            onChange={(info) => {
+                                setCourseFileList(info.fileList);
+                                if (info.fileList.length > 0) {
+                                    setCourseFile(info.fileList[0].originFileObj || info.fileList[0]);
+                                } else {
+                                    setCourseFile(null);
+                                }
+                            }}
+                            onRemove={() => {
+                                setCourseFile(null);
+                                setCourseFileList([]);
+                            }}
+                            maxCount={1} // chon image
                             listType="picture"
                         >
                             <Button icon={<UploadOutlined />}>
@@ -513,11 +544,24 @@ const CourseManager = () => {
 
                     <Form.Item label="Instructor Image">
                         <Upload
+                            fileList={instructorFileList}
                             beforeUpload={(file) => {
                                 setInstructorFile(file);
+                                setInstructorFileList([{ uid: '-1', name: file.name, status: 'done', originFileObj: file }]);
                                 return false;
                             }}
-                            onRemove={() => setInstructorFile(null)}
+                            onChange={(info) => {
+                                setInstructorFileList(info.fileList);
+                                if (info.fileList.length > 0) {
+                                    setInstructorFile(info.fileList[0].originFileObj || info.fileList[0]);
+                                } else {
+                                    setInstructorFile(null);
+                                }
+                            }}
+                            onRemove={() => {
+                                setInstructorFile(null);
+                                setInstructorFileList([]);
+                            }}
                             maxCount={1}
                             listType="picture"
                         >

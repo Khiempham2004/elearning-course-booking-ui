@@ -11,7 +11,7 @@ export const getUserId = () => {
     return user?._id || null;
 };
 
-console.log(localStorage.getItem("token"));
+// console.log(localStorage.getItem("token"));
 
 export const logout = (navigate) => {
     localStorage.removeItem("user");

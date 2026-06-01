@@ -38,7 +38,7 @@ const SignIn = () => {
 
       console.log("Data login : ", res);
 
-      const user = res.data.newUser; //axios client đã tự động thêm token vào header nên không cần lấy token từ response nữa
+      const user = res.data.newUser;
       const token = res.data.token;
 
       localStorage.setItem("token", token);
@@ -47,9 +47,12 @@ const SignIn = () => {
 
       if (role === "admin") {
         navigate("/admin");
+      } else if (role === "teacher") {
+        navigate("/teacher");
       } else {
         navigate("/users");
       }
+
       console.log('Login success');
       message.success('SignIn success');
     } catch (error) {

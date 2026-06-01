@@ -32,13 +32,6 @@ const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 const getLocalImage = (courseImage) => {
     if (!courseImage) return "";
 
-    // if (
-    //     courseImage.startsWith('http://') ||
-    //     courseImage.startsWith('https://') ||
-    //     courseImage.startsWith('/')) {
-    //     return courseImage;
-    // }
-
     const filename = courseImage.split("/").pop();
     const key = Object.keys(imageModules).find((k) => k.includes(filename));
     return key ? imageModules[key].default : courseImage;

@@ -31,18 +31,27 @@ import UserDashboard from "./pages/User/UserDashboard.jsx";
 import AdminRoute from "./routes/AdminRoute.jsx";
 import CourseDetail from "./pages/course/CourseDetail.jsx";
 import EnrollmentStatus from "./pages/User/EnrollmentStatus.jsx";
+import TeacherLayout from "./layouts/TeacherLayout.jsx";
+import TeacherDashboard from "./pages/Teacher/TeacherDashboard.jsx";
+import TeacherReports from "./pages/Teacher/TeacherReports.jsx";
+import TeacherGrading from "./pages/Teacher/TeacherGrading.jsx";
+import TeacherStudents from "./pages/Teacher/TeacherStudents.jsx";
+import TeacherProfile from "./pages/Teacher/TeacherProfile.jsx";
+import TeacherSettings from "./pages/Teacher/TeacherSettings.jsx";
+import TeacherRoute from "./routes/TeacherRoute.jsx";
+
 
 const App = () => {
   const location = useLocation();
   const isHome = location.pathname === "/";
   const isAdminPage = location.pathname.startsWith("/admin");
+  const isTeacherPage = location.pathname.startsWith("/teacher")
   const isUserPage = location.pathname.startsWith('/user');
-
 
   return (
     <>
       <div className={isHome ? "home-page" : ""}>
-        {!isAdminPage && !isUserPage && <Navbar />}
+        {!isAdminPage && !isTeacherPage && !isUserPage && <Navbar />}
         <Routes>
           <Route path="/" element={<Index />} />
 
@@ -50,7 +59,7 @@ const App = () => {
           <Route
             path="/admin"
             element={
-              <AdminRoute roles={["admin", "teacher"]}>
+              <AdminRoute roles={["admin"]}>
                 <AdminLayout />
               </AdminRoute>
             }
@@ -60,6 +69,23 @@ const App = () => {
             <Route path='enrollment' element={<EnrollmentManager />} />
             <Route path='schedule' element={<ScheduleManager />} />
             <Route path='user' element={<UserManager />} />
+          </Route>
+
+          {/* TEACHER */}
+          <Route
+            path="/teacher"
+            element={
+              <TeacherRoute roles={["teacher"]}>
+                <TeacherLayout />
+              </TeacherRoute>
+            }
+          >
+            <Route index element={<TeacherDashboard />} />
+            <Route path='reports' element={<TeacherReports />} />
+            <Route path='grading' element={<TeacherGrading />} />
+            <Route path='students' element={<TeacherStudents />} />
+            <Route path='profile' element={<TeacherProfile />} />
+            <Route path='settings' element={<TeacherSettings />} />
           </Route>
 
           {/* User */}
@@ -85,8 +111,8 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
         </Routes>
 
-        {!isAdminPage && !isUserPage && <Footer />}
-      </div>
+        {!isAdminPage && !isTeacherPage && !isUserPage && <Footer />}
+      </div >
     </>
   );
 };

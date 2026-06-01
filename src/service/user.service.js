@@ -15,12 +15,8 @@ export const getUserProfile = () => {
     return axiosClient.get('/users/profile')
 }
 
-export const getAllUsers = (token) => {
-    return axiosClient.get('/users', {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
+export const getAllUsers = () => {
+    return axiosClient.get('/users')
 }
 
 export const updateUser = (id, data) => {

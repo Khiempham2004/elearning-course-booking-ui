@@ -59,7 +59,7 @@ const SignUp = () => {
   };
   return (
     <>
-      <div className="section-banner bg-[#f3f9ff] h-[400px] py-[50px] lg:py-[90px] flex flex-col justify-center items-center relative">
+      <div className="section-banner bg-[#f3f9ff] h-100 py-12.5 lg:py-22.5 flex flex-col justify-center items-center relative">
         <h1 className="chakrapetch-font font-bold text-5xl lg:text-6xl mb-5 text-[#222e48]">
           Sign Up
         </h1>
@@ -112,7 +112,7 @@ const SignUp = () => {
       </div>
 
       {/* Sign Up Section */}
-      <div className="px-[2%] lg:px-[12%] sm:px-[8%] py-[50px] lg:py-[80px] w-full flex flex-col lg:flex-row gap-10 justify-between items-center xl:gap-20 relative">
+      <div className="px-[2%] lg:px-[12%] sm:px-[8%] py-12.5 lg:py-20 w-full flex flex-col lg:flex-row gap-10 justify-between items-center xl:gap-20 relative">
         {/* Form Section */}
         <div className="lg:w-1/2 w-full">
           <form
@@ -202,7 +202,8 @@ const SignUp = () => {
               >
                 <option value="">Chọn role</option>
                 <option value="student">User</option>
-                <option value="admin">ADMIN</option>
+                <option value="admin">Admin</option>
+                <option value="teacher">Teacher</option>
               </select>
             </div>
 
@@ -234,7 +235,7 @@ const SignUp = () => {
 
         {/* Image Section */}
         <div className="lg:w-1/2 w-full flex justify-center">
-          <div className="learning-image bg-[#f3f9ff] rounded-full w-[300px] sm:w-[450px] lg:w-[550px] aspect-square p-6 flex items-center justify-center shadow-inner">
+          <div className="learning-image bg-[#f3f9ff] rounded-full w-75 sm:w-112.5 lg:w-137.5 aspect-square p-6 flex items-center justify-center shadow-inner">
             <img
               src={learningImage}
               alt="learning"

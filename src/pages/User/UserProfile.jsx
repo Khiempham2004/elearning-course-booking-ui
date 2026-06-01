@@ -23,14 +23,16 @@ const UserProfile = () => {
 
     if (!users) {
         return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+            <div style={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh'
+            }}>
                 <Spin size='large' />
             </div>
         );
     }
 
     const getRoleColor = (role) => {
-        switch(role) {
+        switch (role) {
             case 'admin': return '#ff7a45';
             case 'teacher': return '#13c2c2';
             case 'User': return '#1890ff';
@@ -39,7 +41,7 @@ const UserProfile = () => {
     };
 
     const getRoleLabel = (role) => {
-        switch(role) {
+        switch (role) {
             case 'admin': return '👨‍💼 Quản Trị Viên';
             case 'teacher': return '👨‍🏫 Giảng Viên';
             case 'User': return '👨‍🎓 Học Viên';
@@ -54,8 +56,6 @@ const UserProfile = () => {
             padding: '40px 20px'
         }}>
             <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-                
-                {/* Main Profile Card */}
                 <Card
                     style={{
                         borderRadius: '20px',
@@ -66,7 +66,6 @@ const UserProfile = () => {
                         backdropFilter: 'blur(10px)'
                     }}
                 >
-                    {/* Header Background */}
                     <div style={{
                         height: '140px',
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
