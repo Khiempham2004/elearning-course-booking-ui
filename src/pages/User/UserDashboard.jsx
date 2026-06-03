@@ -5,18 +5,41 @@ import { BookOutlined, CheckCircleOutlined, UserOutlined, ClockCircleOutlined, F
 import { getUserProfile } from '../../service/user.service';
 import { getMyCourses } from '../../service/enrollment.service';
 import { getToken } from '../../utils/Auth';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
+
+const imageModules = import.meta.glob("../../assets/Images/*",
+    {
+        eager: true
+    }
+);
+
+const getLocalImage = (dashboardImage) => {
+    if (!dashboardImage) return "";
+    const filename = dashboardImage.split("/").pop();
+    const key = Object.keys(imageModules).find((k) => k.includes(filename));
+    return key ? imageModules[key].default : dashboardImage;
+}
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return "";
+    if (imagePath.startsWith('/uploads')) {
+        return `http://localhost:3000${imagePath}`;
+    };
+    return getLocalImage(imagePath);
+}
 
 const UserDashboard = () => {
     const [user, setUser] = useState({});
     const [course, setCourse] = useState([]);
+
     const [stats, setStats] = useState({
         totalCourse: 0,
         learning: 0,
         completed: 0
     });
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,16 +52,24 @@ const UserDashboard = () => {
 
                 console.log('userRes : ', userRes);
                 console.log('courseRes : ', courseRes);
+                console.log(courseRes.data);
 
-                const courseData = courseRes?.data?.course || [];
+                const courseData = Array.isArray(courseRes?.data?.courses)
+                    ? courseRes?.data?.courses
+                    : [];
+
+                courseData.forEach((item, index) => {
+                    console.log(`Course ${index} : `, item.status);
+                });
 
                 setUser(userRes?.data);
                 setCourse(courseData);
 
+
                 setStats({
                     totalCourse: courseData.length,
                     learning: courseData.filter(c => c.status === 'approved').length,
-                    completed: courseData.filter(c => c.status === 'completed').length
+                    completed: courseData.filter(c => c.status === 'completed').length,
                 });
 
             } catch (err) {
@@ -70,10 +101,10 @@ const UserDashboard = () => {
 
     const getStatusLabel = (status) => {
         switch (status) {
-            case 'approved': return 'Đang học';
-            case 'completed': return 'Đã hoàn thành';
-            case 'pending': return 'Chờ phê duyệt';
-            case 'rejected': return 'Bị từ chối';
+            case 'approved': return '✅ APRROVED';
+            case 'completed': return '🎓 COMPLETED';
+            case 'pending': return '⏳ PENDING';
+            case 'rejected': return '❌ REJECTED';
             default: return status;
         }
     };
@@ -267,7 +298,7 @@ const UserDashboard = () => {
                                 type="primary"
                                 size="large"
                                 style={{ marginTop: '20px', borderRadius: '8px' }}
-                                onClick={() => window.location.href = '/Courses'}
+                                onClick={() => navigate('/Courses')}
                             >
                                 Xem Khóa Học
                             </Button>
@@ -302,7 +333,8 @@ const UserDashboard = () => {
                                                 <div style={{ position: 'relative', overflow: 'hidden', height: '200px' }}>
                                                     <img
                                                         alt={courseData?.title}
-                                                        src={courseData?.courseImage || `http://localhost:3000/${courseData?.image}`}
+                                                        // src={courseData?.courseImage || `http://localhost:3000/${courseData?.image}`}
+                                                        src={getImageUrl(courseData?.image)}
                                                         style={{
                                                             height: '100%',
                                                             width: '100%',
@@ -320,6 +352,7 @@ const UserDashboard = () => {
                                                         position: 'absolute',
                                                         top: '12px',
                                                         right: '12px',
+                                                        fontSize: '16px',
                                                         zIndex: 10
                                                     }}>
                                                         <Tag color={getStatusColor(item.status)}>

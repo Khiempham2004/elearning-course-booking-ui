@@ -4,8 +4,6 @@ import { getUser } from "../utils/Auth.js";
 const ProtectedRoute = ({  roles }) => {
   const user = getUser();
 
-  console.log('User:', user);
-
   if (!user) {
     return <Navigate to="/signin" replace />;
   }
@@ -13,7 +11,6 @@ const ProtectedRoute = ({  roles }) => {
   if (roles && !roles.includes(user.role?.toLowerCase())) {
     return <Navigate to="/signin" replace />;
   }
-  // console.log(user);
 
   return <Outlet />;
 };

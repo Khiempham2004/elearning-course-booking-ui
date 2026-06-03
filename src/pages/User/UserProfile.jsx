@@ -3,11 +3,13 @@ import { Card, Spin, Typography, Row, Col, Empty, Button, Divider } from 'antd';
 import { UserOutlined, MailOutlined, CopyOutlined } from '@ant-design/icons';
 import { getUserProfile } from '../../service/user.service';
 import './User.css'
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
 const UserProfile = () => {
     const [users, setUsers] = useState(null);
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -119,7 +121,6 @@ const UserProfile = () => {
 
                         {/* Profile Info Grid */}
                         <Row gutter={[32, 32]}>
-                            {/* Email Info */}
                             <Col xs={24} sm={12}>
                                 <div>
                                     <div style={{
@@ -157,7 +158,7 @@ const UserProfile = () => {
                                 </div>
                             </Col>
 
-                            {/* Role Info */}
+                            {/* Role Info  */}
                             <Col xs={24} sm={12}>
                                 <div>
                                     <div style={{
@@ -240,12 +241,25 @@ const UserProfile = () => {
                                 paddingLeft: '30px',
                                 paddingRight: '30px'
                             }}
-                            onClick={() => window.location.href = '/users/settings'}
+                            onClick={() => navigate('/users/settings')}
                         >
                             ⚙️ Cài Đặt Tài Khoản
                         </Button>
                     </Col>
                     <Col>
+                        <Button
+                            size='primary'
+                            style={{
+                                borderRadius: '8px',
+                                height: '45px',
+                                paddingLeft: '30px',
+                                paddingRight: "30px"
+                            }}
+                        >
+                            Chỉnh sửa hồ sơ
+                        </Button>
+                    </Col>
+                    {/* <Col>
                         <Button
                             type="primary"
                             size="large"
@@ -255,11 +269,11 @@ const UserProfile = () => {
                                 paddingLeft: '30px',
                                 paddingRight: '30px'
                             }}
-                            onClick={() => window.location.href = '/'}
+                            onClick={() => navigation('/')}
                         >
                             🏠 Quay Về Trang Chủ
                         </Button>
-                    </Col>
+                    </Col> */}
                 </Row>
             </div>
         </div>

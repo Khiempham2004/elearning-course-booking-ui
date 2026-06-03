@@ -48,6 +48,7 @@ const AdminDashboard = () => {
                 // - axiosClient tự động thêm token từ localStorage (xem axiosClient.js)
                 // - Không cần truyền token vào headers
                 // - Không gọi getCourse() trong Promise.all (không cần)
+
                 const [usersRes, enrollmentsRes] = await Promise.all([
                     getAllUsers(),
                     getAllEnrollments(),
@@ -57,8 +58,21 @@ const AdminDashboard = () => {
                 console.log('✅ Enrollments data:', enrollmentsRes);
 
                 // 📊 Tính toán thống kê
-                const users = usersRes?.data || [];
-                const enrollments = enrollmentsRes?.data || [];
+                // Fix: API trả về users & enrollments, không phải data
+                const users = Array.isArray(usersRes?.users)
+                    ? usersRes.users
+                    : Array.isArray(usersRes?.data)
+                        ? usersRes.data
+                        : Array.isArray(usersRes?.data?.users)
+                            ? usersRes.data.users
+                            : [];
+                const enrollments = Array.isArray(enrollmentsRes?.enrollments)
+                    ? enrollmentsRes.enrollments
+                    : Array.isArray(enrollmentsRes?.data)
+                        ? enrollmentsRes.data
+                        : Array.isArray(enrollmentsRes?.data?.enrollments)
+                            ? enrollmentsRes.data.enrollments
+                            : [];
 
                 const totalStudents = users.filter(u => u.role?.toLowerCase() === 'user').length;
                 const totalTeachers = users.filter(u => u.role?.toLowerCase() === 'teacher').length;
@@ -80,12 +94,13 @@ const AdminDashboard = () => {
 
                 // 📋 Xử lý dữ liệu danh sách sinh viên (Top 3)
                 const students = enrollments.slice(0, 3).map((enrollment, idx) => {
-                    const user = users.find(u => u._id === enrollment.userId);
+                    // userId is already populated with user data from API
+                    const user = enrollment.userId || {};
                     return {
                         key: idx + 1,
-                        studentId: user?.studentId || `SV${String(idx + 1).padStart(3, '0')}`,
-                        name: user?.fullname || `Sinh viên ${idx + 1}`,
-                        title: enrollment.courseId?.name || 'Chưa cập nhật',
+                        studentId: user.studentId || `SV${String(idx + 1).padStart(3, '0')}`,
+                        name: user.name || user.fullname || `Sinh viên ${idx + 1}`,
+                        title: enrollment.courseId?.title || 'Chưa cập nhật',
                         teacher: enrollment.courseId?.instructor || 'GV',
                         submittedDate: new Date(enrollment.createdAt).toLocaleDateString('vi-VN'),
                         defenseDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('vi-VN'),

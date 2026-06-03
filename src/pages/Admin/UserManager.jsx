@@ -320,6 +320,9 @@ const UserManager = () => {
                             <Option value="User">
                                 User
                             </Option>
+                            <Option value="teacher">
+                                Teacher
+                            </Option>
                         </Select>
                     </Col>
                 </Row>

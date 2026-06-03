@@ -33,11 +33,11 @@ const TeacherLayout = () => {
             {
                 type: 'divider',
             },
-            // {
-            //     key: '3',
-            //     label: 'Logout',
-            //     onClick: handleLogout
-            // }
+            {
+                key: '3',
+                label: 'Logout',
+                onClick: handleLogout,
+            }
         ],
     };
 
@@ -76,19 +76,6 @@ const TeacherLayout = () => {
                                 <DownOutlined style={{ fontSize: 12 }} />
                             </Space>
                         </Dropdown>
-
-                        <Button
-                            danger
-                            icon={<LogoutOutlined />}
-                            onClick={handleLogout}
-                            style={{
-                                borderRadius: 6,
-                                display: "flex",
-                                alignItems: "center"
-                            }}
-                        >
-                            Logout
-                        </Button>
                     </div>
                 </Header>
 
