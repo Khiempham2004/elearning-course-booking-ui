@@ -334,11 +334,6 @@ const AdminDashboard = () => {
                 {/* 📋 Danh sách chờ bảo vệ */}
                 <Card
                     title="📋 Danh sách sinh viên chờ bảo vệ (Top 3)"
-                    extra={
-                        <Button type="primary" icon={<DownloadOutlined />}>
-                            Xuất báo cáo
-                        </Button>
-                    }
                     style={{ borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
                 >
                     {pendingStudents.length > 0 ? (
@@ -354,7 +349,7 @@ const AdminDashboard = () => {
                 </Card>
 
                 {/* ℹ️ Hướng dẫn */}
-                <Card
+                {/* <Card
                     title="ℹ️ Hướng dẫn sử dụng"
                     style={{ marginTop: 24, borderRadius: 12, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', background: '#fafafa' }}
                 >
@@ -382,7 +377,7 @@ const AdminDashboard = () => {
                             <li><strong>Sinh viên:</strong> Nộp báo cáo, bảo vệ</li>
                         </ul>
                     </div>
-                </Card>
+                </Card> */}
             </div>
         </Spin>
     );

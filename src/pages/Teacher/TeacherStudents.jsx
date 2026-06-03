@@ -39,6 +39,8 @@ const TeacherStudents = () => {
         },
     ];
 
+    
+
     const filteredStudents = students.filter((student) =>
         student.name.toLowerCase().includes(searchText.toLowerCase()) ||
         student.studentId.includes(searchText) ||

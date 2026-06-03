@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { useEffect, useState } from 'react';
-import { Avatar, Card, Row, Col, Typography, Spin, Progress, Empty, Button, Tag } from 'antd';
+import { Avatar, Card, Row, Col, Typography, Spin, Progress, Empty, Button, Tag, Pagination } from 'antd';
 import { BookOutlined, CheckCircleOutlined, UserOutlined, ClockCircleOutlined, FireOutlined } from '@ant-design/icons';
 import { getUserProfile } from '../../service/user.service';
 import { getMyCourses } from '../../service/enrollment.service';
@@ -40,6 +40,14 @@ const UserDashboard = () => {
     });
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate()
+    const [page, setPage] = useState(1);
+
+    const limit = 6;
+    const paginatedCourses = course.slice(
+        (page - 1) * limit,
+        page * limit
+    );
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,21 +58,12 @@ const UserDashboard = () => {
                 const userRes = await getUserProfile();
                 const courseRes = await getMyCourses(token);
 
-                console.log('userRes : ', userRes);
-                console.log('courseRes : ', courseRes);
-                console.log(courseRes.data);
-
                 const courseData = Array.isArray(courseRes?.data?.courses)
                     ? courseRes?.data?.courses
                     : [];
 
-                courseData.forEach((item, index) => {
-                    console.log(`Course ${index} : `, item.status);
-                });
-
                 setUser(userRes?.data);
                 setCourse(courseData);
-
 
                 setStats({
                     totalCourse: courseData.length,
@@ -79,6 +78,7 @@ const UserDashboard = () => {
             }
         };
         fetchData();
+        // setPage(1);
     }, []);
 
     if (loading) {
@@ -108,6 +108,8 @@ const UserDashboard = () => {
             default: return status;
         }
     };
+
+
 
     return (
         <div style={{
@@ -305,8 +307,8 @@ const UserDashboard = () => {
                         </Card>
                     ) : (
                         <Row gutter={[20, 20]}>
-                            {course.map((item) => {
-                                const courseData = item.courseId;
+                            {paginatedCourses.map((item) => {
+                                const courseData = item;
                                 const progress = item.progress || (item.status === 'completed' ? 100 : 50);
 
                                 return (
@@ -333,8 +335,7 @@ const UserDashboard = () => {
                                                 <div style={{ position: 'relative', overflow: 'hidden', height: '200px' }}>
                                                     <img
                                                         alt={courseData?.title}
-                                                        // src={courseData?.courseImage || `http://localhost:3000/${courseData?.image}`}
-                                                        src={getImageUrl(courseData?.image)}
+                                                        src={getImageUrl(courseData?.courseImage)}
                                                         style={{
                                                             height: '100%',
                                                             width: '100%',
@@ -371,7 +372,7 @@ const UserDashboard = () => {
                                                     <Text type="secondary" style={{ fontSize: '12px' }}>
                                                         Tiến độ
                                                     </Text>
-                                                    <Text strong style={{ fontSize: '12px' }}>
+                                                    <Text strong style={{ fontSize: '14px' }}>
                                                         {progress}%
                                                     </Text>
                                                 </div>
@@ -393,7 +394,7 @@ const UserDashboard = () => {
                                                 <Col span={12}>
                                                     <Text type="secondary" style={{ fontSize: '12px', display: 'flex', alignItems: 'center' }}>
                                                         <BookOutlined style={{ marginRight: '4px' }} />
-                                                        {courseData?.lessons} bài
+                                                        {courseData?.lessons} lessons
                                                     </Text>
                                                 </Col>
                                                 <Col span={12}>
@@ -409,6 +410,16 @@ const UserDashboard = () => {
                             })}
                         </Row>
                     )}
+                    <Pagination
+                        current={page}
+                        pageSize={limit}
+                        total={course.length}
+                        onChange={(p) => setPage(p)}
+                        style={{
+                            marginTop: 30,
+                            textAlign: 'center'
+                        }}
+                    />
                 </div>
             </div>
         </div>
