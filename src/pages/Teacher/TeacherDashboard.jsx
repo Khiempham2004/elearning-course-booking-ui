@@ -1,103 +1,163 @@
-import { Card, Row, Col, Statistic, Table, Tag, Button, Space, Tooltip, Spin } from 'antd';
+import { Card, Row, Col, Statistic, Table, Tag, Button, Space, Tooltip, Spin, message } from 'antd';
 import { UserOutlined, FileTextOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
-import {  useState } from 'react';
+import { useState } from 'react';
+import { getMyCreatedCourses } from '../../service/course.service.js';
+import { useEffect } from 'react';
+import { getToken } from '../../utils/Auth.js';
+import { getMyCourses } from '../../service/enrollment.service.js';
+
+const imageModules = import.meta.glob("../../assets/Images/*",
+    {
+        eager: true
+    }
+);
+const getLocalImage = (dashboardImage) => {
+    if (!dashboardImage) return "";
+    const filename = dashboardImage.split("/").pop();
+    const key = Object.keys(imageModules).find((k) => k.includes(filename));
+    return key ? imageModules[key].default : dashboardImage;
+}
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return "";
+    if (imagePath.startsWith('/uploads')) {
+        return `http://localhost:3000${imagePath}`;
+    };
+    return getLocalImage(imagePath);
+}
 
 const TeacherDashboard = () => {
+    const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [stats, setStats] = useState({
-        totalStudents: 25,
-        pendingReports: 8,
-        gradedReports: 17,
-        approvedReports: 12,
-    });
 
-    const recentReports = [
-        {
-            key: 1,
-            studentName: 'Nguyễn Văn A',
-            studentId: 'SV001',
-            title: 'Hệ thống quản lý học tập',
-            submitDate: '2026-06-01',
-            status: 'Pending',
-            grade: '-',
-        },
-        {
-            key: 2,
-            studentName: 'Trần Thị B',
-            studentId: 'SV002',
-            title: 'App bán hàng online',
-            submitDate: '2026-05-31',
-            status: 'Graded',
-            grade: '8.5',
-        },
-        {
-            key: 3,
-            studentName: 'Lê Văn C',
-            studentId: 'SV003',
-            title: 'Platform hẹn hò thông minh',
-            submitDate: '2026-05-30',
-            status: 'Approved',
-            grade: '9.0',
-        },
-    ];
+    useEffect(() => {
+        const getAllCreateCourses = async () => {
+            try {
+                setLoading(true);
+                const token = getToken();
+                const response = await getMyCreatedCourses(token);
+                const getCourses = await getMyCourses();
+
+                console.log("Danh sách tất cả khóa học:", getCourses.data.data);
+                
+                const userCreatedCourses = response.data.data || [];
+                console.log("Khóa học do user tạo:", userCreatedCourses);
+                
+                const createdCourses = response.data.data || [];
+                setCourses(createdCourses);
+                console.log("Danh sách khóa học do bạn tạo:", createdCourses);
+            } catch (error) {
+                console.error("Error fetching created courses:", error);
+                setLoading(false);
+                message.error(error.response?.data?.message ||
+                    "Có lỗi xảy ra khi lấy danh sách khóa học");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getAllCreateCourses();
+    }, []);
 
     const columns = [
         {
-            title: 'Sinh viên',
-            dataIndex: 'studentName',
-            key: 'studentName',
+            title: 'Ảnh khóa học',
+            dataIndex: 'courseImage',
+            key: 'courseImage',
+            render: (image) => (
+                <img
+                    src={getImageUrl(image.courseImage)}
+                    alt="course"
+                    style={{
+                        width: 80,
+                        height: 50,
+                        objectFit: 'cover',
+                        borderRadius: 8
+                    }}
+                />
+            )
         },
         {
-            title: 'ID SV',
-            dataIndex: 'studentId',
-            key: 'studentId',
-        },
-        {
-            title: 'Tiêu đề đồ án',
+            title: 'Tên khóa học',
             dataIndex: 'title',
             key: 'title',
-            render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
         },
         {
-            title: 'Ngày nộp',
-            dataIndex: 'submitDate',
-            key: 'submitDate',
+            title: 'Giảng viên',
+            dataIndex: 'instructor',
+            key: 'instructor',
         },
         {
-            title: 'Trạng thái',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status) => {
-                let color = 'default';
-                if (status === 'Pending') color = 'orange';
-                if (status === 'Graded') color = 'blue';
-                if (status === 'Approved') color = 'green';
-                return <Tag color={color}>{status}</Tag>;
-            },
+            title: 'Danh mục',
+            dataIndex: 'catagory',
+            key: 'catagory',
+            render: (catagory) => (
+                <Tag color="blue">{catagory}</Tag>
+            )
         },
         {
-            title: 'Điểm',
-            dataIndex: 'grade',
-            key: 'grade',
-            render: (grade) => <span style={{ fontWeight: 600, color: '#1890ff' }}>{grade}</span>,
+            title: 'Cấp độ',
+            dataIndex: 'level',
+            key: 'level',
+            render: (level) => (
+                <Tag color="green">{level}</Tag>
+            )
+        },
+        {
+            title: 'Số bài học',
+            dataIndex: 'lessons',
+            key: 'lessons',
+        },
+        {
+            title: 'Đánh giá',
+            dataIndex: 'rating',
+            key: 'rating',
+            render: (rating) => (
+                <span>⭐ {rating}</span>
+            )
+        },
+        {
+            title: 'Giá',
+            dataIndex: 'price',
+            key: 'price',
+            render: (price) =>
+                `${Number(price).toLocaleString("vi-VN")} VNĐ`
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (date) =>
+                new Date(date).toLocaleDateString("vi-VN")
         },
         {
             title: 'Hành động',
             key: 'action',
             render: (_, record) => (
-                <Space>
-                    <Tooltip title="Xem chi tiết">
-                        <Button type="primary" size="small" ghost>Xem</Button>
-                    </Tooltip>
-                    {record.status === 'Pending' && (
-                        <Tooltip title="Chấm điểm">
-                            <Button type="primary" size="small">Chấm</Button>
-                        </Tooltip>
-                    )}
+                <Space size="middle">
+                    <Button
+                        type="primary"
+                        size="small"
+                    >
+                        Xem
+                    </Button>
+
+                    <Button
+                        size="small"
+                    >
+                        Sửa
+                    </Button>
+
+                    <Button
+                        danger
+                        size="small"
+                    >
+                        Xóa
+                    </Button>
                 </Space>
             ),
         },
     ];
+
 
     return (
         <Spin spinning={loading}>
@@ -107,53 +167,71 @@ const TeacherDashboard = () => {
                     <Col xs={24} sm={12} lg={6}>
                         <Card>
                             <Statistic
-                                title="Tổng sinh viên"
-                                value={stats.totalStudents}
-                                prefix={<UserOutlined />}
+                                title="Tổng khóa học"
+                                value={courses.length}
+                                prefix={<FileTextOutlined />}
                                 valueStyle={{ color: '#1890ff' }}
                             />
                         </Card>
                     </Col>
+
                     <Col xs={24} sm={12} lg={6}>
                         <Card>
                             <Statistic
-                                title="Báo cáo chờ xử lý"
-                                value={stats.pendingReports}
-                                prefix={<ClockCircleOutlined />}
-                                valueStyle={{ color: '#faad14' }}
-                            />
-                        </Card>
-                    </Col>
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card>
-                            <Statistic
-                                title="Đã chấm điểm"
-                                value={stats.gradedReports}
+                                title="Tổng bài học"
+                                value={
+                                    courses.reduce(
+                                        (total, course) => total + (course.lessons || 0),
+                                        0
+                                    )
+                                }
                                 prefix={<CheckCircleOutlined />}
                                 valueStyle={{ color: '#52c41a' }}
                             />
                         </Card>
                     </Col>
+
                     <Col xs={24} sm={12} lg={6}>
                         <Card>
                             <Statistic
-                                title="Đã phê duyệt"
-                                value={stats.approvedReports}
-                                prefix={<FileTextOutlined />}
+                                title="Tổng đánh giá"
+                                value={courses.reduce(
+                                    (total, course) => total + (course.rating || 0),
+                                    0
+                                ).toFixed(1)
+                                }
+                                prefix={<UserOutlined />}
+                                valueStyle={{ color: '#faad14' }}
+                            />
+                        </Card>
+                    </Col>
+
+                    <Col xs={24} sm={12} lg={6}>
+                        <Card>
+                            <Statistic
+                                title="Tổng doanh thu"
+                                value={
+                                    courses.reduce(
+                                        (total, course) => total + (course.price || 0),
+                                        0
+                                    )
+                                }
+                                prefix={<ClockCircleOutlined />}
+                                suffix="VNĐ"
                                 valueStyle={{ color: '#722ed1' }}
                             />
                         </Card>
                     </Col>
                 </Row>
 
-                {/* Recent Reports */}
                 <Card
-                    title="📋 Báo cáo gần đây"
+                    title="📚 Danh sách khóa học của bạn"
                     style={{ boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}
                 >
                     <Table
+                        rowKey="_id"
                         columns={columns}
-                        dataSource={recentReports}
+                        dataSource={courses}
                         pagination={{ pageSize: 5 }}
                         loading={loading}
                     />

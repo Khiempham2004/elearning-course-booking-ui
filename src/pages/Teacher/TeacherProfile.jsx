@@ -1,36 +1,63 @@
-import { Card, Row, Col, Descriptions, Avatar, Button, Space, Statistic, Divider } from 'antd';
+import { Card, Row, Col, Descriptions, Avatar, Button, Space, Statistic, Divider, Spin, Tag } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, EnvironmentOutlined, EditOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { useEffect } from 'react';
+import { getUserProfile } from '../../service/user.service';
 
 const TeacherProfile = () => {
     const [editMode, setEditMode] = useState(false);
-    const [courses, setCourses] = useState([]);
+    const [teacher, setTeacher] = useState(null);
+    const [stats, setStats] = useState({
+        totalCourses: 0,
+        totalLessons: 0,
+        totalRevenue: 0
+    });
 
-    const teacher = {
-        fullname: 'Nguyễn Thanh Tuấn',
-        email: 'teacher@example.com',
-        phone: '0912345678',
-        department: 'Công nghệ Thông tin',
-        joinDate: '2025-01-15',
-        bio: 'Giảng viên chuyên ngành công nghệ phần mềm, chuyên về phát triển web và mobile.',
-        avatar: null,
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await getUserProfile();
+                setTeacher(response.data);
+                // Set stats based on teacher data or fetch additional stats
+                setStats({
+                    totalCourses: response.data.data.totalCourses || 0,
+                    totalLessons: response.data.data.totalLessons || 0,
+                    totalRevenue: response.data.data.totalRevenue || 0
+                });
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    if (!teacher) {
+        return (
+            <div style={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh'
+            }}>
+                <Spin size='large' />
+            </div>
+        );
     };
 
-    const stats = {
-        totalStudents: 45,
-        totalReports: 45,
-        approvedReports: 38,
-        gradedReports: 43,
+    const getRoleColor = (role) => {
+        switch (role) {
+            case 'admin': return '#ff7a45';
+            case 'teacher': return '#13c2c2';
+            case 'User': return '#1890ff';
+            default: return '#1890ff';
+        }
     };
-    // const stats = {
-    //     total: courses.length,
-    //     avgPrice: courses.length > 0
-    //         ? (courses.reduce((sum, c) => sum + (c.price || 0), 0) / courses.length).toFixed(2)
-    //         : 0,
-    //     avgRating: courses.length > 0
-    //         ? (courses.reduce((sum, c) => sum + (parseFloat(c.rating) || 0), 0) / courses.length).toFixed(2)
-    //         : 0,
-    // };
+
+    const getRoleLabel = (role) => {
+        switch (role) {
+            case 'admin': return '👨‍💼 Quản Trị Viên';
+            case 'teacher': return '👨‍🏫 Giảng Viên';
+            case 'User': return '👨‍🎓 Học Viên';
+            default: return role;
+        }
+    };
 
     return (
         <div>
@@ -41,10 +68,17 @@ const TeacherProfile = () => {
                         <Avatar
                             size={120}
                             icon={<UserOutlined />}
-                            style={{ backgroundColor: '#1890ff', fontSize: 40 }}
+                            style={{
+                                backgroundColor: '#1890ff',
+                                fontSize: 40
+                            }}
                         />
-                        <h2 style={{ marginTop: 16, marginBottom: 0 }}>{teacher.fullname}</h2>
-                        <p style={{ color: '#999', marginTop: 4 }}>{teacher.department}</p>
+
+                        <h2>{teacher.fullname}</h2>
+
+                        <Tag color="cyan">
+                            {teacher.role?.toUpperCase()}
+                        </Tag>
                     </Col>
 
                     <Col xs={24} sm={18}>
@@ -52,21 +86,19 @@ const TeacherProfile = () => {
                             <Descriptions.Item label="Email" span={3}>
                                 <MailOutlined /> {teacher.email}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Điện thoại" span={3}>
-                                <PhoneOutlined /> {teacher.phone}
+
+                            <Descriptions.Item color={getRoleColor(teacher.role)} label="Vai trò" span={3}>
+                                {getRoleLabel(teacher.role)}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Bộ môn" span={3}>
-                                <EnvironmentOutlined /> {teacher.department}
-                            </Descriptions.Item>
-                            <Descriptions.Item label="Ngày tham gia" span={3}>
-                                {teacher.joinDate}
+
+                            <Descriptions.Item label="ID" span={3}>
+                                {teacher._id}
                             </Descriptions.Item>
                         </Descriptions>
-
                         <Divider />
 
                         <p><strong>Về tôi:</strong></p>
-                        <p style={{ color: '#666' }}>{teacher.bio}</p>
+                        <p style={{ color: '#666' }}>{teacher.bio || "Chưa có thông tin giới thiệu"}</p>
 
                         <Space style={{ marginTop: 16 }}>
                             <Button
@@ -83,56 +115,37 @@ const TeacherProfile = () => {
 
             {/* Statistics */}
             <Row gutter={16} style={{ marginBottom: 20 }}>
-                <Col xs={24} sm={12} lg={6}>
+                <Col xs={24} sm={8}>
                     <Card>
                         <Statistic
-                            title="Tổng sinh viên"
-                            value={stats.totalStudents}
+                            title="Khóa học đã tạo"
+                            value={stats.totalCourses}
                             valueStyle={{ color: '#1890ff' }}
                         />
                     </Card>
                 </Col>
-                <Col xs={24} sm={12} lg={6}>
+
+                <Col xs={24} sm={8}>
                     <Card>
                         <Statistic
-                            title="Tổng báo cáo"
-                            value={stats.totalReports}
-                            valueStyle={{ color: '#faad14' }}
-                        />
-                    </Card>
-                </Col>
-                <Col xs={24} sm={12} lg={6}>
-                    <Card>
-                        <Statistic
-                            title="Đã chấm"
-                            value={stats.gradedReports}
+                            title="Tổng bài học"
+                            value={stats.totalLessons}
                             valueStyle={{ color: '#52c41a' }}
                         />
                     </Card>
                 </Col>
-                <Col xs={24} sm={12} lg={6}>
+
+                <Col xs={24} sm={8}>
                     <Card>
                         <Statistic
-                            title="Đã phê duyệt"
-                            value={stats.approvedReports}
+                            title="Doanh thu"
+                            value={stats.totalRevenue}
+                            suffix="VNĐ"
                             valueStyle={{ color: '#722ed1' }}
                         />
                     </Card>
                 </Col>
             </Row>
-
-            {/* Activity */}
-            <Card
-                title="📊 Hoạt động gần đây"
-                style={{ boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}
-            >
-                <ul style={{ paddingLeft: 20 }}>
-                    <li>Chấm điểm báo cáo của Nguyễn Văn A - 2026-06-01</li>
-                    <li>Phê duyệt báo cáo của Trần Thị B - 2026-05-31</li>
-                    <li>Cập nhật cài đặt - 2026-05-30</li>
-                    <li>Tạo tài khoản giáo viên - 2026-05-25</li>
-                </ul>
-            </Card>
         </div>
     );
 };

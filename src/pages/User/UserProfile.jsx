@@ -259,21 +259,6 @@ const UserProfile = () => {
                             Chỉnh sửa hồ sơ
                         </Button>
                     </Col>
-                    {/* <Col>
-                        <Button
-                            type="primary"
-                            size="large"
-                            style={{
-                                borderRadius: '8px',
-                                height: '45px',
-                                paddingLeft: '30px',
-                                paddingRight: '30px'
-                            }}
-                            onClick={() => navigation('/')}
-                        >
-                            🏠 Quay Về Trang Chủ
-                        </Button>
-                    </Col> */}
                 </Row>
             </div>
         </div>
