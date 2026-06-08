@@ -1,26 +1,27 @@
-import { getToken } from "../utils/Auth.js";
 import axiosClient from '../utils/axiosClient.js'
 
-export const fetchData = () => {
-    const token = getToken();
+export const getAdminDashboard = () => {
+    return axiosClient.get("/users/admin/dashboard");
+}
 
-    return fetch("http://localhost:3000/api/user/admin/dashboard", {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
+export const getUserDashboard = () => {
+    return axiosClient.get("/users/user/dashboard");
+}
+
+export const getTeacherDashboard = () => {
+    return axiosClient.get("/users/teacher/dashboard");
 }
 
 export const getUserProfile = () => {
-    return axiosClient.get('/users/profile')
+    return axiosClient.get('/users/profile');
 }
 
 export const getAllUsers = () => {
-    return axiosClient.get('/users')
+    return axiosClient.get('/users');
 }
 
 export const updateUser = (id, data) => {
-    return axiosClient.put(`/users/${id}`, data)
+    return axiosClient.put(`/users/${id}`, data);
 }
 
 export const deleteUser = (id, token) => {

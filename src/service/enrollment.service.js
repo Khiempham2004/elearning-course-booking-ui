@@ -1,12 +1,7 @@
 import axiosClient from "../utils/axiosClient"
 
-export const getMyCourses = (token) => {
-    return axiosClient.get('/enrollments/my-courses',
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-        });
+export const getMyCourses = () => {
+    return axiosClient.get('/enrollments/my-courses');
 };
 
 export const createEnrollment = (courseId, token) => {

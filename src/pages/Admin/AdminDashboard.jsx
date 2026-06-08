@@ -22,7 +22,7 @@ import {
     Spin
 } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { getAllUsers } from '../../service/user.service';
+import { getAdminDashboard, getAllUsers } from '../../service/user.service';
 import { getAllEnrollments } from '../../service/enrollment.service';
 
 const AdminDashboard = () => {
@@ -49,13 +49,15 @@ const AdminDashboard = () => {
                 // - Không cần truyền token vào headers
                 // - Không gọi getCourse() trong Promise.all (không cần)
 
-                const [usersRes, enrollmentsRes] = await Promise.all([
+                const [usersRes, enrollmentsRes, adminDashboardRes] = await Promise.all([
                     getAllUsers(),
                     getAllEnrollments(),
+                    getAdminDashboard() // Nếu có API riêng cho dashboard, gọi ở đây
                 ]);
 
                 console.log('✅ Users data:', usersRes);
                 console.log('✅ Enrollments data:', enrollmentsRes);
+                console.log('✅ Admin Dashboard data:', adminDashboardRes);
 
                 // 📊 Tính toán thống kê
                 // Fix: API trả về users & enrollments, không phải data

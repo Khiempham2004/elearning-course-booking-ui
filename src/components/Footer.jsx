@@ -114,7 +114,7 @@ const Footer = () => {
           </div>
           <div className="w-full flex flex-col">
             <h3 className="text-[#222e48] font-semibold sora-font mb-3 text-xl">
-              Category
+              Catagory
             </h3>
             <Link
               to="/"

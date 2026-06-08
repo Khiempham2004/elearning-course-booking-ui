@@ -35,20 +35,35 @@ const { Option } = Select;
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
+// const getLocalImage = (courseImage) => {
+//     if (!courseImage) return "";
+//     const filename = courseImage.split("/").pop();
+//     const key = Object.keys(imageModules).find((k) => k.includes(filename));
+//     return key ? imageModules[key].default : courseImage;
+// };
+
 const getLocalImage = (courseImage) => {
     if (!courseImage) return "";
+
+    // ảnh upload từ server
+    if (courseImage.startsWith("/uploads")) {
+        return `http://localhost:5000${courseImage}`;
+    }
+
+    // ảnh local trong assets
     const filename = courseImage.split("/").pop();
-    const key = Object.keys(imageModules).find((k) => k.includes(filename));
+    const key = Object.keys(imageModules).find(
+        (k) => k.includes(filename)
+    );
     return key ? imageModules[key].default : courseImage;
 };
-
 const getImageUrl = (imagePath) => {
     if (!imagePath) return "";
 
+    // image upload tu server
     if (imagePath.startsWith("/uploads")) {
         return `http://localhost:3000${imagePath}`;
     };
-
     return getLocalImage(imagePath);
 }
 
@@ -69,6 +84,7 @@ const CourseManager = () => {
         try {
             setLoading(true);
             const res = await getCourse();
+            // console.log("res CourseManager", res);
             setCourses(res?.data?.data || []);
         } catch (error) {
             console.log(error);
@@ -130,6 +146,7 @@ const CourseManager = () => {
             const token = getToken();
             const formData = new FormData();
 
+
             formData.append('title', values.title);
             formData.append('lessons', values.lessons);
             formData.append('price', values.price);
@@ -137,16 +154,17 @@ const CourseManager = () => {
             formData.append('rating', values.rating);
             formData.append('reviews', values.reviews);
             formData.append('instructor', values.instructor);
-            formData.append('catagory', values.category);
+            formData.append('catagory', values.catagory);
             formData.append('enrollLink', values.enrollLink || '');
 
-            if (courseFile) {
+            if (courseFile instanceof File) {
                 formData.append('courseImage', courseFile);
             }
 
-            if (instructorFile) {
+            if (instructorFile instanceof File) {
                 formData.append('instructorImage', instructorFile);
             }
+
 
             if (editingCourse) {
                 await updateCourse(editingCourse._id, formData, token);
@@ -162,8 +180,9 @@ const CourseManager = () => {
             setInstructorFile(null);
             fetchCourses();
         } catch (error) {
-            console.log(error);
-            message.error('An error occurred');
+            console.log("ERROR:", error);
+            console.log("RESPONSE:", error.response?.data);
+            message.error("An error occurred");
         }
     };
 
@@ -381,7 +400,7 @@ const CourseManager = () => {
                             style={{ width: '100%' }}
                             value={categoryFilter}
                             onChange={setCategoryFilter}
-                            placeholder="Filter by category"
+                            placeholder="Filter by catagory"
                         >
                             <Option value="all">All Categories</Option>
                             {categories.map((cat) => (
@@ -433,7 +452,7 @@ const CourseManager = () => {
                     </Form.Item>
 
                     <Form.Item
-                        label="Category"
+                        label="Catagory"
                         name="catagory"
                         rules={[{ required: true, message: 'Please select category' }]}
                     >

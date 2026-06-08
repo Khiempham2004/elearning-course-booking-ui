@@ -12,15 +12,17 @@ export const getCourseById = (id) => {
 export const createCourse = (data, token) => {
     return axiosClient.post('/courses', data, {
         headers: {
-            Authorization: `Bearer ${token}`
-        }
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data"
+            }
     })
 };
 
 export const updateCourse = (id, data, token) => {
     return axiosClient.put(`/courses/${id}`, data, {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data"
         }
     })
 };

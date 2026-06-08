@@ -13,13 +13,29 @@ const imageModules = import.meta.glob(
 );
 
 const getLocalImage = (courseImage) => {
-    if (!courseImage) return null;
+    if (!courseImage) return "";
+
+    // ảnh upload từ server
+    if (courseImage.startsWith("/uploads")) {
+        return `http://localhost:3000${courseImage}`;
+    }
+
+    // ảnh local trong assets
     const filename = courseImage.split("/").pop();
-
-    const key = Object.keys(imageModules).find((k) => k.includes(filename));
-
-    return key ? imageModules[key].default : null;
+    const key = Object.keys(imageModules).find(
+        (k) => k.includes(filename)
+    );
+    return key ? imageModules[key].default : courseImage;
 };
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return "";
+
+    // image upload tu server
+    if (imagePath.startsWith("/uploads")) {
+        return `http://localhost:3000${imagePath}`;
+    };
+    return getLocalImage(imagePath);
+}
 
 const CourseDetail = () => {
     const { id } = useParams();
@@ -114,7 +130,7 @@ const CourseDetail = () => {
                             <Row gutter={[40, 20]}>
                                 <Col xs={24} md={10}>
                                     <img
-                                        src={getLocalImage(course.courseImage) || course.courseImage}
+                                        src={getImageUrl(course.courseImage) || course.courseImage}
                                         alt="course"
                                         style={{
                                             width: "100%",

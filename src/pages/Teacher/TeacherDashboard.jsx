@@ -3,8 +3,7 @@ import { UserOutlined, FileTextOutlined, CheckCircleOutlined, ClockCircleOutline
 import { useState } from 'react';
 import { getMyCreatedCourses } from '../../service/course.service.js';
 import { useEffect } from 'react';
-import { getToken } from '../../utils/Auth.js';
-import { getMyCourses } from '../../service/enrollment.service.js';
+import { getTeacherDashboard } from '../../service/user.service.js';
 
 const imageModules = import.meta.glob("../../assets/Images/*",
     {
@@ -28,22 +27,22 @@ const getImageUrl = (imagePath) => {
 const TeacherDashboard = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState({});
 
     useEffect(() => {
         const getAllCreateCourses = async () => {
             try {
                 setLoading(true);
-                const token = getToken();
-                const response = await getMyCreatedCourses(token);
-                const getCourses = await getMyCourses();
+                const response = await getMyCreatedCourses();
+                const dashboardRes = await getTeacherDashboard(); // Nếu có API riêng cho dashboard, gọi ở đây
 
-                console.log("Danh sách tất cả khóa học:", getCourses.data.data);
-                
-                const userCreatedCourses = response.data.data || [];
-                console.log("Khóa học do user tạo:", userCreatedCourses);
-                
+                // const userCreatedCourses = response.data.data || [];
+                // console.log("Khóa học do user tạo:", userCreatedCourses);
+
                 const createdCourses = response.data.data || [];
-                setCourses(createdCourses);
+                setCourses(response.data.data || []);
+                setUser(dashboardRes.data.user); // Nếu có API riêng cho dashboard, lấy thông tin user từ đó 
+
                 console.log("Danh sách khóa học do bạn tạo:", createdCourses);
             } catch (error) {
                 console.error("Error fetching created courses:", error);

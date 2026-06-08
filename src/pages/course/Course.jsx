@@ -15,12 +15,37 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
+// const getLocalImage = (courseImage) => {
+//   if (!courseImage) return "";
+//   const filename = courseImage.split("/").pop();
+//   const key = Object.keys(imageModules).find((k) => k.includes(filename));
+//   return key ? imageModules[key].default : courseImage;
+// };
+
 const getLocalImage = (courseImage) => {
-  if (!courseImage) return "";
-  const filename = courseImage.split("/").pop();
-  const key = Object.keys(imageModules).find((k) => k.includes(filename));
-  return key ? imageModules[key].default : courseImage;
+    if (!courseImage) return "";
+
+    // ảnh upload từ server
+    if (courseImage.startsWith("/uploads")) {
+        return `http://localhost:3000${courseImage}`;
+    }
+
+    // ảnh local trong assets
+    const filename = courseImage.split("/").pop();
+    const key = Object.keys(imageModules).find(
+        (k) => k.includes(filename)
+    );
+    return key ? imageModules[key].default : courseImage;
 };
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return "";
+
+    // image upload tu server
+    if (imagePath.startsWith("/uploads")) {
+        return `http://localhost:3000${imagePath}`;
+    };
+    return getLocalImage(imagePath);
+}
 
 const Course = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -29,12 +54,12 @@ const Course = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
-  const categories = ["All", ...new Set(courses.map((c) => c.category))];
+  const categories = ["All", ...new Set(courses.map((c) => c.catagory))];
 
   // const totalPages = Math.ceil(sortedCourses.length) / limit;
   const filteredCourses = activeCategory === "All"
     ? [...courses]
-    : courses.filter((c) => c.category === activeCategory);
+    : courses.filter((c) => c.catagory === activeCategory);
 
   const sortedCourses = [...filteredCourses].sort((a, b) => {
     switch (sortBy) {
@@ -188,16 +213,16 @@ const Course = () => {
             </div>
 
             <div className="flex flex-wrap gap-3 my-8 bg-white p-5 rounded-xl shadow-xl">
-              {categories.map((category, index) => (
+              {categories.map((catagory, index) => (
                 <button
-                  key={category, index}
-                  onClick={() => setActiveCategory(category)}
-                  className={`px-4 py-3 rounded-full text-sm font-medium transition cursor-pointer shadow-md ${activeCategory === category
+                  key={catagory, index}
+                  onClick={() => setActiveCategory(catagory)}
+                  className={`px-4 py-3 rounded-full text-sm font-medium transition cursor-pointer shadow-md ${activeCategory === catagory
                     ? "bg-blue-600 text-white"
                     : "bg-[#f3f9ff] text-[#404a60]"
                     }`}
                 >
-                  {category}
+                  {catagory}
                 </button>
               ))}
             </div>
@@ -212,7 +237,7 @@ const Course = () => {
                     <div className="h-57.5 rounded-xl overflow-hidden relative bg-gray-200">
                       <div className="absolute inset-0 animate-pulse bg-gray-200"></div>
                       <img
-                        src={getLocalImage(course.courseImage)}
+                        src={getImageUrl(course.courseImage)}
                         alt={course.title}
                         loading="lazy"
                         className="relative z-10 group-hover:scale-110 transition duration-500 h-full w-full object-cover"
@@ -243,7 +268,7 @@ const Course = () => {
                         </span>
                         <div className="flex items-center">
                           <img
-                            src={getLocalImage(course.instructorImage)}
+                            src={getImageUrl(course.instructorImage)}
                             alt={course.instructor}
                             className="w-12 h-12 rounded-full object-cover border"
                           />

@@ -2,9 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Card, Row, Col, Typography, Spin, Progress, Empty, Button, Tag, Pagination } from 'antd';
 import { BookOutlined, CheckCircleOutlined, UserOutlined, ClockCircleOutlined, FireOutlined } from '@ant-design/icons';
-import { getUserProfile } from '../../service/user.service';
+import { getUserDashboard, getUserProfile } from '../../service/user.service';
 import { getMyCourses } from '../../service/enrollment.service';
-import { getToken } from '../../utils/Auth';
 import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
@@ -52,11 +51,12 @@ const UserDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                setLoading(false);
-                const token = getToken();
+                setLoading(true);
 
                 const userRes = await getUserProfile();
-                const courseRes = await getMyCourses(token);
+                const courseRes = await getMyCourses();
+                const fetchUserData = await getUserDashboard();
+                console.log("User Dashboard Data:", fetchUserData.data);
 
                 const courseData = Array.isArray(courseRes?.data?.courses)
                     ? courseRes?.data?.courses
@@ -64,6 +64,7 @@ const UserDashboard = () => {
 
                 setUser(userRes?.data);
                 setCourse(courseData);
+                setUser(fetchUserData.data.user);
 
                 setStats({
                     totalCourse: courseData.length,
