@@ -1,17 +1,20 @@
 import axiosClient from "../utils/axiosClient";
 
 // lay tat ca lich hoc
-export const getSchedule = () => {
-    return axiosClient.get("/schedules")
+export const getAllSchedule = (schedules) => {
+    return axiosClient.get("/schedules", schedules)
 };
 
 // lay chi tiet lich hoc
-export const getAllSchedule = (id, data) => {
+export const getScheduleDetail = (id, data) => {
     return axiosClient.get(`/schedules/${id}`, data)
 };
 
-export const createSchedule = () => {
-    return axiosClient.post('/schedules')
+export const getMySchedule = () => {
+    return axiosClient.get("/schedules/my-schedules");
+}
+export const createSchedule = (schedules) => {
+    return axiosClient.post('/schedules', schedules)
 };
 
 export const updateSchedule = (id, data) => {

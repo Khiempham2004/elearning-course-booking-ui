@@ -29,13 +29,31 @@ const { Title, Text } = Typography;
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
+
 const getLocalImage = (courseImage) => {
     if (!courseImage) return "";
 
+    // ảnh upload từ server
+    if (courseImage.startsWith("/uploads")) {
+        return `http://localhost:5000${courseImage}`;
+    }
+
+    // ảnh local trong assets
     const filename = courseImage.split("/").pop();
-    const key = Object.keys(imageModules).find((k) => k.includes(filename));
+    const key = Object.keys(imageModules).find(
+        (k) => k.includes(filename)
+    );
     return key ? imageModules[key].default : courseImage;
 };
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return "";
+
+    // image upload tu server
+    if (imagePath.startsWith("/uploads")) {
+        return `http://localhost:3000${imagePath}`;
+    };
+    return getLocalImage(imagePath);
+}
 
 const UserCourse = () => {
     const [open, setOpening] = useState(false);
@@ -179,7 +197,7 @@ const UserCourse = () => {
 
             render: (_, record) => (
                 <Image
-                    src={getLocalImage(record.courseImage)}
+                    src={getImageUrl(record.courseImage)}
                     width={100}
                     height={60}
                     style={{
@@ -201,7 +219,7 @@ const UserCourse = () => {
         },
 
         {
-            title: 'lessons',
+            title: 'Lessons',
             dataIndex: 'lessons',
             key: 'lessons',
 
@@ -225,7 +243,7 @@ const UserCourse = () => {
         },
 
         {
-            title: 'level',
+            title: 'Level',
             dataIndex: 'level',
             key: 'level',
 
@@ -236,7 +254,7 @@ const UserCourse = () => {
             ),
         },
         {
-            title: 'rating',
+            title: 'Rating',
             dataIndex: 'rating',
             key: 'rating',
 
@@ -247,7 +265,7 @@ const UserCourse = () => {
             ),
         },
         {
-            title: 'reviews',
+            title: 'Reviews',
             dataIndex: 'reviews',
             key: 'reviews',
         },
@@ -256,7 +274,6 @@ const UserCourse = () => {
             title: 'Instructor Image',
             dataIndex: 'instructor Image',
             key: 'instructor',
-            // width: 220,
 
             render: (_, record) => (
                 <div
@@ -268,7 +285,7 @@ const UserCourse = () => {
                     }}
                 >
                     <Image
-                        src={getLocalImage(record.instructorImage)}
+                        src={getImageUrl(record.instructorImage)}
                         width={42}
                         height={42}
                         preview={false}
@@ -312,7 +329,9 @@ const UserCourse = () => {
                     <Button type="primary" onClick={() => handleEditing(record)}>
                         Edit
                     </Button>
-                    <Popconfirm title='Bạn có chắc muốn xóa không?' onConfirm={() => handleDelete(record._id)}>
+                    <Popconfirm
+                        title='Bạn có chắc muốn xóa không?'
+                        onConfirm={() => handleDelete(record._id)}>
                         <Button danger>
                             Delete
                         </Button>

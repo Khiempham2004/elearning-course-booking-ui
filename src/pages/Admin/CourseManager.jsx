@@ -84,7 +84,6 @@ const CourseManager = () => {
         try {
             setLoading(true);
             const res = await getCourse();
-            // console.log("res CourseManager", res);
             setCourses(res?.data?.data || []);
         } catch (error) {
             console.log(error);
@@ -273,6 +272,12 @@ const CourseManager = () => {
             dataIndex: 'rating',
             key: 'rating',
             render: (rating) => <Tag color="gold">⭐ {rating}</Tag>,
+        },
+        {
+            title: 'Reviews',
+            dataIndex: 'reviews',
+            key: 'reviews',
+            render: (reviews) => <Text>{reviews}</Text>,
         },
         {
             title: 'Lessons',
