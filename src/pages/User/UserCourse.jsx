@@ -35,7 +35,7 @@ const getLocalImage = (courseImage) => {
 
     // ảnh upload từ server
     if (courseImage.startsWith("/uploads")) {
-        return `http://localhost:5000${courseImage}`;
+        return `http://localhost:3000${courseImage}`;
     }
 
     // ảnh local trong assets
@@ -108,7 +108,6 @@ const UserCourse = () => {
         setInstructorFile(null);
         form.setFieldsValue({
             title: record.title,
-            // ...item.courseId,
             lessons: record.lessons,
             price: record.price,
             level: record.level,
@@ -142,9 +141,6 @@ const UserCourse = () => {
             const token = getToken(id);
             const formData = new FormData();
 
-            console.log("DEBUG: courseFile =", courseFile);
-            console.log("DEBUG: instructorFile =", instructorFile);
-
             formData.append("title", values.title);
             formData.append("lessons", values.lessons);
             formData.append("price", values.price);
@@ -155,11 +151,11 @@ const UserCourse = () => {
             formData.append("catagory", values.catagory);
 
             // Append files only if they exist
-            if (courseFile) {
+            if (courseFile instanceof File) {
                 formData.append("courseImage", courseFile);
             }
 
-            if (instructorFile) {
+            if (instructorFile instanceof File) {
                 formData.append("instructorImage", instructorFile);
             }
 
@@ -172,17 +168,16 @@ const UserCourse = () => {
                 setCourses(prev => prev.map(course => course._id === editingCourse._id ? resEdit.data.data : course));
                 message.success("Cập nhật khóa học thành công");
             } else {
-                const res = await createCourse(formData, token);
-                console.log("Create course response:", res.data);
+                await createCourse(formData, token);
                 message.success("Thêm khóa học thành công");
                 // Reload data
-                await fetchCourse();
             }
 
-            setOpening(false);
             form.resetFields();
+            setOpening(false);
             setCourseFile(null);
             setInstructorFile(null);
+            await fetchCourse();
         } catch (error) {
             console.log(error);
             message.error("Có lỗi xảy ra: " + (error.response?.data?.message || error.message))
@@ -331,7 +326,10 @@ const UserCourse = () => {
                     </Button>
                     <Popconfirm
                         title='Bạn có chắc muốn xóa không?'
-                        onConfirm={() => handleDelete(record._id)}>
+                        onConfirm={() => handleDelete(record._id)}
+                        okText='Yes'
+                        cancelText='No'
+                    >
                         <Button danger>
                             Delete
                         </Button>

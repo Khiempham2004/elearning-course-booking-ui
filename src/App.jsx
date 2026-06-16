@@ -39,6 +39,7 @@ import TeacherStudents from "./pages/Teacher/TeacherStudents.jsx";
 import TeacherProfile from "./pages/Teacher/TeacherProfile.jsx";
 import TeacherSettings from "./pages/Teacher/TeacherSettings.jsx";
 import TeacherRoute from "./routes/TeacherRoute.jsx";
+import UserMySchedules from "./pages/User/UserMySchedules.jsx";
 
 
 const App = () => {
@@ -93,9 +94,10 @@ const App = () => {
             <Route path="/users" element={<UserLayout />}>
               <Route index element={<UserDashboard />} />
               <Route path="profile" element={<UserProfile />} />
-              <Route path="my-courses" element={<UserCourse />} />
+              <Route path="my-course" element={<UserCourse />} />
               <Route path="enrollment-status" element={<EnrollmentStatus />} />
-              <Route path="settings" element={<UserSettings />} />
+              <Route path="my-schedule" element={<UserMySchedules/>}/>
+              <Route path="setting" element={<UserSettings />} />
             </Route>
           </Route>
 

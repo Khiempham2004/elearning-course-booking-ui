@@ -55,10 +55,6 @@ const AdminDashboard = () => {
                     getAdminDashboard() // Nếu có API riêng cho dashboard, gọi ở đây
                 ]);
 
-                // console.log('✅ Users data:', usersRes);
-                // console.log('✅ Enrollments data:', enrollmentsRes);
-                // console.log('✅ Admin Dashboard data:', adminDashboardRes);
-
                 // 📊 Tính toán thống kê
                 // Fix: API trả về users & enrollments, không phải data
                 const users = Array.isArray(usersRes?.users)

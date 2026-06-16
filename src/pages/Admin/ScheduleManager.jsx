@@ -1,4 +1,4 @@
-import { Button, Card, DatePicker, Empty, Form, Input, message, Modal, Popconfirm, Select, Space, Spin, Table, TimePicker } from 'antd';
+import { Button, Card, DatePicker, Empty, Form, Input, message, Modal, Popconfirm, Select, Space, Spin, Table, TimePicker, Typography } from 'antd';
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -34,6 +34,8 @@ import { getCourse } from '../../service/course.service';
 //     };
 //     return getLocalImage(imagePath);
 // }
+
+const { Title, Text } = Typography
 
 const ScheduleManager = () => {
     const [schedules, setSchedules] = useState([]);
@@ -74,7 +76,6 @@ const ScheduleManager = () => {
     const handleCreateSchedule = async (values) => {
         try {
             await createSchedule(values);
-            fetchSchedules();
             setIsModalOpen(false);
             message.success("Tạo lịch học thành công")
         } catch (error) {
@@ -83,7 +84,7 @@ const ScheduleManager = () => {
         }
     }
 
-    const handleEditSchedule = (record) => {
+    const handleEditSchedule = async (record) => {
         try {
             setEditting(record);
             form.setFieldsValue({
@@ -121,6 +122,11 @@ const ScheduleManager = () => {
             message.error(error)
         }
     };
+    const handleOpenModal = () => {
+        setEditting(null);
+        form.resetFields();
+        setIsModalOpen(true);
+    }
 
     const handleSubmitSchedule = async () => {
         try {
@@ -132,9 +138,14 @@ const ScheduleManager = () => {
                     editting._id,
                     values
                 );
+                message.success("Cập nhật thành công")
             } else {
                 await handleCreateSchedule(values);
             }
+            form.resetFields();
+            setEditting(null);
+            setIsModalOpen(false);
+            await fetchSchedules();
         } catch (error) {
             console.log(error);
             message.error("Submit thất bại")
@@ -145,6 +156,13 @@ const ScheduleManager = () => {
         return <div className='flex justify-center items-center h-75 py-10'>
             <Spin size="large" />
         </div>
+    }
+    if (!courses || courses.length === 0) {
+        return (
+            <div>
+                <Empty description="Bạn chưa có lịch học nào!" />
+            </div>
+        )
     }
 
     const colums = [
@@ -180,7 +198,7 @@ const ScheduleManager = () => {
                     <Button
                         type="primary"
                         onClick={() => handleEditSchedule(record)}>
-                        Sửa
+                        Edit
                     </Button>
                     <Popconfirm
                         title="Bạn có chắc chắn muốn xóa lịch học này?"
@@ -189,7 +207,7 @@ const ScheduleManager = () => {
                         cancelText="No">
 
                         <Button danger>
-                            Xóa
+                            Delete
                         </Button>
                     </Popconfirm>
                 </Space>
@@ -199,19 +217,21 @@ const ScheduleManager = () => {
 
 
     return (
-        <div className='flex justify-between items-center mb-5'>
-            <h1 className='text-2xl font-bold'> Schedule manager</h1>
+        <div className=' items-center mb-5'>
+            <div className='flex justify-between items-center mb-5'>
+                <Title>
+                    Schedule manager
+                </Title>
 
-            <button type='primary'
-                size='large'
-                onClick={() => {
-                    setEditting(null);
-                    form.resetFields();
-                    setIsModalOpen(true);
-                }}
-            >
-                Thêm lịch học
-            </button>
+                <Button
+                    type='primary'
+                    size='large'
+                    className='cursor-pointer'
+                    onClick={handleOpenModal}
+                >
+                    + Thêm lịch học
+                </Button>
+            </div>
             <div>
                 <Table
                     rowKey="_id"
@@ -256,13 +276,21 @@ const ScheduleManager = () => {
             </div>
 
             <Modal
-                title={editting
-                    ? "Cập nhật lịch học"
-                    : "Thêm lịch học"
+                title={
+                    <div className="text-2xl font-bold text-slate-800">
+                        {editting
+                            ? "✏️ Cập nhật lịch học"
+                            : "📚 Thêm lịch học"
+                        }</div>
                 }
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 onOk={handleSubmitSchedule}
+                width={700}
+                centered
+                className='schedule-modal'
+                okText={editting ? "Cập nhật" : "Tạo mới"}
+                cancelText="Hủy"
             >
                 <Form form={form} layout='vertical'>
                     <Form.Item

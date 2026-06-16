@@ -28,20 +28,41 @@ import { getToken } from '../../utils/Auth';
 
 const { Title, Text, Paragraph } = Typography;
 
-const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
+const imageModules = import.meta.glob(
+    "../../assets/Images/*",
+    { eager: true }
+);
 
 const getLocalImage = (courseImage) => {
     if (!courseImage) return "";
+
+    // ảnh upload từ server
+    if (courseImage.startsWith("/uploads")) {
+        return `http://localhost:3000${courseImage}`;
+    }
+
+    // ảnh local trong assets
     const filename = courseImage.split("/").pop();
-    const key = Object.keys(imageModules).find((k) => k.includes(filename));
+    const key = Object.keys(imageModules).find(
+        (k) => k.includes(filename)
+    );
     return key ? imageModules[key].default : courseImage;
 };
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return "";
+
+    // image upload tu server
+    if (imagePath.startsWith("/uploads")) {
+        return `http://localhost:3000${imagePath}`;
+    };
+    return getLocalImage(imagePath);
+}
 
 const Enrollment = () => {
     const { courseId } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
-    const [course, setCourse] = useState(null);
+    const [course, setCourse] = useState({});
     const [loading, setLoading] = useState(false);
     const [enrolling, setEnrolling] = useState(false);
     const [step, setStep] = useState(0);
@@ -52,7 +73,7 @@ const Enrollment = () => {
             try {
                 setLoading(true);
                 const res = await getCourseById(courseId);
-                setCourse(res?.data?.data);
+                setCourse(res.data.data);
             } catch (error) {
                 console.log(error);
                 message.error('Failed to load course details');
@@ -77,10 +98,13 @@ const Enrollment = () => {
             await createEnrollment(courseId, token);
             setStep(1);
             setEnrolled(true);
-            message.success('Successfully enrolled in the course!');
+
+            message.success(
+                'Đăng ký thành công. Vui lòng chờ Admin phê duyệt.'
+            );
 
             setTimeout(() => {
-                navigate('/users/my-courses');
+                navigate('/users/enrollments');
             }, 2000);
         } catch (error) {
             console.log(error);
@@ -108,15 +132,14 @@ const Enrollment = () => {
                     <Col xs={24} md={18} lg={12}>
                         <Result
                             status="success"
-                            title="Enrollment Successful!"
-                            subTitle="You have successfully enrolled in this course. Redirecting to your courses..."
+                            title="Đăng ký khóa học thành công"
+                            subTitle="Yêu cầu đăng ký của bạn đang chờ Admin phê duyệt. Sau khi được duyệt, lịch học sẽ xuất hiện trong mục My Schedule."
                             extra={
                                 <Button
                                     type="primary"
-                                    size="large"
-                                    onClick={() => navigate('/users/my-courses')}
+                                    onClick={() => navigate('/users/enrollment')}
                                 >
-                                    View My Courses
+                                    Xem trạng thái đăng ký
                                 </Button>
                             }
                         />
@@ -135,7 +158,7 @@ const Enrollment = () => {
                         type="text"
                         icon={<ArrowLeftOutlined />}
                         onClick={() => navigate(-1)}
-                        style={{ marginBottom: 24 , marginTop : 70 }}
+                        style={{ marginBottom: 24, marginTop: 70 }}
                     >
                         Back
                     </Button>
@@ -167,7 +190,7 @@ const Enrollment = () => {
 
                                 {course?.courseImage && (
                                     <img
-                                        src={getLocalImage(course.courseImage)}
+                                        src={getImageUrl(course.courseImage)}
                                         alt={course.title}
                                         style={{
                                             width: '100%',
@@ -392,7 +415,7 @@ const Enrollment = () => {
                                     }}
                                 >
                                     <Text type="warning">
-                                        💡 <strong>Note:</strong> You can access the course materials immediately after enrollment.
+                                        💡 <strong>Lưu ý:</strong> Sau khi đăng ký, yêu cầu của bạn sẽ ở trạng thái Pending và cần được Admin phê duyệt trước khi xem lịch học.
                                     </Text>
                                 </div>
                             </Col>

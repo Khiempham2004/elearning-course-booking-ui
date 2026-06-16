@@ -5,20 +5,29 @@ import { getMyCreatedCourses } from '../../service/course.service.js';
 import { useEffect } from 'react';
 import { getTeacherDashboard } from '../../service/user.service.js';
 
-const imageModules = import.meta.glob("../../assets/Images/*",
-    {
-        eager: true
+const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
+
+
+const getLocalImage = (courseImage) => {
+    if (!courseImage) return "";
+
+    // ảnh upload từ server
+    if (courseImage.startsWith("/uploads")) {
+        return `http://localhost:5000${courseImage}`;
     }
-);
-const getLocalImage = (dashboardImage) => {
-    if (!dashboardImage) return "";
-    const filename = dashboardImage.split("/").pop();
-    const key = Object.keys(imageModules).find((k) => k.includes(filename));
-    return key ? imageModules[key].default : dashboardImage;
-}
+
+    // ảnh local trong assets
+    const filename = courseImage.split("/").pop();
+    const key = Object.keys(imageModules).find(
+        (k) => k.includes(filename)
+    );
+    return key ? imageModules[key].default : courseImage;
+};
 const getImageUrl = (imagePath) => {
     if (!imagePath) return "";
-    if (imagePath.startsWith('/uploads')) {
+
+    // image upload tu server
+    if (imagePath.startsWith("/uploads")) {
         return `http://localhost:3000${imagePath}`;
     };
     return getLocalImage(imagePath);
@@ -57,18 +66,21 @@ const TeacherDashboard = () => {
         getAllCreateCourses();
     }, []);
 
+    const handleDetail = () => {
+        message.info('Xem teacher')
+    }
+
     const columns = [
         {
             title: 'Ảnh khóa học',
             dataIndex: 'courseImage',
             key: 'courseImage',
-            render: (image) => (
+            render: (_, record) => (
                 <img
-                    src={getImageUrl(image.courseImage)}
-                    alt="course"
+                    src={getImageUrl(record.courseImage)}
+                    width={100}
+                    height={60}
                     style={{
-                        width: 80,
-                        height: 50,
                         objectFit: 'cover',
                         borderRadius: 8
                     }}
@@ -136,6 +148,7 @@ const TeacherDashboard = () => {
                     <Button
                         type="primary"
                         size="small"
+                        onClick={() => handleDetail(record)}
                     >
                         Xem
                     </Button>

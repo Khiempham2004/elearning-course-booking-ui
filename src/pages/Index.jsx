@@ -38,10 +38,28 @@ const imageModules = import.meta.glob("../assets/Images/*", { eager: true });
 
 const getLocalImage = (courseImage) => {
   if (!courseImage) return "";
+
+  // ảnh upload từ server
+  if (courseImage.startsWith("/uploads")) {
+    return `http://localhost:5000${courseImage}`;
+  }
+
+  // ảnh local trong assets
   const filename = courseImage.split("/").pop();
-  const key = Object.keys(imageModules).find((k) => k.includes(filename));
+  const key = Object.keys(imageModules).find(
+    (k) => k.includes(filename)
+  );
   return key ? imageModules[key].default : courseImage;
 };
+const getImageUrl = (imagePath) => {
+  if (!imagePath) return "";
+
+  // image upload tu server
+  if (imagePath.startsWith("/uploads")) {
+    return `http://localhost:3000${imagePath}`;
+  };
+  return getLocalImage(imagePath);
+}
 
 const Index = () => {
   const [courses, setCourses] = useState([]);
@@ -471,7 +489,7 @@ const Index = () => {
                 >
                   <div className="relative overflow-hidden h-60">
                     <img
-                      src={getLocalImage(course.courseImage)}
+                      src={getImageUrl(course.courseImage)}
                       alt={course.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -489,7 +507,7 @@ const Index = () => {
                     <div className="flex justify-between items-center text-gray-600 text-sm mb-4">
                       <span className="flex items-center gap-2">
                         <i className="bi bi-camera-video"></i>
-                        {course.lessons} Lessons
+                        {course.lessons} Lessonsd
                       </span>
 
                       <span className="flex items-center gap-2">
@@ -514,7 +532,7 @@ const Index = () => {
 
                     <div className="flex items-center gap-3 border-t border-dashed pt-4 mb-5">
                       <img
-                        src={getLocalImage(course.instructorImage)}
+                        src={getImageUrl(course.instructorImage)}
                         alt={course.instructor}
                         className="w-12 h-12 rounded-full object-cover border"
                       />

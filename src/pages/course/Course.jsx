@@ -15,13 +15,6 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
-// const getLocalImage = (courseImage) => {
-//   if (!courseImage) return "";
-//   const filename = courseImage.split("/").pop();
-//   const key = Object.keys(imageModules).find((k) => k.includes(filename));
-//   return key ? imageModules[key].default : courseImage;
-// };
-
 const getLocalImage = (courseImage) => {
     if (!courseImage) return "";
 

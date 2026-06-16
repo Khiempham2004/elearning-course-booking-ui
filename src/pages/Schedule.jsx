@@ -26,7 +26,7 @@ const scheduleData = [
 const Schedule = () => {
   return (
     <div>
-      <div className="px-[8%] py-[120px] bg-[#f3f9ff] min-h-screen">
+      <div className="px-[8%] py-30 bg-[#f3f9ff] min-h-screen">
         <h1 className="text-3xl font-bold text-[#222e48] mb-10">
           Class Schedule
         </h1>

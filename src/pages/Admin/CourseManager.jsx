@@ -167,21 +167,21 @@ const CourseManager = () => {
 
             if (editingCourse) {
                 await updateCourse(editingCourse._id, formData, token);
-                message.success('Course updated successfully');
+                message.success('Cập nhật khóa học thành công');
             } else {
                 await createCourse(formData, token);
-                message.success('Course created successfully');
+                message.success('Thêm mới khóa học thành công');
             }
 
             setModalOpen(false);
             form.resetFields();
             setCourseFile(null);
             setInstructorFile(null);
-            fetchCourses();
+            await fetchCourses();
         } catch (error) {
             console.log("ERROR:", error);
             console.log("RESPONSE:", error.response?.data);
-            message.error("An error occurred");
+            message.error("Có lỗi xảy ra + : ", (error.response?.data?.message || error.message));
         }
     };
 
