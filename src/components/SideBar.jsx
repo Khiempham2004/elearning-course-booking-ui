@@ -15,7 +15,7 @@ const SideBar = () => {
 
     return (
         <Sider width={220} theme="dark">
-            <h2 style={{ color: "white", textAlign: "center", padding: 20 }}>
+            <h2 style={{ color: "white", textAlign: "center", padding: 20 , fontSize : "20px" }}>
                 Admin
             </h2>
 

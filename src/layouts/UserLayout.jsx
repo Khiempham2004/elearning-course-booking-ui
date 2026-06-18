@@ -42,7 +42,7 @@ const UserLayout = () => {
                         </Menu.Item>
 
                         <Menu.Item key="6">
-                            <NavLink to='/users/setting'>
+                            <NavLink to='/users/settings'>
                                 Settings
                             </NavLink>
                         </Menu.Item>

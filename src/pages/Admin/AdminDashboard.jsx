@@ -42,7 +42,6 @@ const AdminDashboard = () => {
         const fetchDashboardData = async () => {
             try {
                 setLoading(true);
-                console.log('🔄 Loading dashboard data...');
 
                 // ✅ FIX: Gọi API đúng cách
                 // - axiosClient tự động thêm token từ localStorage (xem axiosClient.js)
@@ -107,7 +106,7 @@ const AdminDashboard = () => {
                 });
 
                 setPendingStudents(students);
-                message.success('✅ Dữ liệu dashboard tải thành công!');
+                // message.success('✅ Dữ liệu dashboard tải thành công!');
 
             } catch (error) {
                 console.error('❌ Lỗi fetch API:', error);

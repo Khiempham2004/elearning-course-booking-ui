@@ -57,7 +57,6 @@ const EnrollmentManager = () => {
             setLoading(true);
             const token = getToken();
             const res = await getAllEnrollments(token);
-            console.log('Enrollments:', res?.data);
             setEnrollments(res?.data?.enrollments || []);
         } catch (error) {
             console.log(error);

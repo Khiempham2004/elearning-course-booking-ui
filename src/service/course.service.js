@@ -1,6 +1,6 @@
 import axiosClient from "../utils/axiosClient.js";
 
-export const getCourse = () => {
+export const getAllCourse = () => {
     return axiosClient.get('/courses')
 };
 

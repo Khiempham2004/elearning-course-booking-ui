@@ -40,6 +40,8 @@ import TeacherProfile from "./pages/Teacher/TeacherProfile.jsx";
 import TeacherSettings from "./pages/Teacher/TeacherSettings.jsx";
 import TeacherRoute from "./routes/TeacherRoute.jsx";
 import UserMySchedules from "./pages/User/UserMySchedules.jsx";
+import AdminProfile from "./pages/Admin/AdminProfile.jsx";
+import AdminSetting from "./pages/Admin/AdminSetting.jsx";
 
 
 const App = () => {
@@ -47,7 +49,7 @@ const App = () => {
   const isHome = location.pathname === "/";
   const isAdminPage = location.pathname.startsWith("/admin");
   const isTeacherPage = location.pathname.startsWith("/teacher")
-  const isUserPage = location.pathname.startsWith('/user');
+  const isUserPage = location.pathname.startsWith('/users');
 
   return (
     <>
@@ -70,6 +72,8 @@ const App = () => {
             <Route path='enrollment' element={<EnrollmentManager />} />
             <Route path='schedule' element={<ScheduleManager />} />
             <Route path='user' element={<UserManager />} />
+            <Route path='profile' element={<AdminProfile />} />
+            <Route path='settings' element={<AdminSetting />} />
           </Route>
 
           {/* TEACHER */}
@@ -96,8 +100,8 @@ const App = () => {
               <Route path="profile" element={<UserProfile />} />
               <Route path="my-course" element={<UserCourse />} />
               <Route path="enrollment-status" element={<EnrollmentStatus />} />
-              <Route path="my-schedule" element={<UserMySchedules/>}/>
-              <Route path="setting" element={<UserSettings />} />
+              <Route path="my-schedule" element={<UserMySchedules />} />
+              <Route path="settings" element={<UserSettings />} />
             </Route>
           </Route>
 

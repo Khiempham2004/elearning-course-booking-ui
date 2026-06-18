@@ -27,7 +27,7 @@ import {
     SearchOutlined,
     UploadOutlined,
 } from '@ant-design/icons';
-import { getCourse, createCourse, updateCourse, deleteCourse } from '../../service/course.service';
+import { createCourse, updateCourse, deleteCourse, getAllCourse } from '../../service/course.service';
 import { getToken } from '../../utils/Auth';
 
 const { Title, Text } = Typography;
@@ -47,7 +47,7 @@ const getLocalImage = (courseImage) => {
 
     // ảnh upload từ server
     if (courseImage.startsWith("/uploads")) {
-        return `http://localhost:5000${courseImage}`;
+        return `http://localhost:3000${courseImage}`;
     }
 
     // ảnh local trong assets
@@ -83,7 +83,7 @@ const CourseManager = () => {
     const fetchCourses = async () => {
         try {
             setLoading(true);
-            const res = await getCourse();
+            const res = await getAllCourse();
             setCourses(res?.data?.data || []);
         } catch (error) {
             console.log(error);

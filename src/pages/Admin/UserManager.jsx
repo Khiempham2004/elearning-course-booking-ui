@@ -1,8 +1,10 @@
 import {
     DeleteOutlined,
     EditOutlined,
+    FileAddOutlined,
     ReloadOutlined,
     SearchOutlined,
+    UserAddOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import {
@@ -10,6 +12,7 @@ import {
     Button,
     Card,
     Col,
+    Form,
     Input,
     message,
     Modal,
@@ -23,7 +26,8 @@ import {
     Typography,
 } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import { deleteUser, getAllUsers, updateUser } from '../../service/user.service';
+import { createUser, deleteUser, getAllUsers, updateUserRole } from '../../service/user.service';
+import { getToken } from '../../utils/Auth';
 
 
 const { Title, Text } = Typography;
@@ -41,6 +45,15 @@ const UserManager = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const [selectedName, setSelectedName] = useState('');
     const [selectedEmail, setSelectedEmail] = useState('');
+    const [selectedPassword, setSelectedPassword] = useState('');
+    const [createOpenModal, setCreateOpenModal] = useState(false);
+
+    const [newUser, setNewUser] = useState({
+        name: "",
+        email: "",
+        password: "",
+        role: ""
+    })
 
     const fetchUsers = async () => {
         try {
@@ -63,35 +76,78 @@ const UserManager = () => {
         fetchUsers();
     }, []);
 
+    const handleCreateUser = async () => {
+        try {
+            if (!newUser.name.trim()) {
+                return message.error("Vui lòng nhập họ tên");
+            }
+            if (!newUser.email.trim()) {
+                return message.error("Vui lòng nhập email");
+            }
+            if (!newUser.password.trim()) {
+                return message.error("Vui lòng nhập password");
+            }
+            if (!newUser.role.trim()) {
+                return message.error("Vui lòng chọn role");
+            }
+
+            const token = getToken();
+            await createUser(
+                {
+                    name: newUser.name,
+                    email: newUser.email,
+                    password: newUser.password,
+                    role: newUser.role
+                },
+                token
+            );
+
+            message.success("Tạo mới tài thoản thành công");
+            setCreateOpenModal(false);
+            setNewUser({
+                name: "",
+                email: "",
+                password: "",
+                role: ""
+            });
+            await fetchUsers();
+        } catch (error) {
+            console.log(error);
+            message.error("Tạo tài khoản thất bại");
+        }
+    }
+
     const handleEditClick = (record) => {
         setSelectedUser(record);
         setSelectedRole(record?.role || '');
         setSelectedName(record?.name || '');
         setSelectedEmail(record?.email || '');
+        setSelectedPassword('');
         setEditModalOpen(true);
     };
 
     const handleEditConfirm = async () => {
         try {
             if (!selectedRole) {
-                message.error('Please select a role');
-                return;
+                return message.error('Please select a role');
             }
 
             if (!selectedName.trim()) {
-                message.error('Please enter user name');
-                return;
+                return message.error('Please enter user name');
             }
 
             if (!selectedEmail.trim()) {
-                message.error('Please enter email');
-                return;
+                return message.error('Please enter email');
+            }
+            if (!selectedPassword.trim()) {
+                return message.error('Please enter password');
             }
 
-            await updateUser(selectedUser._id, {
+            await updateUserRole(selectedUser._id, {
                 role: selectedRole,
                 name: selectedName,
-                email: selectedEmail
+                email: selectedEmail,
+                password: selectedPassword
             });
             message.success('Update user success');
             setEditModalOpen(false);
@@ -99,6 +155,7 @@ const UserManager = () => {
             setSelectedRole('');
             setSelectedName('');
             setSelectedEmail('');
+            setSelectedPassword('')
             fetchUsers();
         } catch (error) {
             console.log(error);
@@ -146,7 +203,7 @@ const UserManager = () => {
     const totalAdmins = users.filter(
         (item) => item.role === 'admin'
     ).length;
-    
+
 
     const columns = [
         {
@@ -180,6 +237,7 @@ const UserManager = () => {
 
                 if (role === 'admin') color = 'red';
                 if (role === 'User') color = 'green';
+                if (role === "teacher") color = 'orange'
 
                 return (
                     <Tag color={color}>
@@ -257,12 +315,29 @@ const UserManager = () => {
                 </Col>
 
                 <Col>
-                    <Button
-                        icon={<ReloadOutlined />}
-                        onClick={fetchUsers}
-                    >
-                        Refresh
-                    </Button>
+                    <Space>
+                        <Button
+                            icon={<ReloadOutlined />}
+                            onClick={fetchUsers}
+                        >
+                            Refresh
+                        </Button>
+                        <Button
+                            type='primary'
+                            onClick={() => {
+                                setNewUser({
+                                    name: "",
+                                    email: "",
+                                    password: "",
+                                    role: ""
+                                });
+                                setCreateOpenModal(true);
+                            }}
+                        >
+                            + Create User
+                        </Button>
+
+                    </Space>
                 </Col>
             </Row>
 
@@ -342,53 +417,246 @@ const UserManager = () => {
             </Card>
 
             <Modal
-                title="Update User"
+                title={
+                    <Space>
+                        <UserOutlined />
+                        <span>Update User</span>
+                    </Space>
+                }
                 open={editModalOpen}
                 onOk={handleEditConfirm}
                 onCancel={() => {
                     setEditModalOpen(false);
                     setSelectedUser(null);
-                    setSelectedRole('');
-                    setSelectedName('');
-                    setSelectedEmail('');
+                    setSelectedRole("");
+                    setSelectedName("");
+                    setSelectedEmail("");
+                    setSelectedPassword("");
                 }}
-                okText="Update"
+                okText="Update User"
                 cancelText="Cancel"
+                width={600}
             >
+                <div
+                    style={{
+                        textAlign: "center",
+                        marginBottom: 24,
+                    }}
+                >
+                    <Avatar
+                        size={80}
+                        icon={<UserOutlined />}
+                    />
+
+                    <div
+                        style={{
+                            marginTop: 12,
+                            fontWeight: 600,
+                            fontSize: 18,
+                        }}
+                    >
+                        {selectedName}
+                    </div>
+
+                    <div style={{ color: "#888" }}>
+                        {selectedEmail}
+                    </div>
+                </div>
                 {selectedUser && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                        <div>
-                            <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>Name:</label>
-                            <Input
-                                value={selectedName}
-                                onChange={(e) => setSelectedName(e.target.value)}
-                                placeholder="Enter user name"
-                            />
-                        </div>
+                    <div style={{ marginTop: 20 }}>
+                        <Form layout="vertical">
 
-                        <div>
-                            <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>Email:</label>
-                            <Input
-                                value={selectedEmail}
-                                onChange={(e) => setSelectedEmail(e.target.value)}
-                                placeholder="Enter email"
-                                type="email"
-                            />
-                        </div>
-
-                        <div>
-                            <label style={{ display: 'block', marginBottom: 4, fontWeight: 'bold' }}>Role:</label>
-                            <Select
-                                style={{ width: '100%' }}
-                                value={selectedRole}
-                                onChange={setSelectedRole}
+                            <Form.Item
+                                label="Full Name"
+                                required
                             >
-                                <Option value="admin">Admin</Option>
-                                <Option value="User">User</Option>
-                            </Select>
-                        </div>
+                                <Input
+                                    size="large"
+                                    prefix={<UserOutlined />}
+                                    value={selectedName}
+                                    onChange={(e) =>
+                                        setSelectedName(e.target.value)
+                                    }
+                                    placeholder="Enter full name"
+                                />
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Email Address"
+                                required
+                            >
+                                <Input
+                                    size="large"
+                                    value={selectedEmail}
+                                    onChange={(e) =>
+                                        setSelectedEmail(e.target.value)
+                                    }
+                                    placeholder="Enter email"
+                                />
+                            </Form.Item>
+
+                            <Form.Item
+                                label="New Password"
+                                extra="Leave blank if you don't want to change password"
+                            >
+                                <Input.Password
+                                    size="large"
+                                    value={selectedPassword}
+                                    onChange={(e) =>
+                                        setSelectedPassword(e.target.value)
+                                    }
+                                    placeholder="Enter new password"
+                                    type='password'
+                                />
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Role"
+                                required
+                            >
+                                <Select
+                                    size="large"
+                                    value={selectedRole}
+                                    onChange={setSelectedRole}
+                                >
+                                    <Option value="admin">
+                                        👑 Admin
+                                    </Option>
+
+                                    <Option value="User">
+                                        👤 User
+                                    </Option>
+
+                                    <Option value="teacher">
+                                        👨‍🏫 Teacher
+                                    </Option>
+                                </Select>
+                            </Form.Item>
+
+                        </Form>
                     </div>
                 )}
+            </Modal>
+
+            <Modal
+                title={
+                    <Space>
+                        <UserAddOutlined />
+                        <span>Create New User</span>
+                    </Space>
+                }
+                open={createOpenModal}
+                onOk={handleCreateUser}
+                onCancel={() => {
+                    setCreateOpenModal(false);
+                    setNewUser({
+                        name: "",
+                        email: "",
+                        password: "",
+                        role: "",
+                    });
+                }}
+                okText="Create User"
+                width={600}
+            >
+                <div
+                    style={{
+                        textAlign: "center",
+                        marginBottom: 24,
+                    }}
+                >
+                    <Avatar
+                        size={80}
+                        icon={<UserOutlined />}
+                    />
+                </div>
+
+                <Form layout="vertical">
+
+                    <Form.Item
+                        label="Full Name"
+                        required
+                    >
+                        <Input
+                            size="large"
+                            prefix={<UserOutlined />}
+                            placeholder="Enter full name"
+                            value={newUser.name}
+                            onChange={(e) =>
+                                setNewUser({
+                                    ...newUser,
+                                    name: e.target.value,
+                                })
+                            }
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Email Address"
+                        required
+                    >
+                        <Input
+                            size="large"
+                            placeholder="Enter email"
+                            autoComplete="off"
+                            value={newUser.email}
+                            onChange={(e) =>
+                                setNewUser({
+                                    ...newUser,
+                                    email: e.target.value,
+                                })
+                            }
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Password"
+                        required
+                    >
+                        <Input.Password
+                            size="large"
+                            autoComplete="new-password"
+                            placeholder="Enter password"
+                            value={newUser.password}
+                            onChange={(e) =>
+                                setNewUser({
+                                    ...newUser,
+                                    password: e.target.value,
+                                })
+                            }
+                        />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Role"
+                        required
+                    >
+                        <Select
+                            size="large"
+                            placeholder="Select role"
+                            value={newUser.role || undefined}
+                            onChange={(value) =>
+                                setNewUser({
+                                    ...newUser,
+                                    role: value,
+                                })
+                            }
+                        >
+                            <Option value="admin">
+                                👑 Admin
+                            </Option>
+
+                            <Option value="User">
+                                👤 User
+                            </Option>
+
+                            <Option value="teacher">
+                                👨‍🏫 Teacher
+                            </Option>
+                        </Select>
+                    </Form.Item>
+
+                </Form>
             </Modal>
         </div>
     );

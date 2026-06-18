@@ -14,8 +14,8 @@ export const getUserId = () => {
 // console.log(localStorage.getItem("token"));
 
 export const logout = (navigate) => {
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/signin");
 }
 

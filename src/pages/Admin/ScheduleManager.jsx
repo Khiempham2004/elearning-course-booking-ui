@@ -6,7 +6,7 @@ import { createSchedule, getAllSchedule, updateSchedule } from '../../service/sc
 import { deleteSchedule } from '../../service/schedule.service';
 import { getToken } from '../../utils/Auth';
 import dayjs from 'dayjs';
-import { getCourse } from '../../service/course.service';
+import { getAllCourse } from '../../service/course.service';
 // const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
 
@@ -50,8 +50,6 @@ const ScheduleManager = () => {
         try {
             setLoading(true);
             const res = await getAllSchedule();
-            console.log("✅ Lịch học đã được tải:", res.data.schedules);
-
             setSchedules(res.data.schedules);
         } catch (error) {
             console.log(error);
@@ -62,7 +60,7 @@ const ScheduleManager = () => {
 
     const fectCourses = async () => {
         try {
-            const res = await getCourse();
+            const res = await getAllCourse();
             setCourses(res?.data?.data || []);
         } catch (error) {
             console.log(error);

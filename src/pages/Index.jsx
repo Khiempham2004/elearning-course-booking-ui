@@ -32,7 +32,7 @@ import { Link } from "react-router-dom";
 import article1 from "../../src/assets/Images/articles-01.jpg";
 import article2 from "../../src/assets/Images/articles-02.jpg";
 import article3 from "../../src/assets/Images/articles-03.jpg";
-import { getCourse } from "../service/course.service";
+import { getAllCourse } from "../service/course.service";
 
 const imageModules = import.meta.glob("../assets/Images/*", { eager: true });
 
@@ -70,7 +70,7 @@ const Index = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await getCourse();
+        const res = await getAllCourse();
         setCourses(res.data.data);
       } catch (error) {
         console.log(error);

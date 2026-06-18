@@ -1,15 +1,58 @@
 
-import { Layout, Input, Avatar, Button } from "antd";
+import { Layout, Input, Avatar, Button, Space, Dropdown } from "antd";
 import SideBar from '../components/SideBar.jsx';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 const { Header, Sider, Content } = Layout;
 import {
     BellOutlined,
     UserOutlined,
     LogoutOutlined,
+    SettingOutlined,
+    ProfileOutlined
 } from "@ant-design/icons";
+import { logout } from "../utils/Auth.js";
 
 const AdminLayout = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const navigae = useNavigate();
+
+    const handleLogout = () => {
+        logout(navigae);
+    }
+
+    const items = [
+        {
+            key: "profile",
+            icon: <ProfileOutlined />,
+            label: "Profile",
+        },
+        {
+            key: "setting",
+            icon: <SettingOutlined />,
+            label: "Setting",
+        },
+        {
+            type: "divider"
+        },
+        {
+            key: "logout",
+            icon: <LogoutOutlined />,
+            label: "Logout",
+        }
+    ];
+
+    const handleMenuCLick = ({ key }) => {
+        if (key === "profile") {
+            navigae("/admin/profile");
+        }
+
+        if (key === "setting") {
+            navigae("/admin/settings");
+        }
+        if (key === "logout") {
+            handleLogout();
+        }
+    }
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <SideBar />
@@ -17,7 +60,7 @@ const AdminLayout = () => {
                 <Header
                     style={{
                         background: "#fff",
-                        display: "flex",
+                        display: "flex",  
                         justifyContent: "space-between",
                         textAlign: "center",
                         alignItems: "center",
@@ -27,21 +70,40 @@ const AdminLayout = () => {
                 >
                     <h2 style={{ margin: 0, fontWeight: 600, fontSize: 20 }}>Admin Dashboard</h2>
 
-                    <div style={{ display: "flex", gap: 16, padding: "6px 12px", borderRadius: 6, background: "#fafafa" }}>
-                        <Input placeholder="Search..." style={{ width: 200, borderRadius: 6 }} />
-                        <BellOutlined style={{ fontSize: 18, cursor: "pointer" }} />
-                        <Avatar icon={<UserOutlined />} style={{ cursor: "pointer" }} />
 
-                        <Link to="/signin">
-                            <Button danger icon={<LogoutOutlined />} style={{
-                                borderRadius: 6,
-                                display: "flex",
-                                alignItems: "center"
-                            }}>
-                                Logout
-                            </Button>
-                        </Link>
-                    </div>
+                    <Space size="middle">
+                        <Input style={{ width: 220 }} placeholder="Search..." />
+                        <BellOutlined
+                            style={{
+                                fontSize: 18, cursor: "pointer"
+                            }}
+                        />
+                        <Dropdown
+                            menu={{ items, onClick: handleMenuCLick }}
+                        // trigger={["click"]}
+                        >
+                            <Space
+                                style={{
+                                    cursor: "pointer"
+                                }}
+                            >
+                                <Avatar icon={<UserOutlined />}
+                                    style={{
+                                        backgroundColor: "#1677ff"
+                                    }}
+                                >
+                                </Avatar>
+
+                                <span
+                                    style={{
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    {user?.name}
+                                </span>
+                            </Space>
+                        </Dropdown>
+                    </Space>
                 </Header>
 
                 <Content style={{ margin: 20 }}>

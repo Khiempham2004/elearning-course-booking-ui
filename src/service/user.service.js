@@ -19,9 +19,23 @@ export const getUserProfile = () => {
 export const getAllUsers = () => {
     return axiosClient.get('/users');
 }
+export const createUser = (data, token) => {
+    return axiosClient.post('/users', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
 
-export const updateUser = (id, data) => {
-    return axiosClient.put(`/users/${id}`, data);
+export const updateUserRole = (id, data) => {
+    return axiosClient.put(`/users/${id}`, data)
+}
+export const updateProfile = (data, token) => {
+    return axiosClient.put('/users/profile', data, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
 }
 
 export const deleteUser = (id, token) => {

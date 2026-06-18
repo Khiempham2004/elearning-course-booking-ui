@@ -10,34 +10,34 @@ import element6 from "../../assets/Images/element-06.png";
 
 import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
-import { getCourse } from "../../service/course.service";
+import { getAllCourse } from "../../service/course.service";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
 const getLocalImage = (courseImage) => {
-    if (!courseImage) return "";
+  if (!courseImage) return "";
 
-    // ảnh upload từ server
-    if (courseImage.startsWith("/uploads")) {
-        return `http://localhost:3000${courseImage}`;
-    }
+  // ảnh upload từ server
+  if (courseImage.startsWith("/uploads")) {
+    return `http://localhost:3000${courseImage}`;
+  }
 
-    // ảnh local trong assets
-    const filename = courseImage.split("/").pop();
-    const key = Object.keys(imageModules).find(
-        (k) => k.includes(filename)
-    );
-    return key ? imageModules[key].default : courseImage;
+  // ảnh local trong assets
+  const filename = courseImage.split("/").pop();
+  const key = Object.keys(imageModules).find(
+    (k) => k.includes(filename)
+  );
+  return key ? imageModules[key].default : courseImage;
 };
 const getImageUrl = (imagePath) => {
-    if (!imagePath) return "";
+  if (!imagePath) return "";
 
-    // image upload tu server
-    if (imagePath.startsWith("/uploads")) {
-        return `http://localhost:3000${imagePath}`;
-    };
-    return getLocalImage(imagePath);
+  // image upload tu server
+  if (imagePath.startsWith("/uploads")) {
+    return `http://localhost:3000${imagePath}`;
+  };
+  return getLocalImage(imagePath);
 }
 
 const Course = () => {
@@ -49,7 +49,6 @@ const Course = () => {
 
   const categories = ["All", ...new Set(courses.map((c) => c.catagory))];
 
-  // const totalPages = Math.ceil(sortedCourses.length) / limit;
   const filteredCourses = activeCategory === "All"
     ? [...courses]
     : courses.filter((c) => c.catagory === activeCategory);
@@ -92,10 +91,9 @@ const Course = () => {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const res = await getCourse();
+        const res = await getAllCourse();
         console.log("Course API response:", res.data);
 
-        // Backend returns { data: [...] } so access res.data.data
         const coursesData = res.data.data || res.data || [];
         console.log("Courses loaded:", coursesData.length);
 
