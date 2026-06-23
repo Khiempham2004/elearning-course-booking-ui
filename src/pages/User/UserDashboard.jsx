@@ -5,6 +5,7 @@ import { BookOutlined, CheckCircleOutlined, UserOutlined, ClockCircleOutlined, F
 import { getUserDashboard, getUserProfile } from '../../service/user.service';
 import { getMyCourses } from '../../service/enrollment.service';
 import { useNavigate } from 'react-router-dom';
+import { resolveApiAssetUrl } from '../../utils/apiUrl';
 
 const { Title, Text } = Typography;
 
@@ -23,7 +24,7 @@ const getLocalImage = (dashboardImage) => {
 const getImageUrl = (imagePath) => {
     if (!imagePath) return "";
     if (imagePath.startsWith('/uploads')) {
-        return `http://localhost:3000${imagePath}`;
+        return resolveApiAssetUrl(imagePath);
     };
     return getLocalImage(imagePath);
 }

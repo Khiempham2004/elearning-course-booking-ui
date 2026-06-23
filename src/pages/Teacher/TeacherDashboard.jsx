@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { getMyCreatedCourses } from '../../service/course.service.js';
 import { useEffect } from 'react';
 import { getTeacherDashboard } from '../../service/user.service.js';
+import { resolveApiAssetUrl } from '../../utils/apiUrl.js';
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
@@ -13,7 +14,7 @@ const getLocalImage = (courseImage) => {
 
     // ảnh upload từ server
     if (courseImage.startsWith("/uploads")) {
-        return `http://localhost:5000${courseImage}`;
+        return resolveApiAssetUrl(courseImage);
     }
 
     // ảnh local trong assets
@@ -28,7 +29,7 @@ const getImageUrl = (imagePath) => {
 
     // image upload tu server
     if (imagePath.startsWith("/uploads")) {
-        return `http://localhost:3000${imagePath}`;
+        return resolveApiAssetUrl(imagePath);
     };
     return getLocalImage(imagePath);
 }

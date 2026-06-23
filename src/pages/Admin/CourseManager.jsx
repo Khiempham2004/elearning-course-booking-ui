@@ -29,6 +29,7 @@ import {
 } from '@ant-design/icons';
 import { createCourse, updateCourse, deleteCourse, getAllCourse } from '../../service/course.service';
 import { getToken } from '../../utils/Auth';
+import { resolveApiAssetUrl } from '../../utils/apiUrl';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -47,7 +48,7 @@ const getLocalImage = (courseImage) => {
 
     // ảnh upload từ server
     if (courseImage.startsWith("/uploads")) {
-        return `http://localhost:3000${courseImage}`;
+        return resolveApiAssetUrl(courseImage);
     }
 
     // ảnh local trong assets
@@ -62,7 +63,7 @@ const getImageUrl = (imagePath) => {
 
     // image upload tu server
     if (imagePath.startsWith("/uploads")) {
-        return `http://localhost:3000${imagePath}`;
+        return resolveApiAssetUrl(imagePath);
     };
     return getLocalImage(imagePath);
 }

@@ -1,8 +1,8 @@
 import axios from "axios";
+import { API_BASE_URL } from "./apiUrl";
 
 const axiosClient = axios.create({
-    // baseURL: 'http://localhost:3000/api',
-    baseURL: "https://elearning-course-booking-api.onrender.com/api",
+    baseURL: API_BASE_URL,
     headers: {
         "Content-Type": "application/json",
     }

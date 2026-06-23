@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { faHome } from "@fortawesome/free-regular-svg-icons";
 import { getAllCourse } from "../../service/course.service";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { resolveApiAssetUrl } from "../../utils/apiUrl";
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
 
@@ -20,7 +21,7 @@ const getLocalImage = (courseImage) => {
 
   // ảnh upload từ server
   if (courseImage.startsWith("/uploads")) {
-    return `http://localhost:3000${courseImage}`;
+    return resolveApiAssetUrl(courseImage);
   }
 
   // ảnh local trong assets
@@ -35,7 +36,7 @@ const getImageUrl = (imagePath) => {
 
   // image upload tu server
   if (imagePath.startsWith("/uploads")) {
-    return `http://localhost:3000${imagePath}`;
+    return resolveApiAssetUrl(imagePath);
   };
   return getLocalImage(imagePath);
 }

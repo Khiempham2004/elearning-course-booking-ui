@@ -5,6 +5,7 @@ import { getCourseById } from '../../service/course.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BookOutlined, DollarOutlined, UserOutlined, StarFilled, TagOutlined } from '@ant-design/icons';
 import { getToken } from '../../utils/Auth';
+import { resolveApiAssetUrl } from '../../utils/apiUrl';
 const { Title, Paragraph, Text } = Typography;
 
 const imageModules = import.meta.glob(
@@ -17,7 +18,7 @@ const getLocalImage = (courseImage) => {
 
     // ảnh upload từ server
     if (courseImage.startsWith("/uploads")) {
-        return `http://localhost:3000${courseImage}`;
+        return resolveApiAssetUrl(courseImage);
     }
 
     // ảnh local trong assets
@@ -32,7 +33,7 @@ const getImageUrl = (imagePath) => {
 
     // image upload tu server
     if (imagePath.startsWith("/uploads")) {
-        return `http://localhost:3000${imagePath}`;
+        return resolveApiAssetUrl(imagePath);
     };
     return getLocalImage(imagePath);
 }
