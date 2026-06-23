@@ -6,47 +6,68 @@ const { Sider, Header, Content } = Layout;
 
 const UserLayout = () => {
 
+    const menuItems = [
+        {
+            key: '1',
+            label: (
+                <NavLink to='/users'>
+                    Home
+                </NavLink>
+            )
+        },
+        {
+            key: '2',
+            label: (
+                <NavLink to='/users/profile'>
+                    Profile
+                </NavLink>
+            )
+        },
+        {
+            key: '3',
+            label: (
+                <NavLink to='/users/my-course'>
+                    My Courses
+                </NavLink>
+            )
+        },
+        {
+            key: '4',
+            label: (
+                <NavLink to='/users/enrollment-status'>
+                    Enrollment
+                </NavLink>
+            )
+        },
+        {
+            key: '5',
+            label: (
+                <NavLink to='/users/my-schedule'>
+                    My Schedule
+                </NavLink>
+            )
+        },
+        {
+            key: '6',
+            label: (
+                <NavLink to='/users/settings'>
+                    Settings
+                </NavLink>
+            )
+        },
+    ]
+
     return (
         <div style={{ background: "#f0f0f0", minHeight: "100vh" }}>
             <Layout style={{ minHeight: "100vh", background: "transparent" }}>
                 <Sider width={220} theme="dark">
                     <h2 style={{ textAlign: 'center', padding: 20, fontSize: 30, color: '#fff' }}>User</h2>
-
-                    <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} >
-                        <Menu.Item key="1">
-                            <NavLink to='/users'>
-                                Home
-                            </NavLink>
-                        </Menu.Item>
-                        <Menu.Item key="2">
-                            <NavLink to='/users/profile'>
-                                Profile
-                            </NavLink>
-                        </Menu.Item>
-
-                        <Menu.Item key="3">
-                            <NavLink to='/users/my-course'>
-                                My Courses
-                            </NavLink>
-                        </Menu.Item>
-                        <Menu.Item key="4">
-                            <NavLink to='/users/enrollment-status'>
-                                Enrollment
-                            </NavLink>
-                        </Menu.Item>
-
-                        <Menu.Item key="5">
-                            <NavLink to="/users/my-schedule">
-                                My Schedule
-                            </NavLink>
-                        </Menu.Item>
-
-                        <Menu.Item key="6">
-                            <NavLink to='/users/settings'>
-                                Settings
-                            </NavLink>
-                        </Menu.Item>
-                    </Menu>
+                    <Menu
+                        theme='dark'
+                        mode='inline'
+                        defaultSelectedKeys={['1']}
+                        items={menuItems}
+                    />
                 </Sider>
 
                 <Layout>

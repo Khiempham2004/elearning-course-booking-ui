@@ -74,21 +74,22 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.dashboard-container > * {
+.dashboard-container>* {
   animation: slideUp 0.5s ease-out forwards;
 }
 
-.dashboard-container > *:nth-child(1) {
+.dashboard-container>*:nth-child(1) {
   animation-delay: 0.1s;
 }
 
-.dashboard-container > *:nth-child(2) {
+.dashboard-container>*:nth-child(2) {
   animation-delay: 0.2s;
 }
 
@@ -178,4 +179,18 @@
   .ant-col {
     min-width: 100%;
   }
+}
+
+body .ant-modal-content {
+  border-radius: 20px;
+}
+
+body .ant-card {
+  border-radius: 14px;
+}
+
+body .ant-input,
+body .ant-input-number,
+body .ant-select-selector {
+  border-radius: 10px !important;
 }

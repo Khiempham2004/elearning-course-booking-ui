@@ -182,7 +182,7 @@ const TeacherDashboard = () => {
                                 title="Tổng khóa học"
                                 value={courses.length}
                                 prefix={<FileTextOutlined />}
-                                valueStyle={{ color: '#1890ff' }}
+                                styles={{ color: '#1890ff' }}
                             />
                         </Card>
                     </Col>
@@ -198,7 +198,7 @@ const TeacherDashboard = () => {
                                     )
                                 }
                                 prefix={<CheckCircleOutlined />}
-                                valueStyle={{ color: '#52c41a' }}
+                                styles={{ color: '#52c41a' }}
                             />
                         </Card>
                     </Col>
@@ -213,7 +213,7 @@ const TeacherDashboard = () => {
                                 ).toFixed(1)
                                 }
                                 prefix={<UserOutlined />}
-                                valueStyle={{ color: '#faad14' }}
+                                styles={{ color: '#faad14' }}
                             />
                         </Card>
                     </Col>
@@ -230,7 +230,7 @@ const TeacherDashboard = () => {
                                 }
                                 prefix={<ClockCircleOutlined />}
                                 suffix="VNĐ"
-                                valueStyle={{ color: '#722ed1' }}
+                                styles={{ color: '#722ed1' }}
                             />
                         </Card>
                     </Col>

@@ -56,7 +56,6 @@ const UserDashboard = () => {
                 const userRes = await getUserProfile();
                 const courseRes = await getMyCourses();
                 const fetchUserData = await getUserDashboard();
-                console.log("User Dashboard Data:", fetchUserData.data);
 
                 const courseData = Array.isArray(courseRes?.data?.courses)
                     ? courseRes?.data?.courses
@@ -79,7 +78,6 @@ const UserDashboard = () => {
             }
         };
         fetchData();
-        // setPage(1);
     }, []);
 
     if (loading) {

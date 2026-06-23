@@ -120,7 +120,7 @@ const TeacherProfile = () => {
                         <Statistic
                             title="Khóa học đã tạo"
                             value={stats.totalCourses}
-                            valueStyle={{ color: '#1890ff' }}
+                            styles={{ color: '#1890ff' }}
                         />
                     </Card>
                 </Col>
@@ -130,7 +130,7 @@ const TeacherProfile = () => {
                         <Statistic
                             title="Tổng bài học"
                             value={stats.totalLessons}
-                            valueStyle={{ color: '#52c41a' }}
+                            styles={{ color: '#52c41a' }}
                         />
                     </Card>
                 </Col>
@@ -141,7 +141,7 @@ const TeacherProfile = () => {
                             title="Doanh thu"
                             value={stats.totalRevenue}
                             suffix="VNĐ"
-                            valueStyle={{ color: '#722ed1' }}
+                            styles={{ color: '#722ed1' }}
                         />
                     </Card>
                 </Col>

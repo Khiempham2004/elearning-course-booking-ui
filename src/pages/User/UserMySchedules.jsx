@@ -15,8 +15,6 @@ const UserMySchedules = () => {
         try {
             setLoading(true);
             const res = await getMySchedule();
-            console.log(res);
-            
             setSchedule(res.data?.schedules || []);
         } catch (error) {
             console.log(error);

@@ -15,6 +15,8 @@ import {
     Empty,
     Skeleton,
     Divider,
+    Pagination,
+    Image
 } from 'antd';
 import {
     ReloadOutlined,
@@ -38,17 +40,16 @@ const EnrollmentStatus = () => {
     const [detailModalOpen, setDetailModalOpen] = useState(false);
     const [selectedEnrollment, setSelectedEnrollment] = useState(null);
     const [cancelling, setCancelling] = useState(false);
+    const [page, setPage] = useState(1);
 
     const fetchEnrollments = async () => {
         try {
             setLoading(true);
             const token = getToken();
             const res = await getMyCourses(token);
-            console.log('My Courses:', res?.data);
             setEnrollments(res?.data?.courses || []);
         } catch (error) {
-            console.log(error);
-            message.error('Failed to fetch your enrollments');
+            message.error('Failed to fetch your enrollments', error);
         } finally {
             setLoading(false);
         }
@@ -58,6 +59,11 @@ const EnrollmentStatus = () => {
         fetchEnrollments();
     }, []);
 
+    useEffect(() => {
+        setPage(1)
+    }, [searchText, setSearchText])
+
+
     const handleDeleteEnrollment = async (id) => {
         try {
             setCancelling(true);
@@ -66,8 +72,7 @@ const EnrollmentStatus = () => {
             message.success('Enrollment cancelled successfully');
             fetchEnrollments();
         } catch (error) {
-            console.log(error);
-            message.error('Failed to cancel enrollment');
+            message.error('Người dùng Không thể hủy đăng ký', error);
         } finally {
             setCancelling(false);
         }
@@ -80,17 +85,24 @@ const EnrollmentStatus = () => {
 
     const filteredEnrollments = enrollments.filter((enrollment) => {
         const searchLower = searchText.toLowerCase();
-        const matchSearch = searchText === '' ? true : (
-            enrollment?.title?.toLowerCase().includes(searchLower) ||
-            enrollment?.level?.toLowerCase().includes(searchLower) ||
-            enrollment?.catagory?.toLowerCase().includes(searchLower)
-        );
+        const matchSearch =
+            searchText === '' ? true : (
+                enrollment?.courseId?.title?.toLowerCase().includes(searchLower) ||
+                enrollment?.courseId?.level?.toLowerCase().includes(searchLower) ||
+                enrollment?.courseId?.catagory?.toLowerCase().includes(searchLower)
+            );
 
         const matchStatus =
             statusFilter === 'all' ? true : enrollment?.status === statusFilter;
 
         return matchSearch && matchStatus;
     });
+
+    const limit = 6;
+    const paginatedEnrollments = filteredEnrollments.slice(
+        (page - 1) * limit,
+        page * limit
+    );
 
     const getStatusColor = (status) => {
         const colors = {
@@ -126,7 +138,6 @@ const EnrollmentStatus = () => {
     };
 
     // const canEnrollMore = () => enrollments.filter(e => e.status === 'approved').length < 10;
-
     return (
         <div style={{ padding: 24, background: '#f5f7fa', minHeight: '100vh' }}>
             {/* Header */}
@@ -156,6 +167,12 @@ const EnrollmentStatus = () => {
                         <Statistic
                             title="Total Enrollments"
                             value={stats.total}
+                            styles={{
+                                content: {
+                                    color: '#1890ff',
+                                    fontSize: 24
+                                }
+                            }}
                             prefix="📊"
                         />
                     </Card>
@@ -166,7 +183,11 @@ const EnrollmentStatus = () => {
                             title="Approved"
                             value={stats.approved}
                             prefix={<CheckCircleOutlined style={{ color: 'green' }} />}
-                            valueStyle={{ color: 'green' }}
+                            styles={{
+                                content: {
+                                    color: 'green',
+                                },
+                            }}
                         />
                     </Card>
                 </Col>
@@ -176,7 +197,11 @@ const EnrollmentStatus = () => {
                             title="Pending"
                             value={stats.pending}
                             prefix={<ClockCircleOutlined style={{ color: 'orange' }} />}
-                            valueStyle={{ color: 'orange' }}
+                            styles={{
+                                content: {
+                                    color: 'orange',
+                                },
+                            }}
                         />
                     </Card>
                 </Col>
@@ -186,7 +211,11 @@ const EnrollmentStatus = () => {
                             title="Rejected"
                             value={stats.rejected}
                             prefix={<CloseCircleOutlined style={{ color: 'red' }} />}
-                            valueStyle={{ color: 'red' }}
+                            styles={{
+                                content: {
+                                    color: "red",
+                                },
+                            }}
                         />
                     </Card>
                 </Col>
@@ -196,13 +225,16 @@ const EnrollmentStatus = () => {
                             title="Completed"
                             value={stats.completed}
                             prefix="🎓"
-                            valueStyle={{ color: '#1890ff' }}
+                            styles={{
+                                content: {
+                                    color: '#1890ff',
+                                },
+                            }}
                         />
                     </Card>
                 </Col>
             </Row>
 
-            {/* Filters */}
             <Card style={{ marginBottom: 24 }}>
                 <Row gutter={[16, 16]}>
                     <Col xs={24} md={12}>
@@ -235,8 +267,8 @@ const EnrollmentStatus = () => {
             {/* Enrollments List */}
             {loading ? (
                 <Row gutter={[16, 16]}>
-                    {[1, 2, 3].map(i => (
-                        <Col xs={24} md={12} key={i}>
+                    {paginatedEnrollments.map((item) => (
+                        <Col xs={24} md={12} key={item}>
                             <Card>
                                 <Skeleton active />
                             </Card>
@@ -252,7 +284,7 @@ const EnrollmentStatus = () => {
                 </Card>
             ) : (
                 <Row gutter={[16, 16]}>
-                    {filteredEnrollments.map((enrollment) => (
+                    {paginatedEnrollments.map((enrollment) => (
                         <Col xs={24} md={12} lg={8} key={enrollment._id}>
                             <Card
                                 hoverable
@@ -264,17 +296,17 @@ const EnrollmentStatus = () => {
                                 <div style={{ marginBottom: 16 }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 8 }}>
                                         <Text strong style={{ fontSize: 16 }}>
-                                            {enrollment?.title || 'N/A'}
+                                            {enrollment?.courseId?.title || 'N/A'}
                                         </Text>
                                         <Tag
                                             icon={getStatusIcon(enrollment.status)}
                                             color={getStatusColor(enrollment.status)}
                                         >
-                                            {enrollment?.status?.toUpperCase()}
+                                            {enrollment?.courseId?.status?.toUpperCase()}
                                         </Tag>
                                     </div>
                                     <Text type="secondary" style={{ fontSize: 12 }}>
-                                        {enrollment?.level || 'Level N/A'} • {enrollment?.catagory || 'Category N/A'}
+                                        {enrollment?.courseId?.level || 'Level N/A'} • {enrollment?.catagory || 'Category N/A'}
                                     </Text>
                                 </div>
 
@@ -282,7 +314,7 @@ const EnrollmentStatus = () => {
 
                                 <div style={{ marginBottom: 12 }}>
                                     <Text type="secondary" style={{ fontSize: 12 }}>
-                                        <strong>Enrolled:</strong> {new Date(enrollment?.createdAt).toLocaleDateString()}
+                                        <strong>Enrolled:</strong> {new Date(enrollment?.courseId?.createdAt).toLocaleDateString()}
                                     </Text>
                                 </div>
 
@@ -300,7 +332,7 @@ const EnrollmentStatus = () => {
                                             <strong>Rejection Reason:</strong>
                                         </Text>
                                         <p style={{ fontSize: 12, marginTop: 4 }}>
-                                            {enrollment?.rejectionReason || 'No reason provided'}
+                                            {enrollment?.courseId?.rejectionReason || 'No reason provided'}
                                         </p>
                                     </div>
                                 )}
@@ -317,7 +349,7 @@ const EnrollmentStatus = () => {
                                     <div style={{ marginBottom: 12 }}>
                                         <Text type="success" style={{ fontSize: 12 }}>
                                             ✓ 🎓 Course completed on {''}
-                                            {enrollment?.createdAt
+                                            {enrollment?.courseId?.createdAt
                                                 ? new Date(enrollment.completedAt).toLocaleDateString()
                                                 : 'N/A'}
                                         </Text>
@@ -352,8 +384,24 @@ const EnrollmentStatus = () => {
                     ))}
                 </Row>
             )}
+            <div
+                style={{
+                    marginTop: 24,
+                    display: "flex",
+                    justifyContent: "center",
+                }}
+            >
+                <Pagination
+                    current={page}
+                    pageSize={limit}
+                    total={filteredEnrollments.length}
+                    onChange={(currentPage) =>
+                        setPage(currentPage)
+                    }
+                    showSizeChanger={false}
+                />
+            </div>
 
-            {/* Details Modal */}
             <Modal
                 title="Enrollment Details"
                 open={detailModalOpen}
@@ -392,7 +440,13 @@ const EnrollmentStatus = () => {
                                     <strong>Lessons:</strong> {selectedEnrollment?.courseId?.lessons || '0'}
                                 </p>
                                 <p>
-                                    <strong>Rating:</strong> ⭐ {selectedEnrollment?.courseId?.rating || '0'}/5
+                                    <strong>Rating:</strong> ⭐ {selectedEnrollment?.courseId?.rating || '0'}
+                                </p>
+                                <p>
+                                    <strong>Instructor : {selectedEnrollment?.courseId?.instructor || 'N/A'}</strong>
+                                </p>
+                                <p>
+                                    <strong>Reviews : {selectedEnrollment?.courseId?.reviews || 'N/A'}</strong>
                                 </p>
                             </Card>
                         </div>

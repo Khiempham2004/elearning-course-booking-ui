@@ -16,6 +16,9 @@ import {
     Input,
     InputNumber,
     Upload,
+    Row,
+    Col,
+    Select,
 } from 'antd';
 import {
     createCourse,
@@ -25,6 +28,7 @@ import {
 import { getToken } from '../../utils/Auth';
 import { UploadOutlined } from '@ant-design/icons';
 import { getMyCourses } from '../../service/enrollment.service';
+import './User.css'
 const { Title, Text } = Typography;
 
 const imageModules = import.meta.glob("../../assets/Images/*", { eager: true });
@@ -56,7 +60,7 @@ const getImageUrl = (imagePath) => {
 }
 
 const UserCourse = () => {
-    const [open, setOpening] = useState(false);
+    const [detailopen, setDetailOpening] = useState(false);
     const [editingCourse, setEditingCourse] = useState(null);
     const [form] = Form.useForm();
     const [courses, setCourses] = useState([]);
@@ -72,13 +76,6 @@ const UserCourse = () => {
             const token = localStorage.getItem("token");
 
             const res = await getMyCourses(token);
-            console.log("API Response:", res.data);
-            console.log("Courses data:", res.data.courses);
-            if (res.data.courses && res.data.courses.length > 0) {
-                console.log("First course:", res.data.courses[0]);
-                console.log("Course image:", res.data.courses[0].courseImage);
-                console.log("Instructor image:", res.data.courses[0].instructorImage);
-            }
 
             setCourses(res.data.courses || []);
 
@@ -99,7 +96,7 @@ const UserCourse = () => {
         form.resetFields();
         setCourseFile(null);
         setInstructorFile(null);
-        setOpening(true);
+        setDetailOpening(true);
     };
 
     const handleEditing = (record) => {
@@ -118,7 +115,7 @@ const UserCourse = () => {
             catagory: record.catagory,
             courseImage: record.courseImage,
         });
-        setOpening(true);
+        setDetailOpening(true);
     };
 
     const handleDelete = async (id) => {
@@ -174,7 +171,7 @@ const UserCourse = () => {
             }
 
             form.resetFields();
-            setOpening(false);
+            setDetailOpening(false);
             setCourseFile(null);
             setInstructorFile(null);
             await fetchCourse();
@@ -385,134 +382,255 @@ const UserCourse = () => {
                 />
 
                 <Modal
-                    open={open}
-                    onCancel={() => setOpening(false)}
+                    open={detailopen}
+                    onCancel={() => {
+                        setDetailOpening(false);
+                        form.resetFields();
+                    }}
                     onOk={handleSubmit}
-                    maskClosable={false}
-                    destroyOnClose
+                    width={800}
+                    centered
+                    destroyOnHidden
                     title={
-                        editingCourse
-                            ? "Edit Course"
-                            : "Add Course"
+                        <div
+                            style={{
+                                fontSize: 28,
+                                fontWeight: 700,
+                                color: "#1677ff",
+                            }}
+                        >
+                            {editingCourse ? "✏️ Edit Course" : "📚 Add New Course"}
+                        </div>
                     }
+                    okText={editingCourse ? "Update Course" : "Create Course"}
+                    cancelText="Cancel"
+                    styles={{
+                        body: {
+                            paddingTop: 12,
+                        },
+                    }}
                 >
-                    <Form
-                        layout="vertical"
-                        form={form}
-
+                    <Card
+                        bordered={false}
+                        style={{
+                            borderRadius: 20,
+                            boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
+                        }}
                     >
-                        <Form.Item
-                            label="Course Image"
+                        <Form
+                            form={form}
+                            layout="vertical"
                         >
-                            <Upload
-                                beforeUpload={(file) => {
-                                    console.log("Course file selected:", file);
-                                    setCourseFile(file);
-                                    return false; // Prevent auto upload
-                                }}
-                                onRemove={() => {
-                                    console.log("Removing course file");
-                                    setCourseFile(null);
-                                }}
-                                maxCount={1}
-                                listType='picture'
-                            >
-                                <Button icon={<UploadOutlined />}>
-                                    Upload Course Image
-                                </Button>
-                            </Upload>
-                        </Form.Item>
+                            <Row gutter={[24, 24]}>
+                                <Col xs={24} md={12}>
+                                    <Card
+                                        size="small"
+                                        title="Course Image"
+                                        style={{
+                                            borderRadius: 12,
+                                        }}
+                                    >
+                                        <Upload
+                                            beforeUpload={(file) => {
+                                                setCourseFile(file);
+                                                return false;
+                                            }}
+                                            onRemove={() => setCourseFile(null)}
+                                            listType="picture-card"
+                                            maxCount={1}
+                                        >
+                                            <div>
+                                                <UploadOutlined />
+                                                <div style={{ marginTop: 8 }}>
+                                                    Upload
+                                                </div>
+                                            </div>
+                                        </Upload>
+                                    </Card>
+                                </Col>
 
-                        <Form.Item
-                            label="Title"
-                            name="title"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Nhập tên khóa học",
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        label="Course Title"
+                                        name="title"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: "Please enter course title",
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            size="large"
+                                            placeholder="Course title..."
+                                        />
+                                    </Form.Item>
+                                </Col>
 
-                        <Form.Item
-                            label="lessons"
-                            name="lessons"
-                        >
-                            <Input />
-                        </Form.Item>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        label="Lessons"
+                                        name="lessons"
+                                    >
+                                        <InputNumber
+                                            style={{ width: "100%" }}
+                                            size="large"
+                                            min={1}
+                                            placeholder="Number of lessons"
+                                        />
+                                    </Form.Item>
+                                </Col>
 
-                        <Form.Item
-                            label="Price"
-                            name="price"
-                        >
-                            <InputNumber
-                                style={{ width: "100%" }}
-                            />
-                        </Form.Item>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        label="Price ($)"
+                                        name="price"
+                                    >
+                                        <InputNumber
+                                            style={{ width: "100%" }}
+                                            size="large"
+                                            min={0}
+                                            placeholder="Course price"
+                                        />
+                                    </Form.Item>
+                                </Col>
 
-                        <Form.Item
-                            label="Level"
-                            name="level"
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            label="rating"
-                            name="rating">
-                            <Input />
-                        </Form.Item>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        label="Level"
+                                        name="level"
+                                    >
+                                        <Select
+                                            size="large"
+                                            placeholder="Select level"
+                                            options={[
+                                                {
+                                                    label: "Beginner",
+                                                    value: "Beginner",
+                                                },
+                                                {
+                                                    label: "Intermediate",
+                                                    value: "Intermediate",
+                                                },
+                                                {
+                                                    label: "Advanced",
+                                                    value: "Advanced",
+                                                },
+                                            ]}
+                                        />
+                                    </Form.Item>
+                                </Col>
 
-                        <Form.Item
-                            label="reviews"
-                            name="reviews"
-                        >
-                            <Input />
-                        </Form.Item>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        label="Rating"
+                                        name="rating"
+                                    >
+                                        <InputNumber
+                                            min={0}
+                                            min={5}
+                                            min={0.1}
+                                            styles={{
+                                                width: '100%'
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </Col>
 
-                        <Form.Item
-                            label='Instructor'
-                            name='instructor'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Nhập trên instructor'
-                                }
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        label="Reviews"
+                                        name="reviews"
+                                    >
+                                        <Input
+                                            size="large"
+                                            placeholder="Reviews..."
+                                        />
+                                    </Form.Item>
+                                </Col>
 
-                        <Form.Item
-                            label="Instructor Image"
-                        >
-                            <Upload
-                                beforeUpload={(file) => {
-                                    console.log("Instructor file selected:", file);
-                                    setInstructorFile(file);
-                                    return false; // Prevent auto upload
-                                }}
-                                onRemove={() => {
-                                    console.log("Removing instructor file");
-                                    setInstructorFile(null);
-                                }}
-                                maxCount={1}
-                                listType='picture'
-                            >
-                                <Button icon={<UploadOutlined />}>
-                                    Upload Instructor Image
-                                </Button>
-                            </Upload>
-                        </Form.Item>
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        label="Instructor"
+                                        name="instructor"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: "Please enter instructor",
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            size="large"
+                                            placeholder="Instructor..."
+                                        />
+                                    </Form.Item>
+                                </Col>
 
-                        <Form.Item
-                            label="Category"
-                            name="catagory"
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Form>
+                                <Col xs={24} md={12}>
+                                    <Card
+                                        size="small"
+                                        title="Instructor Image"
+                                        style={{
+                                            borderRadius: 12,
+                                        }}
+                                    >
+                                        <Upload
+                                            beforeUpload={(file) => {
+                                                setInstructorFile(file);
+                                                return false;
+                                            }}
+                                            onRemove={() => setInstructorFile(null)}
+                                            listType="picture-card"
+                                            maxCount={1}
+                                        >
+                                            <div>
+                                                <UploadOutlined />
+                                                <div style={{ marginTop: 8 }}>
+                                                    Upload
+                                                </div>
+                                            </div>
+                                        </Upload>
+                                    </Card>
+                                </Col>
+
+                                <Col xs={24} md={12}>
+                                    <Form.Item
+                                        label="Category"
+                                        name="catagory"
+                                    >
+                                        <Select
+                                            size="large"
+                                            showSearch
+                                            placeholder="Select category"
+                                            options={[
+                                                {
+                                                    label: "Marketing",
+                                                    value: "Marketing",
+                                                },
+                                                {
+                                                    label: "Programming",
+                                                    value: "Programming",
+                                                },
+                                                {
+                                                    label: "Business",
+                                                    value: "Business",
+                                                },
+                                                {
+                                                    label: "Design",
+                                                    value: "Design",
+                                                },
+                                                {
+                                                    label: "AI",
+                                                    value: "AI",
+                                                },
+                                            ]}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Card>
                 </Modal>
             </Card>
         </div>

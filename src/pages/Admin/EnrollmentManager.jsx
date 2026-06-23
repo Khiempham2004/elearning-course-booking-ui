@@ -357,6 +357,12 @@ const EnrollmentManager = () => {
                         <Statistic
                             title="Total Enrollments"
                             value={stats.total}
+                            styles={{
+                                content: {
+                                    color: '#1890ff',
+                                    fontSize: 24
+                                }
+                            }}
                             prefix="📊"
                         />
                     </Card>
@@ -367,7 +373,7 @@ const EnrollmentManager = () => {
                             title="Approved"
                             value={stats.approved}
                             prefix={<CheckCircleOutlined style={{ color: 'green' }} />}
-                            valueStyle={{ color: 'green' }}
+                            styles={{ color: 'green' }}
                         />
                     </Card>
                 </Col>
@@ -377,7 +383,7 @@ const EnrollmentManager = () => {
                             title="Pending"
                             value={stats.pending}
                             prefix={<ClockCircleOutlined style={{ color: 'orange' }} />}
-                            valueStyle={{ color: 'orange' }}
+                            styles={{ color: 'orange' }}
                         />
                     </Card>
                 </Col>
@@ -387,7 +393,7 @@ const EnrollmentManager = () => {
                             title="Rejected"
                             value={stats.rejected}
                             prefix={<CloseCircleOutlined style={{ color: 'red' }} />}
-                            valueStyle={{ color: 'red' }}
+                            styles={{ color: 'red' }}
                         />
                     </Card>
                 </Col>
@@ -397,7 +403,7 @@ const EnrollmentManager = () => {
                             title="Completed"
                             value={stats.completed}
                             prefix="🎓"
-                            valueStyle={{ color: '#1890ff' }}
+                            styles={{ color: '#1890ff' }}
                         />
                     </Card>
                 </Col>

@@ -65,8 +65,7 @@ const UserManager = () => {
 
             setUsers(res?.data?.users || []);
         } catch (error) {
-            console.log(error);
-            message.error('Fetch users failed');
+            message.error('Fetch users failed', error);
         } finally {
             setLoading(false);
         }
@@ -112,8 +111,7 @@ const UserManager = () => {
             });
             await fetchUsers();
         } catch (error) {
-            console.log(error);
-            message.error("Tạo tài khoản thất bại");
+            message.error("Tạo tài khoản thất bại", error);
         }
     }
 
@@ -158,8 +156,7 @@ const UserManager = () => {
             setSelectedPassword('')
             fetchUsers();
         } catch (error) {
-            console.log(error);
-            message.error("Edit users failed");
+            message.error("Edit users failed", error);
         }
     };
 
@@ -297,6 +294,7 @@ const UserManager = () => {
             ),
         },
     ];
+
     return (
         <div style={{ padding: 24 }}>
             <Row

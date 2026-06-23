@@ -43,11 +43,6 @@ const AdminDashboard = () => {
             try {
                 setLoading(true);
 
-                // ✅ FIX: Gọi API đúng cách
-                // - axiosClient tự động thêm token từ localStorage (xem axiosClient.js)
-                // - Không cần truyền token vào headers
-                // - Không gọi getCourse() trong Promise.all (không cần)
-
                 const [usersRes, enrollmentsRes] = await Promise.all([
                     getAllUsers(),
                     getAllEnrollments(),
@@ -197,7 +192,7 @@ const AdminDashboard = () => {
                                 title="👥 Tổng sinh viên"
                                 value={stats.totalStudents}
                                 prefix={<UserOutlined />}
-                                valueStyle={{ color: '#1890ff', fontSize: 24 }}
+                                styles={{ color: '#1890ff', fontSize: 24 }}
                             />
                         </Card>
                     </Col>
@@ -208,7 +203,7 @@ const AdminDashboard = () => {
                                 title="📚 Tổng giáo viên"
                                 value={stats.totalTeachers}
                                 prefix={<TeamOutlined />}
-                                valueStyle={{ color: '#52c41a', fontSize: 24 }}
+                                styles={{ color: '#52c41a', fontSize: 24 }}
                             />
                         </Card>
                     </Col>
@@ -219,7 +214,7 @@ const AdminDashboard = () => {
                                 title="📄 Tổng báo cáo"
                                 value={stats.totalReports}
                                 prefix={<FileTextOutlined />}
-                                valueStyle={{ color: '#faad14', fontSize: 24 }}
+                                styles={{ color: '#faad14', fontSize: 24 }}
                             />
                         </Card>
                     </Col>
@@ -231,7 +226,7 @@ const AdminDashboard = () => {
                                 value={stats.completedDefense}
                                 suffix={`/${stats.totalReports}`}
                                 prefix={<CheckCircleOutlined />}
-                                valueStyle={{ color: '#722ed1', fontSize: 24 }}
+                                styles={{ color: '#722ed1', fontSize: 24 }}
                             />
                         </Card>
                     </Col>
